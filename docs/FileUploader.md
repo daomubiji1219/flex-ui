@@ -70,12 +70,12 @@ function App() {
 ```tsx
 <FileUploader
   action="/api/upload"
-  enableResume
-  enableInstant
+  enableResume={true}
+  enableInstant={true}
 />
 ```
 
-## API
+<!-- ## API
 
 - action: string (必填) 上传接口地址
 - multiple: boolean 是否多选
@@ -85,4 +85,4 @@ function App() {
 - beforeUpload: (file: File) => boolean | Promise<boolean> 上传前校验
 - onSuccess: (file: File, response: unknown) => void 成功回调
 - onError: (file: File, error: unknown) => void 失败回调
-- onProgress: (file: File, percent: number) => void 进度回调
+- onProgress: (file: File, percent: number) => void 进度回调 -->

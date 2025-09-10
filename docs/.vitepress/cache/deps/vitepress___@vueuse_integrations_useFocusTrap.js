@@ -1,13 +1,9 @@
 import {
-  notNullish,
-  toArray,
   tryOnScopeDispose,
   unrefElement
-} from "./chunk-KCCFLKYU.js";
+} from "./chunk-BXRJVPJG.js";
 import {
-  computed,
-  shallowRef,
-  toValue,
+  ref,
   watch
 } from "./chunk-LKA2MDY3.js";
 import "./chunk-VUNV25KB.js";
@@ -1066,12 +1062,12 @@ var createFocusTrap = function createFocusTrap2(elements, userOptions) {
   return trap;
 };
 
-// ../../node_modules/.pnpm/@vueuse+integrations@12.8.2_focus-trap@7.6.5_typescript@5.8.3/node_modules/@vueuse/integrations/useFocusTrap.mjs
+// ../../node_modules/.pnpm/@vueuse+integrations@10.11.1_focus-trap@7.6.5_vue@3.5.21/node_modules/@vueuse/integrations/useFocusTrap.mjs
 function useFocusTrap(target, options = {}) {
   let trap;
   const { immediate, ...focusTrapOptions } = options;
-  const hasFocus = shallowRef(false);
-  const isPaused = shallowRef(false);
+  const hasFocus = ref(false);
+  const isPaused = ref(false);
   const activate = (opts) => trap && trap.activate(opts);
   const deactivate = (opts) => trap && trap.deactivate(opts);
   const pause = () => {
@@ -1086,19 +1082,12 @@ function useFocusTrap(target, options = {}) {
       isPaused.value = false;
     }
   };
-  const targets = computed(() => {
-    const _targets = toValue(target);
-    return toArray(_targets).map((el) => {
-      const _el = toValue(el);
-      return typeof _el === "string" ? _el : unrefElement(_el);
-    }).filter(notNullish);
-  });
   watch(
-    targets,
-    (els) => {
-      if (!els.length)
+    () => unrefElement(target),
+    (el) => {
+      if (!el)
         return;
-      trap = createFocusTrap(els, {
+      trap = createFocusTrap(el, {
         ...focusTrapOptions,
         onActivate() {
           hasFocus.value = true;
