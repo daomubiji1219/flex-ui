@@ -1,7 +1,7 @@
 import { resolveComponent, withCtx, createVNode, useSSRContext } from "vue";
 import { ssrRenderAttrs, ssrRenderComponent, ssrRenderStyle } from "vue/server-renderer";
 import { _ as _export_sfc } from "./plugin-vue_export-helper.1tPrXgE0.js";
-const __pageData = JSON.parse('{"title":"Button 组件","description":"","frontmatter":{},"headers":[],"relativePath":"Button.md","filePath":"Button.md","lastUpdated":null}');
+const __pageData = JSON.parse('{"title":"Button 组件","description":"","frontmatter":{},"headers":[],"relativePath":"Button.md","filePath":"Button.md","lastUpdated":1757514271000}');
 const _sfc_main = { name: "Button.md" };
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
   const _component_DemoContainer = resolveComponent("DemoContainer");

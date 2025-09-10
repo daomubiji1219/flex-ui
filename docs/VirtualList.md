@@ -15,6 +15,60 @@
 
 ## 基础用法
 
+<DemoContainer title="基础用法（实时演示）">
+  <ReactDemo name="VirtualList" />
+</DemoContainer>
+
+```tsx
+import { VirtualList } from '@flexi-ui/components'
+
+const items = Array.from({ length: 10000 }, (_, i) => `Item ${i + 1}`)
+
+function App() {
+  return (
+    <VirtualList
+      items={items}
+      height={400}
+      itemHeight={40}
+      renderItem={(item, index) => (
+        <div style={{ height: 40, display: 'flex', alignItems: 'center' }}>
+          {index + 1}. {item}
+        </div>
+      )}
+    />
+  )
+}
+```
+
+## 自定义行高
+
+```tsx
+<VirtualList
+  items={items}
+  height={500}
+  itemHeight={(index) => (index % 2 === 0 ? 40 : 60)}
+  renderItem={(item) => <div>{item}</div>}
+/>
+```
+
+## 滚动到指定项
+
+```tsx
+const ref = useRef<{ scrollTo: (index: number) => void }>(null)
+
+<button onClick={() => ref.current?.scrollTo(500)}>滚动到第 500 项</button>
+
+<VirtualList ref={ref} items={items} height={400} itemHeight={40} renderItem={(item) => <div>{item}</div>} />
+```
+
+## API
+
+- items: unknown[] 数据源
+- height: number 容器高度
+- itemHeight: number | (index: number) => number 行高或计算函数
+- renderItem: (item: unknown, index: number) => React.ReactNode 行渲染函数
+- overscan?: number 预渲染行数
+
 ```tsx
 import { VirtualList } from '@flexi-ui/components'
 

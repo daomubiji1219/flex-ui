@@ -15,6 +15,10 @@
 
 ## 基础用法
 
+<DemoContainer title="基础用法（实时演示）">
+  <ReactDemo name="DataTable" />
+</DemoContainer>
+
 ```tsx
 import { DataTable } from '@flexi-ui/components'
 import type { Column } from '@flexi-ui/components'

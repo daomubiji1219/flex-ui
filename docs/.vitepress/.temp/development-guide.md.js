@@ -1,7 +1,7 @@
 import { resolveComponent, useSSRContext } from "vue";
 import { ssrRenderAttrs, ssrRenderComponent } from "vue/server-renderer";
 import { _ as _export_sfc } from "./plugin-vue_export-helper.1tPrXgE0.js";
-const __pageData = JSON.parse('{"title":"开发指南（修正版）","description":"","frontmatter":{},"headers":[],"relativePath":"development-guide.md","filePath":"development-guide.md","lastUpdated":null}');
+const __pageData = JSON.parse('{"title":"开发指南（修正版）","description":"","frontmatter":{},"headers":[],"relativePath":"development-guide.md","filePath":"development-guide.md","lastUpdated":1757514271000}');
 const _sfc_main = { name: "development-guide.md" };
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
   const _component_ReactDemo = resolveComponent("ReactDemo");

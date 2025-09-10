@@ -440,10 +440,7 @@ features:
 ## 快速体验
 
 <DemoContainer title="Button 组件示例">
-  <ReactDemo name="Button" :props="{ children: '默认按钮' }" />
-  <ReactDemo name="Button" :props="{ variant: 'primary', children: '主要按钮' }" />
-  <ReactDemo name="Button" :props="{ variant: 'secondary', children: '次要按钮' }" />
-  <ReactDemo name="Button" :props="{ disabled: true, children: '禁用按钮' }" />
+  <ReactDemo name="Button" :props="{ variant: 'primary', children: 'Hello Flexi-UI' }" />
 </DemoContainer>
 
 ## 安装使用
