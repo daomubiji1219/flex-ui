@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    // 指定Node环境TypeScript构建信息文件的存储路径，用于增量编译优化（针对node相关代码）
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    // 编译后生成的JavaScript目标版本（这里指定为ES2023，适用于Node环境）
+    "target": "ES2023",
+    // 编译时包含的库文件（仅包含ES2023核心库，Node环境无需DOM相关库）
+    "lib": ["ES2023"],
+    // 生成的模块代码格式（使用最新的ES模块系统）
+    "module": "ESNext",
+    // 跳过对库文件（.d.ts）的类型检查，提升编译速度
+    "skipLibCheck": true,
+
+    /* 打包工具模式配置（适用于vite等构建工具的Node端脚本） */
+    // 模块解析策略（使用打包工具的解析逻辑）
+    "moduleResolution": "bundler",
+    // 允许在导入语句中使用.ts等TypeScript文件扩展名
+    "allowImportingTsExtensions": true,
+    // 保留原始模块语法（不自动添加/移除import/export关键字）
+    "verbatimModuleSyntax": true,
+    // 强制将所有文件视为模块（即使没有显式的import/export）
+    "moduleDetection": "force",
+    // 不生成编译输出文件（由打包工具负责处理输出）
+    "noEmit": true,
+
+    /* 代码检查（Linting）相关配置 */
+    // 启用严格模式（开启所有严格类型检查选项）
+    "strict": true,
+    // 禁止定义未使用的局部变量
+    "noUnusedLocals": true,
+    // 禁止定义未使用的函数参数
+    "noUnusedParameters": true,
+    // 仅处理可擦除的语法（如装饰器等实验性语法）
+    "erasableSyntaxOnly": true,
+    // 禁止switch语句中出现贯穿（fallthrough）情况（case后未加break）
+    "noFallthroughCasesInSwitch": true,
+    // 检查有副作用的导入语句，防止意外引入未使用但有副作用的模块
+    "noUncheckedSideEffectImports": true
+  },
+  // 指定需要TypeScript编译的文件（这里包含vite和vitest的配置文件，因该配置专为Node端工具脚本设计）
+  "include": ["vite.config.ts", "vitest.config.ts"]
+}

@@ -1,0 +1,54 @@
+{
+  // TypeScript编译器的配置选项块
+  "compilerOptions": {
+    // 指定TypeScript构建信息文件的存储路径，用于增量编译优化
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    // 编译后生成的JavaScript目标版本（这里指定为ES2022）
+    "target": "ES2022",
+    // 对类字段使用ES6的Object.defineProperty语法（而非简单赋值）
+    "useDefineForClassFields": true,
+    // 编译时包含的库文件（ES2022核心库、DOM库、DOM可迭代对象库）
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    // 生成的模块代码格式（ESNext表示使用最新的模块系统）
+    "module": "ESNext",
+    // 跳过对库文件（.d.ts）的类型检查，提高编译速度
+    "skipLibCheck": true,
+    // 模块解析的基础目录（这里设置为当前项目根目录）
+    "baseUrl": ".",
+    // 模块路径映射配置（将@/*别名映射到src/*目录，简化导入路径）
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
+
+    /* 打包工具模式配置（适用于webpack、vite等打包工具） */
+    // 模块解析策略（使用打包工具的解析逻辑）
+    "moduleResolution": "bundler",
+    // 允许在导入语句中使用.ts/.tsx等TypeScript文件扩展名
+    "allowImportingTsExtensions": true,
+    // 保留原始模块语法（不自动添加/移除import/export关键字）
+    "verbatimModuleSyntax": true,
+    // 强制将所有文件视为模块（即使没有显式的import/export）
+    "moduleDetection": "force",
+    // 不生成编译输出文件（由打包工具负责输出）
+    "noEmit": true,
+    // 指定JSX的编译方式（使用React 17+的自动导入模式，无需显式导入React）
+    "jsx": "react-jsx",
+
+    /* 代码检查（Linting）相关配置 */
+    // 启用严格模式（开启所有严格类型检查选项）
+    "strict": true,
+    // 禁止定义未使用的局部变量
+    "noUnusedLocals": true,
+    // 禁止定义未使用的函数参数
+    "noUnusedParameters": true,
+    // 仅处理可擦除的语法（如装饰器等实验性语法）
+    "erasableSyntaxOnly": true,
+    // 禁止switch语句中出现贯穿（fallthrough）情况（case后未加break）
+    "noFallthroughCasesInSwitch": true,
+    // 检查有副作用的导入语句，防止意外引入未使用但有副作用的模块
+    "noUncheckedSideEffectImports": true
+  },
+  // 指定需要TypeScript编译的文件目录（包含src目录下的所有文件，包括测试文件）
+  "include": ["src/**/*", "src/**/*.test.tsx", "src/**/*.test.ts"]
+}

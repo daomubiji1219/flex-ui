@@ -1,0 +1,12 @@
+{
+  // 指定当前配置文件直接包含的需要编译的文件列表
+  // 空数组表示当前配置不直接包含任何文件，而是通过引用其他配置文件来管理
+  "files": [],
+  // TypeScript项目引用配置，用于组合多个TypeScript项目（支持多项目协作和增量编译）
+  "references": [
+    // 引用应用程序相关的TypeScript配置文件（通常是前端应用代码）
+    { "path": "./tsconfig.app.json" },
+    // 引用Node.js环境相关的TypeScript配置文件（通常是后端或工具脚本代码）
+    { "path": "./tsconfig.node.json" }
+  ]
+}

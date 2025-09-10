@@ -1,0 +1,37 @@
+{
+  // 继承自./tsconfig.app.json配置，复用基础编译选项（减少配置冗余）
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    // 类型声明文件的输出目录（生成的.d.ts文件会放在dist/types下）
+    "outDir": "dist/types",
+    // 启用生成类型声明文件（.d.ts），用于提供类型信息给其他项目
+    "declaration": true,
+    // 仅生成类型声明文件，不生成编译后的JavaScript代码
+    "emitDeclarationOnly": true,
+    // 允许编译器输出文件（覆盖继承的noEmit: true，因为需要生成声明文件）
+    "noEmit": false,
+    // 禁用"孤立模块"模式（孤立模块要求每个文件都是独立模块，这里为生成声明可能需要跨文件分析）
+    "isolatedModules": false
+  },
+  // 指定需要生成类型声明的文件范围（核心源代码文件）
+  "include": [
+    "src/index.ts", // 入口文件
+    "src/compoents/**/*", // 所有组件相关文件（**/*表示递归匹配子目录）
+    "src/hooks/**/*", // 所有自定义钩子相关文件
+    "src/utils/**/*", // 所有工具函数相关文件
+    "src/theme/**/*", // 所有主题相关文件
+    "src/types/**/*" // 所有类型定义文件
+  ],
+  // 指定不需要生成类型声明的文件（排除非核心代码）
+  "exclude": [
+    "**/*.test.tsx", // 所有React测试文件
+    "**/*.test.ts", // 所有普通测试文件
+    "**/*.stories.tsx", // 所有Storybook故事文件
+    "src/examples/**", // 示例代码目录
+    "src/stories/**", // Storybook相关目录
+    "src/test/**", // 测试相关目录（小写test）
+    "src/tests/**", // 测试相关目录（复数tests）
+    "src/main.tsx", // 应用入口文件（通常不对外暴露类型）
+    "src/App.tsx" // 根组件（通常不对外暴露类型）
+  ]
+}
