@@ -18,3 +18,4 @@ export * from './hooks';
 
 // 主题导出
 export * from './theme/tokens';
+export { ThemeProvider } from './providers/ThemeProvider';
