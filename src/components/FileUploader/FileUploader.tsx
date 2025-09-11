@@ -2,7 +2,24 @@
 // import type { ReactNode } from 'react';
 import React, { useState, useRef } from 'react';
 // import crypto from 'crypto-js';
-import './FileUploader.css';
+import {
+  Container,
+  DropZone,
+  DropZoneOverlay,
+  DropZoneText,
+  HiddenInput,
+  FileList,
+  FileItem,
+  FileHeader,
+  FileName,
+  FileSize,
+  StatusBadge,
+  ProgressBar,
+  ProgressFill,
+  ProgressShimmer,
+  ButtonGroup,
+  ActionButton,
+} from './FileUploader.styled';
 
 interface UploadUrls {
   check: string; // 检查已上传分片的接口URL
@@ -60,20 +77,20 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
   const uploadQueueRef = useRef<Map<string, AbortController>>(new Map()); //避免重新渲染
 
   // 主题检测
-  const getThemeClass = () => {
-    if (theme === 'dark') return 'dark';
-    if (theme === 'light') return '';
+  const isDarkMode = () => {
+    if (theme === 'dark') return true;
+    if (theme === 'light') return false;
     // auto模式：检测系统主题
     if (
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-color-scheme: dark)').matches
     ) {
-      return 'dark';
+      return true;
     }
-    return '';
+    return false;
   };
 
-  const themeClass = getThemeClass();
+  const darkMode = isDarkMode();
 
   const getApiUrl = (type: keyof UploadUrls) => {
     if (urls) {
@@ -505,148 +522,86 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
     }
   };
 
-  // 获取状态对应的样式
-  const getStatusStyles = (status: UploadFile['status']) => {
-    const baseStyles = {
-      ready: 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400',
-      uploading:
-        'bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400',
-      success:
-        'bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400',
-      error: 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400',
-      paused:
-        'bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400',
-    };
-    return (
-      baseStyles[status] ||
-      'bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
-    );
-  };
-
-  const getProgressStyles = (status: UploadFile['status']) => {
-    const progressStyles = {
-      ready: 'bg-gradient-to-r from-blue-500 to-blue-400',
-      uploading: 'bg-gradient-to-r from-blue-500 to-blue-400',
-      success: 'bg-gradient-to-r from-green-500 to-green-400',
-      error: 'bg-gradient-to-r from-red-500 to-red-400',
-      paused: 'bg-gradient-to-r from-purple-500 to-purple-400',
-    };
-    return (
-      progressStyles[status] || 'bg-gradient-to-r from-blue-500 to-blue-400'
-    );
-  };
-
   return (
-    <div className={`${themeClass} ${className}`} data-testid="file-uploader">
-      <div className="w-full max-w-2xl mx-auto font-sans">
-        {/* 拖拽区域 */}
-        <div
-          className={`
-            border-2 border-dashed rounded-lg p-10 text-center cursor-pointer
-            transition-all duration-300 ease-in-out mb-6 relative overflow-hidden
-            ${
-              isDragging
-                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 transform scale-105'
-                : 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/50 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+    <Container className={className} data-testid="file-uploader">
+      {/* 拖拽区域 */}
+      <DropZone
+        isDragging={isDragging}
+        darkMode={darkMode}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        onClick={() => fileInputRef.current?.click()}
+        data-testid="drop-zone"
+      >
+        {isDragging && <DropZoneOverlay />}
+        <DropZoneText isDragging={isDragging} darkMode={darkMode}>
+          点击或拖拽文件到此处上传
+        </DropZoneText>
+        <HiddenInput
+          ref={fileInputRef}
+          type="file"
+          multiple={multiple}
+          accept={accept}
+          data-testid="file-input"
+          onChange={e => {
+            if (e.target.files) {
+              addFiles(e.target.files);
             }
-          `}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
-          data-testid="drop-zone"
-        >
-          {isDragging && (
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent animate-pulse" />
-          )}
-          <p
-            className={`m-0 text-base font-medium transition-colors ${
-              isDragging
-                ? 'text-blue-600 dark:text-blue-400'
-                : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
-            }`}
-          >
-            点击或拖拽文件到此处上传
-          </p>
-          <input
-            ref={fileInputRef}
-            type="file"
-            multiple={multiple}
-            accept={accept}
-            className="hidden"
-            data-testid="file-input"
-            onChange={e => {
-              if (e.target.files) {
-                addFiles(e.target.files);
-              }
-            }}
-          />
-        </div>
+          }}
+        />
+      </DropZone>
 
-        {/* 文件列表 */}
-        <div className="flex flex-col gap-3">
-          {files.map(file => (
-            <div
-              key={file.uid}
-              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-300 animate-in slide-in-from-bottom-4"
-            >
-              <div className="flex justify-between items-center mb-3 flex-wrap gap-2">
-                <span className="font-semibold text-gray-900 dark:text-gray-100 flex-1 min-w-0 truncate">
-                  {file.name}
-                </span>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {(file.size / 1024 / 1024).toFixed(2)} MB
-                </span>
-                <span
-                  className={`px-2 py-1 rounded text-xs font-medium uppercase tracking-wide ${getStatusStyles(file.status)}`}
+      {/* 文件列表 */}
+      <FileList>
+        {files.map(file => (
+          <FileItem key={file.uid} darkMode={darkMode}>
+            <FileHeader>
+              <FileName darkMode={darkMode}>{file.name}</FileName>
+              <FileSize darkMode={darkMode}>
+                {(file.size / 1024 / 1024).toFixed(2)} MB
+              </FileSize>
+              <StatusBadge status={file.status} darkMode={darkMode}>
+                {file.status}
+              </StatusBadge>
+            </FileHeader>
+
+            <ProgressBar darkMode={darkMode}>
+              <ProgressFill status={file.status} progress={file.progress}>
+                <ProgressShimmer />
+              </ProgressFill>
+            </ProgressBar>
+
+            <ButtonGroup>
+              {file.status === 'uploading' && (
+                <ActionButton
+                  variant="pause"
+                  onClick={() => {
+                    const controller = uploadQueueRef.current.get(file.uid);
+                    controller?.abort();
+                    uploadQueueRef.current.delete(file.uid);
+                    setFiles(prev =>
+                      prev.map(f =>
+                        f.uid === file.uid
+                          ? { ...f, status: 'paused' as const }
+                          : f
+                      )
+                    );
+                  }}
                 >
-                  {file.status}
-                </span>
-              </div>
-
-              <div className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-3 relative">
-                <div
-                  className={`h-full rounded-full transition-all duration-300 relative ${getProgressStyles(file.status)}`}
-                  style={{ width: `${file.progress}%` }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                {file.status === 'uploading' && (
-                  <button
-                    className="px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white text-xs font-medium rounded transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0"
-                    onClick={() => {
-                      const controller = uploadQueueRef.current.get(file.uid);
-                      controller?.abort();
-                      uploadQueueRef.current.delete(file.uid);
-                      setFiles(prev =>
-                        prev.map(f =>
-                          f.uid === file.uid
-                            ? { ...f, status: 'paused' as const }
-                            : f
-                        )
-                      );
-                    }}
-                  >
-                    暂停
-                  </button>
-                )}
-                {file.status === 'paused' && (
-                  <button
-                    className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white text-xs font-medium rounded transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0"
-                    onClick={() => uploadFile(file)}
-                  >
-                    继续
-                  </button>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+                  暂停
+                </ActionButton>
+              )}
+              {file.status === 'paused' && (
+                <ActionButton variant="resume" onClick={() => uploadFile(file)}>
+                  继续
+                </ActionButton>
+              )}
+            </ButtonGroup>
+          </FileItem>
+        ))}
+      </FileList>
+    </Container>
   );
 };
 

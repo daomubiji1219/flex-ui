@@ -2,10 +2,17 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { DataTable } from '../DataTable';
 import type { DataTableProps, Column } from '../DataTable';
+import { ThemeProvider } from '../../../providers/ThemeProvider';
 
 // Mock VirtualList component
 vi.mock('../../VirtualList/VirtualList', () => ({
-  VirtualList: ({ data, renderItem }: any) => (
+  VirtualList: ({
+    data,
+    renderItem,
+  }: {
+    data: unknown[];
+    renderItem: (item: unknown, index: number) => React.ReactNode;
+  }) => (
     <div data-testid="virtual-list">
       {data.map((item: unknown, index: number) => (
         <div key={index}>{renderItem(item, index)}</div>
@@ -14,20 +21,12 @@ vi.mock('../../VirtualList/VirtualList', () => ({
   ),
 }));
 
-// Mock useTheme hook
-vi.mock('../../../hooks/useTheme', () => ({
-  useTheme: () => ({
-    tokens: {
-      colors: {
-        primary: {
-          500: '#3b82f6',
-        },
-      },
-    },
-  }),
-}));
+// Test wrapper with ThemeProvider
+const TestWrapper = ({ children }: { children: React.ReactNode }) => (
+  <ThemeProvider defaultMode="light">{children}</ThemeProvider>
+);
 
-interface TestData {
+interface TestData extends Record<string, unknown> {
   id: number;
   name: string;
   age: number;
@@ -47,6 +46,11 @@ const mockColumns: Column<TestData>[] = [
   { key: 'email', title: 'Email', width: 200, filterable: true },
 ];
 
+// Helper function to render with theme
+const renderWithTheme = (ui: React.ReactElement) => {
+  return render(ui, { wrapper: TestWrapper });
+};
+
 describe('DataTable Component', () => {
   const defaultProps: DataTableProps<TestData> = {
     data: mockData,
@@ -56,14 +60,14 @@ describe('DataTable Component', () => {
 
   describe('Rendering', () => {
     it('should render data table with data', () => {
-      render(<DataTable {...defaultProps} />);
+      renderWithTheme(<DataTable {...defaultProps} />);
       expect(screen.getByTestId('data-table')).toBeInTheDocument();
       expect(screen.getByText('John Doe')).toBeInTheDocument();
       expect(screen.getByText('Jane Smith')).toBeInTheDocument();
     });
 
     it('should render table headers', () => {
-      render(<DataTable {...defaultProps} />);
+      renderWithTheme(<DataTable {...defaultProps} />);
       expect(screen.getByText('ID')).toBeInTheDocument();
       expect(screen.getByText('Name')).toBeInTheDocument();
       expect(screen.getByText('Age')).toBeInTheDocument();
@@ -71,14 +75,14 @@ describe('DataTable Component', () => {
     });
 
     it('should render empty table when no data', () => {
-      render(<DataTable {...defaultProps} data={[]} />);
+      renderWithTheme(<DataTable {...defaultProps} data={[]} />);
       expect(screen.getByTestId('data-table')).toBeInTheDocument();
     });
   });
 
   describe('Loading State', () => {
     it('should show loading skeleton when loading', () => {
-      render(<DataTable {...defaultProps} loading />);
+      renderWithTheme(<DataTable {...defaultProps} loading />);
       expect(screen.getByTestId('table-skeleton')).toBeInTheDocument();
     });
   });
@@ -89,7 +93,7 @@ describe('DataTable Component', () => {
         ...defaultProps,
         pagination: { pageSize: 2 },
       };
-      render(<DataTable {...paginationProps} />);
+      renderWithTheme(<DataTable {...paginationProps} />);
       expect(screen.getByTestId('pagination')).toBeInTheDocument();
     });
   });
@@ -97,7 +101,7 @@ describe('DataTable Component', () => {
   describe('Selection', () => {
     it('should render selectable table when selectable is true', () => {
       const onRowSelect = vi.fn();
-      render(
+      renderWithTheme(
         <DataTable {...defaultProps} selectable onRowSelect={onRowSelect} />
       );
 
@@ -107,7 +111,7 @@ describe('DataTable Component', () => {
 
   describe('Virtual Scroll', () => {
     it('should render with virtual scroll enabled', () => {
-      render(<DataTable {...defaultProps} virtualScroll />);
+      renderWithTheme(<DataTable {...defaultProps} virtualScroll />);
       expect(screen.getByTestId('data-table')).toBeInTheDocument();
     });
   });

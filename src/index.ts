@@ -1,14 +1,14 @@
 // 组件导出
-export { default as Button } from './compoents/Button/Button';
-export { default as DataTable } from './compoents/DataTable/DataTable';
-export { default as FileUploader } from './compoents/FileUploader/FileUploader';
-export { default as VirtualList } from './compoents/VirtualList/VirtualList';
+export { default as Button } from './components/Button/Button';
+export { default as DataTable } from './components/DataTable/DataTable';
+export { default as FileUploader } from './components/FileUploader/FileUploader';
+export { default as VirtualList } from './components/VirtualList/VirtualList';
 
 // 类型导出
-export type { ButtonProps } from './compoents/Button/Button';
-export type { DataTableProps } from './compoents/DataTable/DataTable';
-export type { FileUploaderProps } from './compoents/FileUploader/FileUploader';
-export type { VirtualListProps } from './compoents/VirtualList/VirtualList';
+export type { ButtonProps } from './components/Button/Button';
+export type { DataTableProps } from './components/DataTable/DataTable';
+export type { FileUploaderProps } from './components/FileUploader/FileUploader';
+export type { VirtualListProps } from './components/VirtualList/VirtualList';
 
 // Hooks 导出（通过统一入口，便于按需导入）
 export * from './hooks';

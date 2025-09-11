@@ -1,26 +1,44 @@
 # VirtualList 虚拟列表组件
 
-一个高性能的虚拟滚动列表组件，专为处理大量数据而设计，通过只渲染可见区域的元素来实现极致的性能优化。
+一个极致性能的虚拟滚动列表组件，专为处理海量数据而设计。通过智能的可视区域渲染和动态高度计算，轻松处理百万级数据而不卡顿，是现代 Web 应用处理大数据集的最佳选择。
 
-## 特性
+## 🚀 核心特性
 
-- ✅ 虚拟滚动技术，支持海量数据渲染
-- ✅ 自动高度检测和动态高度支持
-- ✅ 可配置的缓冲区（overscan）
-- ✅ 高性能滚动处理
-- ✅ TypeScript 泛型支持
-- ✅ 灵活的渲染函数和自定义key函数
-- ✅ 响应式设计
-- ✅ 内存占用优化
-- ✅ 内置样式和Tailwind CSS支持
+### 性能优势
 
-## 安装
+- ✅ **虚拟滚动**: 只渲染可见区域，支持百万级数据流畅滚动
+- ✅ **动态高度**: 自动检测和适配不同高度的列表项
+- ✅ **智能缓冲**: 可配置的 overscan 缓冲区，优化滚动体验
+- ✅ **内存优化**: 极低的内存占用，高效的 DOM 复用
+- ✅ **节流优化**: 内置滚动事件节流，避免性能抖动
+
+### 开发体验
+
+- ✅ **TypeScript 泛型**: 完整的类型安全和智能提示
+- ✅ **灵活渲染**: 支持自定义渲染函数和 key 生成
+- ✅ **CSS-in-JS**: Emotion 样式系统，完美的样式隔离
+- ✅ **响应式设计**: 自适应容器尺寸变化
+- ✅ **易于集成**: 简洁的 API 设计，快速上手
+
+### 技术亮点
+
+- ✅ **高精度计算**: 精确的滚动位置和可视区域计算
+- ✅ **实时高度更新**: 支持内容高度动态变化
+- ✅ **平滑滚动**: 优化的滚动算法，提供丝滑体验
+
+## 📦 安装
 
 ```bash
 pnpm add flexi-ui
+# 或
+npm install flexi-ui
+# 或
+yarn add flexi-ui
 ```
 
-## 基础用法
+## 🚀 快速开始
+
+### 基础用法
 
 ```tsx
 import { VirtualList } from 'flexi-ui';
@@ -30,35 +48,54 @@ interface ListItem {
   id: number;
   title: string;
   description: string;
+  avatar?: string;
+  status: 'active' | 'inactive';
+  createTime: string;
 }
 
-// 生成大量数据
-const data: ListItem[] = Array.from({ length: 10000 }, (_, i) => ({
+// 生成大量数据 - 轻松处理 10万+ 数据
+const data: ListItem[] = Array.from({ length: 100000 }, (_, i) => ({
   id: i,
   title: `项目 ${i}`,
-  description: `这是第 ${i} 个项目的描述信息`,
+  description: `这是第 ${i} 个项目的详细描述信息，包含更多内容...`,
+  status: i % 3 === 0 ? 'inactive' : 'active',
+  createTime: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
 }));
 
 function App() {
   return (
     <VirtualList
       data={data}
-      containerHeight={400}
-      itemHeight={60}
+      containerHeight={500}
+      itemHeight={80}
+      overscan={5}
       getKey={item => item.id}
       renderItem={(item, index) => (
         <div
           style={{
-            height: '60px',
+            height: '80px',
             padding: '16px',
-            borderBottom: '1px solid #eee',
+            borderBottom: '1px solid #f0f0f0',
             display: 'flex',
             alignItems: 'center',
+            backgroundColor: index % 2 === 0 ? '#fafafa' : '#ffffff',
           }}
         >
-          <div>
-            <h4>{item.title}</h4>
-            <p>{item.description}</p>
+          <div style={{ flex: 1 }}>
+            <h4 style={{ margin: 0, fontSize: '16px', fontWeight: 600 }}>
+              {item.title}
+            </h4>
+            <p style={{ margin: '4px 0 0 0', color: '#666', fontSize: '14px' }}>
+              {item.description}
+            </p>
+            <div style={{ marginTop: '4px', fontSize: '12px', color: '#999' }}>
+              <span className={`status-${item.status}`}>
+                {item.status === 'active' ? '✅ 活跃' : '⏸️ 非活跃'}
+              </span>
+              <span style={{ marginLeft: '12px' }}>
+                创建时间: {new Date(item.createTime).toLocaleDateString()}
+              </span>
+            </div>
           </div>
         </div>
       )}
@@ -67,37 +104,347 @@ function App() {
 }
 ```
 
-## API
-
-### VirtualListProps<T>
-
-| 属性            | 类型                                     | 默认值 | 说明                                         |
-| --------------- | ---------------------------------------- | ------ | -------------------------------------------- |
-| data            | `T[]`                                    | -      | 列表数据数组                                 |
-| containerHeight | `number`                                 | `1000` | 容器高度（px）                               |
-| itemHeight      | `number`                                 | `50`   | 项目高度（px）                               |
-| renderItem      | `(item: T, index?: number) => ReactNode` | -      | 项目渲染函数                                 |
-| overscan        | `number`                                 | `3`    | 缓冲区项目数量                               |
-| getKey          | `(item: T) => number \| string`          | -      | 获取项目唯一标识的函数，如果不提供则使用索引 |
-
-## 高级用法
-
-### 动态高度
-
-VirtualList 组件支持自动高度检测。组件会自动测量每个项目的实际高度，并相应地调整虚拟滚动计算。
+### 动态高度支持
 
 ```tsx
-function DynamicHeightList() {
-  const items = Array.from({ length: 5000 }, (_, i) => ({
+function DynamicHeightExample() {
+  const items = Array.from({ length: 50000 }, (_, i) => ({
     id: i,
-    title: `项目 ${i}`,
-    content: `内容 ${i}`.repeat(Math.floor(Math.random() * 10) + 1),
+    title: `动态内容 ${i}`,
+    content: `内容 ${i} `.repeat(Math.floor(Math.random() * 20) + 1),
   }));
 
   return (
     <VirtualList
       data={items}
-      containerHeight={500}
+      containerHeight={600}
+      itemHeight={60} // 初始预估高度
+      overscan={3}
+      getKey={item => item.id}
+      renderItem={item => (
+        <div style={{ padding: '16px', borderBottom: '1px solid #eee' }}>
+          <h3 style={{ margin: '0 0 8px 0' }}>{item.title}</h3>
+          <p style={{ margin: 0, lineHeight: 1.5 }}>{item.content}</p>
+        </div>
+      )}
+    />
+  );
+}
+```
+
+## 📚 API 文档
+
+### VirtualListProps<T>
+
+| 属性            | 类型                                     | 默认值 | 必填 | 说明                                            |
+| --------------- | ---------------------------------------- | ------ | ---- | ----------------------------------------------- |
+| data            | `T[]`                                    | -      | ✅   | 列表数据数组，支持任意类型的数据结构            |
+| renderItem      | `(item: T, index?: number) => ReactNode` | -      | ✅   | 项目渲染函数，接收数据项和索引，返回 React 节点 |
+| containerHeight | `number`                                 | `1000` | ❌   | 容器高度（px），决定可视区域大小                |
+| itemHeight      | `number`                                 | `50`   | ❌   | 项目预估高度（px），用于初始计算和性能优化      |
+| overscan        | `number`                                 | `3`    | ❌   | 缓冲区项目数量，增加可提升滚动流畅度            |
+| getKey          | `(item: T) => number \| string`          | -      | ❌   | 获取项目唯一标识的函数，优化渲染性能            |
+
+### 属性详解
+
+#### data
+
+- **类型**: `T[]`
+- **说明**: 要渲染的数据数组，支持任意数据结构
+- **性能**: 组件会自动优化大数据集的渲染，支持百万级数据
+
+#### renderItem
+
+- **类型**: `(item: T, index?: number) => ReactNode`
+- **说明**: 自定义渲染函数，用于定义每个列表项的展示方式
+- **参数**:
+  - `item`: 当前数据项
+  - `index`: 当前项在原始数据中的索引（可选）
+- **返回**: React 节点
+
+#### containerHeight
+
+- **类型**: `number`
+- **默认值**: `1000`
+- **说明**: 虚拟列表容器的高度，决定可视区域大小
+- **建议**: 根据实际布局需求设置，过小会影响用户体验
+
+#### itemHeight
+
+- **类型**: `number`
+- **默认值**: `50`
+- **说明**: 列表项的预估高度，用于初始渲染计算
+- **注意**: 组件支持动态高度，会自动调整实际高度
+
+#### overscan
+
+- **类型**: `number`
+- **默认值**: `3`
+- **说明**: 可视区域外额外渲染的项目数量
+- **性能**: 适当增加可提升滚动流畅度，但会增加内存占用
+
+#### getKey
+
+- **类型**: `(item: T) => number | string`
+- **说明**: 生成列表项唯一标识的函数
+- **优化**: 提供稳定的 key 可以优化 React 的 diff 算法性能
+- **默认**: 如不提供，将使用数组索引作为 key
+
+## 🔧 高级用法
+
+### 与其他组件集成
+
+#### 在 DataTable 中使用
+
+```tsx
+import { DataTable, VirtualList } from 'flexi-ui';
+
+// DataTable 会自动在数据量大于 100 条时启用虚拟滚动
+function LargeDataTable() {
+  const data = Array.from({ length: 50000 }, (_, i) => ({
+    id: i,
+    name: `用户 ${i}`,
+    email: `user${i}@example.com`,
+    department: `部门 ${i % 10}`,
+  }));
+
+  return (
+    <DataTable
+      data={data}
+      columns={columns}
+      rowKey="id"
+      virtualScroll // 启用虚拟滚动
+      pagination={{ pageSize: 50 }}
+    />
+  );
+}
+```
+
+### 复杂数据结构处理
+
+```tsx
+interface ComplexItem {
+  id: string;
+  user: {
+    name: string;
+    avatar: string;
+    role: string;
+  };
+  content: {
+    title: string;
+    body: string;
+    tags: string[];
+    attachments?: File[];
+  };
+  metadata: {
+    createdAt: Date;
+    updatedAt: Date;
+    views: number;
+  };
+}
+
+function ComplexVirtualList() {
+  const complexData: ComplexItem[] = generateComplexData(100000);
+
+  return (
+    <VirtualList
+      data={complexData}
+      containerHeight={600}
+      itemHeight={120}
+      overscan={5}
+      getKey={item => item.id}
+      renderItem={item => (
+        <div className="complex-item">
+          <div className="user-info">
+            <img src={item.user.avatar} alt={item.user.name} />
+            <div>
+              <h4>{item.user.name}</h4>
+              <span className="role">{item.user.role}</span>
+            </div>
+          </div>
+          <div className="content">
+            <h3>{item.content.title}</h3>
+            <p>{item.content.body}</p>
+            <div className="tags">
+              {item.content.tags.map(tag => (
+                <span key={tag} className="tag">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="metadata">
+            <span>创建: {item.metadata.createdAt.toLocaleDateString()}</span>
+            <span>浏览: {item.metadata.views}</span>
+          </div>
+        </div>
+      )}
+    />
+  );
+}
+```
+
+## ⚡ 性能优化
+
+### 最佳实践
+
+#### 1. 合理设置 overscan
+
+```tsx
+// 根据滚动速度调整缓冲区大小
+<VirtualList
+  data={data}
+  overscan={3} // 慢速滚动场景
+  // overscan={8} // 快速滚动场景
+/>
+```
+
+#### 2. 优化渲染函数
+
+```tsx
+// ❌ 避免在 renderItem 中创建复杂对象
+const BadExample = () => (
+  <VirtualList
+    data={data}
+    renderItem={item => (
+      <div
+        style={
+          {
+            /* 复杂样式对象 */
+          }
+        }
+      >
+        {/* 复杂计算 */}
+        {expensiveCalculation(item)}
+      </div>
+    )}
+  />
+);
+
+// ✅ 推荐做法：预计算和样式复用
+const itemStyle = { padding: '16px', borderBottom: '1px solid #eee' };
+const GoodExample = () => {
+  const processedData = useMemo(
+    () =>
+      data.map(item => ({
+        ...item,
+        displayValue: expensiveCalculation(item),
+      })),
+    [data]
+  );
+
+  return (
+    <VirtualList
+      data={processedData}
+      renderItem={item => <div style={itemStyle}>{item.displayValue}</div>}
+    />
+  );
+};
+```
+
+#### 3. 稳定的 key 函数
+
+```tsx
+// ✅ 使用稳定的唯一标识
+<VirtualList
+  data={data}
+  getKey={item => item.id} // 推荐
+  // getKey={item => `${item.type}-${item.id}`} // 复合 key
+/>
+```
+
+### 性能监控
+
+```tsx
+function PerformanceMonitoredList() {
+  const [renderTime, setRenderTime] = useState(0);
+
+  const handleRender = useCallback(() => {
+    const start = performance.now();
+
+    // 渲染完成后测量时间
+    requestAnimationFrame(() => {
+      setRenderTime(performance.now() - start);
+    });
+  }, []);
+
+  return (
+    <div>
+      <div>渲染时间: {renderTime.toFixed(2)}ms</div>
+      <VirtualList
+        data={data}
+        containerHeight={400}
+        renderItem={item => {
+          handleRender();
+          return <div>{item.title}</div>;
+        }}
+      />
+    </div>
+  );
+}
+```
+
+## 🎨 样式定制
+
+### CSS-in-JS 样式
+
+```tsx
+import styled from '@emotion/styled';
+
+const StyledVirtualList = styled(VirtualList)`
+  .virtual-list-container {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .virtual-list-item {
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+`;
+```
+
+### 主题支持
+
+```tsx
+import { ThemeProvider } from '@emotion/react';
+
+const theme = {
+  virtualList: {
+    backgroundColor: '#ffffff',
+    borderColor: '#e0e0e0',
+    hoverColor: '#f5f5f5',
+    scrollbarColor: '#c0c0c0',
+  },
+};
+
+function ThemedApp() {
+  return (
+    <ThemeProvider theme={theme}>
+      <VirtualList
+        data={data}
+        renderItem={item => (
+          <div
+            css={theme => ({
+              backgroundColor: theme.virtualList.backgroundColor,
+              '&:hover': {
+                backgroundColor: theme.virtualList.hoverColor,
+              },
+            })}
+          >
+            {item.title}
+          </div>
+        )}
+      />
+    </ThemeProvider>
+  );
+}
+```
+
       itemHeight={80} // 初始估计高度，组件会自动调整
       getKey={item => item.id}
       renderItem={(item, index) => (
@@ -113,9 +460,11 @@ function DynamicHeightList() {
         </div>
       )}
     />
-  );
+
+);
 }
-```
+
+````
 
 > **注意**: `itemHeight` 属性用作初始估计值。组件会在渲染时自动测量每个项目的实际高度，并更新内部高度缓存以确保准确的滚动计算。
 
@@ -219,7 +568,7 @@ function ComplexItemList() {
     />
   );
 }
-```
+````
 
 ### 搜索和筛选
 

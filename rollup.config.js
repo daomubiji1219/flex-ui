@@ -40,11 +40,17 @@ export default {
     },
     // 生成按需导入所需的原子化ESM产物（与源码目录结构一一对应）
     {
+      // 输出目录：指定原子化ESM产物的存放路径为dist/esm
       dir: 'dist/esm',
+      // 输出格式：采用ES模块格式（适用于现代浏览器和支持ES模块的构建工具）
       format: 'esm',
+      // 生成源映射文件：便于调试时将打包后的代码映射回原始源代码
       sourcemap: true,
+      // 保留模块结构：不将所有代码合并为单个文件，而是保持与源码相同的模块划分
       preserveModules: true,
+      // 模块根目录：指定保留模块结构时的根目录为src，确保输出目录结构与src保持一致
       preserveModulesRoot: 'src',
+      // 入口文件命名规则：生成的入口文件名称使用原始文件名，不添加哈希或其他后缀
       entryFileNames: '[name].js',
     },
   ],

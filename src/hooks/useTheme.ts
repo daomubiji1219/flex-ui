@@ -1,43 +1,27 @@
-// src/hooks/useTheme.ts - 面试重点展示
-import { createContext, useContext, useMemo } from 'react';
-import { designTokens } from '../theme/tokens';
+import { useContext } from 'react';
+import { ThemeContext } from '../providers/ThemeProvider';
+import type { Theme, ThemeMode } from '../theme/tokens';
 
-interface Theme {
-  tokens: typeof designTokens;
-  mode: 'light' | 'dark';
-  cssVars: Record<string, string>;
+// 重新导出ThemeProvider和相关类型
+export { ThemeProvider } from '../providers/ThemeProvider';
+export type { Theme, ThemeMode } from '../theme/tokens';
+
+// 定义ThemeContextValue类型（与ThemeProvider中的定义保持一致）
+export interface ThemeContextValue {
+  theme: Theme;
+  mode: ThemeMode;
+  toggleMode: () => void;
+  setMode: (mode: ThemeMode) => void;
 }
 
-// 创建ThemeContext
-const ThemeContext = createContext<Theme>({
-  tokens: designTokens,
-  mode: 'light',
-  cssVars: {},
-});
-
-export const useTheme = () => {
-  const theme = useContext(ThemeContext);
-
-  // 动态CSS变量生成 - 技术亮点
-  const cssVars = useMemo(() => {
-    const vars: Record<string, string> = {};
-
-    Object.entries(theme.tokens.colors.primary).forEach(
-      ([key, value]: [string, string]) => {
-        vars[`--color-primary-${key}`] = value;
-      }
-    );
-
-    theme.tokens.spacing.forEach((value: number, index: number) => {
-      vars[`--spacing-${index}`] = `${value}px`;
-    });
-
-    return vars;
-  }, [theme]);
-
-  return { ...theme, cssVars };
+// useTheme hook实现
+export const useTheme = (): ThemeContextValue => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
 };
 
-// 导出ThemeContext供Provider使用
-export { ThemeContext };
+// 默认导出useTheme
 export default useTheme;

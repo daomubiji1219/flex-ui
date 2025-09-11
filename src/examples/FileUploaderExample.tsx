@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FileUploader } from '../compoents/FileUploader/FileUploader';
+import { FileUploader } from '../components/FileUploader/FileUploader';
 
 interface UploadFile {
   uid: string;

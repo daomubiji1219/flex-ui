@@ -5,6 +5,7 @@ import { TableRow } from './TableRow';
 import { TableHeader } from './TableHeader';
 import { TableSkeleton } from './TableSkeleton';
 import { Pagination } from './Pagination';
+import { TableContainer } from './DataTable.styled';
 
 export interface Column<T> {
   key: keyof T;
@@ -12,6 +13,8 @@ export interface Column<T> {
   width?: number;
   sortable?: boolean;
   filterable?: boolean;
+  sortDirection?: 'asc' | 'desc';
+  filterValue?: unknown;
   render?: (value: unknown, record: T, index: number) => React.ReactNode;
 }
 
@@ -27,6 +30,7 @@ export interface DataTableProps<T> {
   onRowSelect?: (selectedRows: T[]) => void; //选中回调
   virtualScroll?: boolean;
   selectable?: boolean;
+  className?: string;
 }
 
 export const DataTable = <T extends Record<string, unknown>>({
@@ -38,6 +42,7 @@ export const DataTable = <T extends Record<string, unknown>>({
   onRowSelect,
   virtualScroll = false,
   selectable = false,
+  className,
 }: DataTableProps<T>) => {
   // 状态管理 - 简化实现
   //记录排序规则，存储{key: keyof T, direction: 'asc' | 'desc'}类型的数组
@@ -143,13 +148,13 @@ export const DataTable = <T extends Record<string, unknown>>({
           renderItem={(row: T, index?: number) => (
             <TableRow
               key={String(row[rowKey])}
-              data={row}
+              record={row}
               selectable={selectable}
               columns={processedColumns}
               index={index ?? 0}
               selected={selectedRows.includes(row)}
-              onSelect={(selected: boolean) =>
-                actions.toggleRowSelection(row, selected)
+              onSelect={(record: T, selected: boolean) =>
+                actions.toggleRowSelection(record, selected)
               }
             />
           )}
@@ -162,13 +167,13 @@ export const DataTable = <T extends Record<string, unknown>>({
         {paginatedData.map((row: T, index: number) => (
           <TableRow
             key={String(row[rowKey])}
-            data={row}
+            record={row}
             selectable={selectable}
             columns={processedColumns}
             index={index}
-            // selected={selectedRows.includes(row)}
-            onSelect={(selected: boolean) =>
-              actions.toggleRowSelection(row, selected)
+            selected={selectedRows.includes(row)}
+            onSelect={(record: T, selected: boolean) =>
+              actions.toggleRowSelection(record, selected)
             }
           />
         ))}
@@ -185,7 +190,10 @@ export const DataTable = <T extends Record<string, unknown>>({
   ]);
 
   return (
-    <div className="data-table" data-testid="data-table">
+    <TableContainer
+      className={`data-table ${className || ''}`}
+      data-testid="data-table"
+    >
       {/* 表头 */}
       <TableHeader
         columns={processedColumns}
@@ -205,7 +213,7 @@ export const DataTable = <T extends Record<string, unknown>>({
           onChange={actions.changePage}
         />
       )}
-    </div>
+    </TableContainer>
   );
 };
 

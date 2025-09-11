@@ -16,20 +16,20 @@
       "require": "./dist/index.cjs.js"
     },
     "./Button": {
-      "types": "./dist/types/compoents/Button/Button.d.ts",
-      "import": "./dist/esm/compoents/Button/Button.js"
+      "types": "./dist/types/components/Button/Button.d.ts",
+      "import": "./dist/esm/components/Button/Button.js"
     },
     "./DataTable": {
-      "types": "./dist/types/compoents/DataTable/DataTable.d.ts",
-      "import": "./dist/esm/compoents/DataTable/DataTable.js"
+      "types": "./dist/types/components/DataTable/DataTable.d.ts",
+      "import": "./dist/esm/components/DataTable/DataTable.js"
     },
     "./FileUploader": {
-      "types": "./dist/types/compoents/FileUploader/FileUploader.d.ts",
-      "import": "./dist/esm/compoents/FileUploader/FileUploader.js"
+      "types": "./dist/types/components/FileUploader/FileUploader.d.ts",
+      "import": "./dist/esm/components/FileUploader/FileUploader.js"
     },
     "./VirtualList": {
-      "types": "./dist/types/compoents/VirtualList/VirtualList.d.ts",
-      "import": "./dist/esm/compoents/VirtualList/VirtualList.js"
+      "types": "./dist/types/components/VirtualList/VirtualList.d.ts",
+      "import": "./dist/esm/components/VirtualList/VirtualList.js"
     },
     "./hooks/useLocalStorage": {
       "types": "./dist/types/hooks/useLocalStorage.d.ts",

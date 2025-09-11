@@ -1,5 +1,6 @@
 import React from 'react';
-import { FileUploader } from '../compoents/FileUploader/t';
+import { FileUploader } from '../components/FileUploader/FileUploader';
+import { Button } from '../components/Button/Button';
 
 interface UploadFile {
   uid: string;
@@ -64,6 +65,42 @@ const FileUploaderTExample: React.FC = () => {
       <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">
         增强版文件上传组件示例
       </h1>
+
+      {/* Button组件测试区域 */}
+      <div className="mb-10 p-6 border border-gray-200 rounded-lg bg-white shadow-sm">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          Button组件测试
+        </h2>
+        <div className="space-y-4">
+          <div className="flex gap-4 flex-wrap">
+            <Button variant="primary" onClick={() => alert('Primary clicked!')}>
+              Primary
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => alert('Secondary clicked!')}
+            >
+              Secondary
+            </Button>
+            <Button variant="outline" onClick={() => alert('Outline clicked!')}>
+              Outline
+            </Button>
+            <Button variant="ghost" onClick={() => alert('Ghost clicked!')}>
+              Ghost
+            </Button>
+          </div>
+          <div className="flex gap-4 flex-wrap">
+            <Button size="sm">Small</Button>
+            <Button size="md">Medium</Button>
+            <Button size="lg">Large</Button>
+          </div>
+          <div className="flex gap-4 flex-wrap">
+            <Button loading>Loading</Button>
+            <Button disabled>Disabled</Button>
+            <Button icon={<span>🚀</span>}>With Icon</Button>
+          </div>
+        </div>
+      </div>
 
       <div className="mb-10 p-6 border border-gray-200 rounded-lg bg-white shadow-sm">
         <h2 className="text-xl font-semibold text-gray-800 mb-2">

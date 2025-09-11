@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { VirtualList } from '../VirtualList';
 import type { VirtualListProps } from '../VirtualList';
+import { ThemeProvider } from '../../../providers/ThemeProvider';
 
 // Mock lodash-es throttle
 vi.mock('lodash-es', () => ({
@@ -28,6 +29,11 @@ const renderTestItem = (item: TestItem) => (
   </div>
 );
 
+// 测试渲染辅助函数
+const renderWithTheme = (ui: React.ReactElement) => {
+  return render(<ThemeProvider defaultMode="light">{ui}</ThemeProvider>);
+};
+
 describe('VirtualList Component', () => {
   const mockData = generateTestData(100);
 
@@ -38,13 +44,13 @@ describe('VirtualList Component', () => {
 
   describe('Rendering', () => {
     it('should render virtual list container', () => {
-      render(<VirtualList {...defaultProps} />);
+      renderWithTheme(<VirtualList {...defaultProps} />);
       const container = screen.getByTestId('virtual-list');
       expect(container).toBeInTheDocument();
     });
 
     it('should render visible items only', () => {
-      render(
+      renderWithTheme(
         <VirtualList {...defaultProps} itemHeight={50} containerHeight={200} />
       );
 
@@ -55,7 +61,7 @@ describe('VirtualList Component', () => {
     });
 
     it('should render first few items initially', () => {
-      render(<VirtualList {...defaultProps} />);
+      renderWithTheme(<VirtualList {...defaultProps} />);
 
       expect(screen.getByTestId('item-1')).toBeInTheDocument();
       expect(screen.getByTestId('item-2')).toBeInTheDocument();
@@ -65,14 +71,14 @@ describe('VirtualList Component', () => {
 
   describe('Configuration', () => {
     it('should use custom container height', () => {
-      render(<VirtualList {...defaultProps} containerHeight={500} />);
+      renderWithTheme(<VirtualList {...defaultProps} containerHeight={500} />);
 
       const container = screen.getByTestId('virtual-list');
       expect(container).toHaveStyle({ height: '500px' });
     });
 
     it('should handle empty data array', () => {
-      render(<VirtualList data={[]} renderItem={renderTestItem} />);
+      renderWithTheme(<VirtualList data={[]} renderItem={renderTestItem} />);
 
       const container = screen.getByTestId('virtual-list');
       expect(container).toBeInTheDocument();
@@ -83,7 +89,9 @@ describe('VirtualList Component', () => {
         <div data-testid={`custom-item-${item.id}`}>Custom: {item.name}</div>
       );
 
-      render(<VirtualList {...defaultProps} renderItem={customRender} />);
+      renderWithTheme(
+        <VirtualList {...defaultProps} renderItem={customRender} />
+      );
 
       expect(screen.getByTestId('custom-item-1')).toBeInTheDocument();
     });

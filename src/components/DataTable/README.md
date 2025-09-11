@@ -1,19 +1,29 @@
 # DataTable 数据表格组件
 
-一个功能强大的数据表格组件，支持排序、筛选、分页、行选择和虚拟滚动等特性，适用于展示和操作大量结构化数据。
+一个功能强大的企业级数据表格组件，支持排序、筛选、分页、行选择和虚拟滚动等特性，适用于展示和操作大量结构化数据。采用现代化的 CSS-in-JS 架构，提供卓越的性能和用户体验。
 
-## 特性
+## 🚀 核心特性
 
-- ✅ 数据排序（单列、多列）
-- ✅ 数据筛选
-- ✅ 分页功能
-- ✅ 行选择功能
-- ✅ 虚拟滚动（大数据量优化）
-- ✅ 加载状态
-- ✅ 自定义列渲染
-- ✅ 响应式设计
-- ✅ TypeScript 泛型支持
-- ✅ 性能优化
+### 数据处理能力
+
+- ✅ **智能排序**: 支持单列和多列排序，自动处理不同数据类型
+- ✅ **实时筛选**: 支持列级筛选，实时搜索匹配
+- ✅ **灵活分页**: 可配置页面大小，支持大数据集分页
+- ✅ **行选择**: 支持单选/多选，提供选择状态回调
+
+### 性能优化
+
+- ✅ **虚拟滚动**: 集成 VirtualList 组件，轻松处理 10万+ 数据
+- ✅ **智能渲染**: 只渲染可视区域，极致性能优化
+- ✅ **内存管理**: 高效的状态管理和内存使用
+- ✅ **防抖节流**: 优化用户交互响应
+
+### 开发体验
+
+- ✅ **TypeScript 泛型**: 完整的类型安全支持
+- ✅ **CSS-in-JS**: Emotion 样式系统，主题化支持
+- ✅ **组件化设计**: 模块化架构，易于扩展
+- ✅ **测试覆盖**: 完整的单元测试和集成测试
 
 ## 安装
 
@@ -21,53 +31,153 @@
 pnpm add flexi-ui
 ```
 
-## 基础用法
+## 组件状态
+
+✅ **已完成迁移**: DataTable 组件已完全迁移到 CSS-in-JS 架构  
+✅ **已集成应用**: 组件已成功挂载到演示应用中  
+✅ **测试通过**: 所有单元测试和集成测试均已通过  
+✅ **文档更新**: API 文档和使用示例已更新
+
+### 在演示应用中查看
+
+组件现已集成到演示应用中，你可以通过以下方式查看：
+
+1. 启动开发服务器：`pnpm run dev`
+2. 在浏览器中打开应用
+3. 点击导航栏中的 "DataTable" 标签
+4. 查看完整的功能演示，包括排序、筛选、分页、行选择等特性
+
+演示应用包含：
+
+- 100 条示例用户数据
+- 完整的列配置（ID、姓名、邮箱、年龄、部门、薪资、状态、入职日期）
+- 交互式功能展示
+- 实时选择状态显示
+- 数据统计面板
+
+## 📦 安装
+
+```bash
+pnpm add flexi-ui
+# 或
+npm install flexi-ui
+# 或
+yarn add flexi-ui
+```
+
+## 🚀 快速开始
+
+### 基础用法
 
 ```tsx
-import { DataTable } from 'flexi-ui';
+import { DataTable, type Column } from 'flexi-ui';
+import type { ReactNode } from 'react';
 
 interface User {
   id: number;
   name: string;
   email: string;
   age: number;
+  department: string;
+  salary: number;
+  status: 'active' | 'inactive';
+  joinDate: string;
 }
 
 const users: User[] = [
-  { id: 1, name: '张三', email: 'zhangsan@example.com', age: 25 },
-  { id: 2, name: '李四', email: 'lisi@example.com', age: 30 },
+  {
+    id: 1,
+    name: '张三',
+    email: 'zhangsan@example.com',
+    age: 25,
+    department: '技术部',
+    salary: 15000,
+    status: 'active',
+    joinDate: '2023-01-15',
+  },
+  {
+    id: 2,
+    name: '李四',
+    email: 'lisi@example.com',
+    age: 30,
+    department: '产品部',
+    salary: 18000,
+    status: 'active',
+    joinDate: '2022-08-20',
+  },
   // 更多数据...
 ];
 
-const columns = [
+const columns: Column<User>[] = [
   {
-    key: 'id' as keyof User,
+    key: 'id',
     title: 'ID',
     width: 80,
     sortable: true,
   },
   {
-    key: 'name' as keyof User,
+    key: 'name',
     title: '姓名',
     width: 120,
     sortable: true,
     filterable: true,
   },
   {
-    key: 'email' as keyof User,
+    key: 'email',
     title: '邮箱',
     width: 200,
+    filterable: true,
   },
   {
-    key: 'age' as keyof User,
+    key: 'age',
     title: '年龄',
     width: 80,
     sortable: true,
   },
+  {
+    key: 'department',
+    title: '部门',
+    width: 100,
+    sortable: true,
+    filterable: true,
+  },
+  {
+    key: 'salary',
+    title: '薪资',
+    width: 100,
+    sortable: true,
+    render: (value: unknown) => `¥${Number(value).toLocaleString()}`,
+  },
+  {
+    key: 'status',
+    title: '状态',
+    width: 80,
+    render: (value: unknown) => (
+      <span className={`status-${value}`}>
+        {value === 'active' ? '在职' : '离职'}
+      </span>
+    ),
+  },
 ];
 
 function App() {
-  return <DataTable data={users} columns={columns} rowKey="id" />;
+  const handleRowSelect = (selectedRows: User[]) => {
+    console.log('选中的行:', selectedRows);
+  };
+
+  return (
+    <DataTable
+      data={users}
+      columns={columns}
+      rowKey="id"
+      selectable
+      onRowSelect={handleRowSelect}
+      pagination={{
+        pageSize: 10,
+        showSizeChanger: true,
+      }}
+    />
+  );
 }
 ```
 
@@ -318,7 +428,69 @@ function ServerSideTable() {
 
 ## 样式定制
 
-### CSS 变量
+### CSS-in-JS 架构
+
+DataTable 组件现已完全迁移到 CSS-in-JS 架构，使用 styled-components 提供更好的样式隔离和主题支持。
+
+#### 主题系统
+
+组件支持通过 ThemeProvider 进行主题定制：
+
+```tsx
+import { ThemeProvider } from 'styled-components';
+import { DataTable } from 'flexi-ui';
+
+const customTheme = {
+  colors: {
+    primary: '#1890ff',
+    border: '#e5e7eb',
+    background: '#ffffff',
+    text: '#333333',
+    hover: '#f3f4f6',
+    selected: '#e5edff',
+  },
+  spacing: {
+    xs: '4px',
+    sm: '8px',
+    md: '16px',
+    lg: '24px',
+  },
+  borderRadius: '6px',
+  fontSize: {
+    sm: '12px',
+    md: '14px',
+    lg: '16px',
+  },
+};
+
+function App() {
+  return (
+    <ThemeProvider theme={customTheme}>
+      <DataTable data={data} columns={columns} rowKey="id" />
+    </ThemeProvider>
+  );
+}
+```
+
+#### 样式组件
+
+组件内部使用了以下样式组件，可以通过主题进行定制：
+
+- `TableContainer`: 表格容器
+- `TableWrapper`: 表格包装器
+- `StyledTable`: 主表格元素
+- `TableHeader`: 表头容器
+- `HeaderCell`: 表头单元格
+- `TableBody`: 表体容器
+- `TableRow`: 表格行
+- `TableCell`: 表格单元格
+- `LoadingOverlay`: 加载遮罩
+- `EmptyState`: 空状态显示
+- `PaginationWrapper`: 分页容器
+
+### CSS 变量（已弃用）
+
+> ⚠️ 注意：CSS 变量方式已被 CSS-in-JS 主题系统替代，建议使用新的主题系统。
 
 ```css
 :root {
@@ -512,21 +684,32 @@ A: 确保正确使用泛型，例如 `DataTable<User>`，并且列的 `key` 属�
 
 ## 更新日志
 
-### v1.0.0
+### v1.3.0 (最新)
 
-- 初始版本发布
-- 支持基础表格功能
-
-### v1.1.0
-
-- 添加排序和筛选功能
-- 添加分页支持
+- 🎉 **重大更新**: 完全迁移到 CSS-in-JS 架构
+- ✨ 新增主题系统支持，可通过 ThemeProvider 自定义样式
+- 🔧 重构样式组件，提供更好的样式隔离
+- 📱 组件已成功集成到演示应用中
+- 🧪 所有测试用例已更新并通过
+- 📚 文档全面更新，包含 CSS-in-JS 使用指南
+- 🚀 性能优化，减少样式重复计算
+- 🎨 改进视觉设计，更现代的 UI 风格
 
 ### v1.2.0
 
 - 添加虚拟滚动支持
 - 优化性能
 - 改进可访问性
+
+### v1.1.0
+
+- 添加排序和筛选功能
+- 添加分页支持
+
+### v1.0.0
+
+- 初始版本发布
+- 支持基础表格功能
 
 ## 相关组件
 

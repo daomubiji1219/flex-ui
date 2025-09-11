@@ -1,6 +1,6 @@
 # Button 按钮组件
 
-一个功能丰富、高度可定制的 React 按钮组件，支持多种样式变体、尺寸和状态。
+一个功能丰富、高度可定制的 React 按钮组件，基于 CSS-in-JS 技术构建，支持多种样式变体、尺寸和状态。
 
 ## 特性
 
@@ -12,8 +12,11 @@
 - ✅ 全宽度显示
 - ✅ TypeScript 完整类型支持
 - ✅ forwardRef 支持
-- ✅ 主题系统集成
+- ✅ CSS-in-JS 样式系统（基于 @emotion）
+- ✅ 完整的主题系统集成
 - ✅ 动画过渡效果
+- ✅ 运行时样式优化
+- ✅ 类型安全的样式属性
 
 ## 安装
 
@@ -23,6 +26,8 @@ pnpm add flexi-ui
 
 ## 基础用法
 
+### 简单使用
+
 ```tsx
 import { Button } from 'flexi-ui';
 
@@ -30,6 +35,24 @@ function App() {
   return <Button onClick={() => alert('Hello!')}>点击我</Button>;
 }
 ```
+
+### 配合主题系统使用
+
+```tsx
+import { Button, ThemeProvider } from 'flexi-ui';
+
+function App() {
+  return (
+    <ThemeProvider defaultMode="light">
+      <Button onClick={() => alert('Hello!')}>点击我</Button>
+    </ThemeProvider>
+  );
+}
+```
+
+> **注意**: Button 组件需要在 `ThemeProvider` 内部使用以获得完整的主题支持。如果未使用 `ThemeProvider`，组件将抛出错误。
+
+````
 
 ## API
 
@@ -55,7 +78,7 @@ function App() {
 const buttonRef = useRef<HTMLButtonElement>(null);
 
 <Button ref={buttonRef}>按钮</Button>;
-```
+````
 
 ## 样式变体
 
@@ -189,18 +212,61 @@ function FormButton() {
 
 ## 样式定制
 
-### CSS 变量
+### 主题系统定制
 
-```css
-:root {
-  --button-primary-bg: #1890ff;
-  --button-primary-hover: #40a9ff;
-  --button-border-radius: 6px;
-  --button-transition: all 0.2s ease-in-out;
+Button 组件基于 CSS-in-JS 技术构建，完全集成了主题系统。你可以通过修改主题令牌来定制按钮样式：
+
+```tsx
+import { ThemeProvider } from 'flexi-ui';
+import type { Theme } from 'flexi-ui';
+
+// 自定义主题
+const customTheme: Partial<Theme> = {
+  tokens: {
+    colors: {
+      primary: {
+        50: '#eff6ff',
+        500: '#3b82f6', // 自定义主色调
+        900: '#1e3a8a',
+      },
+    },
+    borderRadius: {
+      md: '8px', // 自定义圆角
+    },
+  },
+};
+
+function App() {
+  return (
+    <ThemeProvider theme={customTheme}>
+      <Button variant="primary">自定义主题按钮</Button>
+    </ThemeProvider>
+  );
 }
 ```
 
-### 自定义样式
+### 运行时样式定制
+
+```tsx
+// 使用 css prop（需要 @emotion/react）
+import { css } from '@emotion/react';
+
+<Button
+  css={css`
+    background: linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%);
+    border: 0;
+    border-radius: 3px;
+    box-shadow: 0 3px 5px 2px rgba(255, 105, 135, 0.3);
+    color: white;
+    height: 48px;
+    padding: 0 30px;
+  `}
+>
+  渐变按钮
+</Button>;
+```
+
+### 传统样式覆盖
 
 ```tsx
 <Button
@@ -211,6 +277,30 @@ function FormButton() {
 >
   自定义颜色
 </Button>
+```
+
+### 主题模式切换
+
+```tsx
+import { ThemeProvider, useTheme } from 'flexi-ui';
+
+function ThemeToggle() {
+  const { mode, toggleMode } = useTheme();
+
+  return (
+    <Button onClick={toggleMode}>
+      切换到 {mode === 'light' ? '暗色' : '亮色'} 模式
+    </Button>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider defaultMode="light">
+      <ThemeToggle />
+    </ThemeProvider>
+  );
+}
 ```
 
 ## 可访问性
@@ -324,12 +414,67 @@ A: 确保使用的 props 类型正确，参考 `ButtonProps` 接口定义。
 </Button>
 ```
 
+## CSS-in-JS 技术说明
+
+### 技术架构
+
+Button 组件采用 `@emotion/styled` 构建，具有以下技术特点：
+
+- **运行时样式生成**: 根据 props 动态生成样式
+- **主题感知**: 自动响应主题变化
+- **类型安全**: 完整的 TypeScript 类型支持
+- **性能优化**: 样式缓存和最小化重渲染
+- **零运行时**: 构建时优化，减少运行时开销
+
+### 样式组织
+
+```typescript
+// Button.styled.ts - 样式组件定义
+import styled from '@emotion/styled';
+import type { Theme } from '../../theme/tokens';
+
+interface StyledButtonProps {
+  variant: 'primary' | 'secondary' | 'outline' | 'ghost';
+  size: 'sm' | 'md' | 'lg';
+  fullWidth?: boolean;
+  loading?: boolean;
+}
+
+export const StyledButton = styled.button<StyledButtonProps>`
+  /* 基础样式 */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* 动态样式 */
+  ${({ theme, variant }) => getVariantStyles(theme, variant)}
+  ${({ theme, size }) => getSizeStyles(theme, size)}
+  ${({ fullWidth }) => fullWidth && 'width: 100%;'}
+`;
+```
+
+### 最佳实践
+
+1. **主题优先**: 优先使用主题令牌而非硬编码值
+2. **性能考虑**: 避免在渲染函数中创建样式对象
+3. **类型安全**: 充分利用 TypeScript 类型检查
+4. **可维护性**: 将复杂样式逻辑提取到独立函数
+
 ## 更新日志
 
-### v1.0.0
+### v2.0.0
 
-- 初始版本发布
-- 支持基础功能和样式变体
+- 🎉 **重大更新**: 迁移到 CSS-in-JS 架构
+- ✨ 完整的主题系统支持
+- ⚡ 性能优化和运行时样式缓存
+- 🔧 改进的 TypeScript 类型定义
+- 🎨 更灵活的样式定制能力
+
+### v1.2.0
+
+- 添加全宽度支持
+- 优化性能
+- 修复样式问题
 
 ### v1.1.0
 
@@ -337,11 +482,10 @@ A: 确保使用的 props 类型正确，参考 `ButtonProps` 接口定义。
 - 优化加载状态动画
 - 改进可访问性
 
-### v1.2.0
+### v1.0.0
 
-- 添加全宽度支持
-- 优化性能
-- 修复样式问题
+- 初始版本发布
+- 支持基础功能和样式变体
 
 ## 相关组件
 

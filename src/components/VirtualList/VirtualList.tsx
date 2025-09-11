@@ -1,6 +1,13 @@
 import { useState, useRef, useMemo, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import { throttle } from 'lodash-es';
+import {
+  VirtualListContainer,
+  VirtualListContent,
+  VisibleArea,
+  VirtualListItem,
+  ItemContent,
+} from './VirtualList.styled';
 
 // 定义组件属性接口
 interface VirtualListProps<T> {
@@ -79,24 +86,18 @@ export const VirtualList = <T,>({
   }, 50);
 
   return (
-    <div
+    <VirtualListContainer
       ref={containerRef}
-      className="overflow-y-auto bg-gray-50"
-      style={{ height: `${containerHeight}px` }}
+      containerHeight={containerHeight}
       onScroll={handleScroll}
       data-testid="virtual-list"
     >
-      <div className="relative" style={{ height: `${totalHeight}px` }}>
-        <div
-          className="absolute w-full"
-          style={{
-            transform: `translateY(${offsetTop}px)`,
-          }}
-        >
+      <VirtualListContent totalHeight={totalHeight}>
+        <VisibleArea offsetTop={offsetTop}>
           {data.slice(startIndex, endIndex).map((item, i) => {
             const index = startIndex + i;
             return (
-              <div
+              <VirtualListItem
                 key={getKey?.(item) ?? index}
                 ref={ref => {
                   if (ref) {
@@ -106,15 +107,14 @@ export const VirtualList = <T,>({
                     }
                   }
                 }}
-                className="border-b p-4 text-center bg-white hover:bg-blue-50 transition-colors"
               >
                 {renderItem(item, index)}
-              </div>
+              </VirtualListItem>
             );
           })}
-        </div>
-      </div>
-    </div>
+        </VisibleArea>
+      </VirtualListContent>
+    </VirtualListContainer>
   );
 };
 
@@ -139,10 +139,10 @@ export const Demo = () => {
       containerHeight={400}
       itemHeight={70}
       renderItem={item => (
-        <div key={item.id}>
+        <ItemContent key={item.id}>
           <h3>{item.name}</h3>
           <p>{item.description}</p>
-        </div>
+        </ItemContent>
       )}
     />
   );
