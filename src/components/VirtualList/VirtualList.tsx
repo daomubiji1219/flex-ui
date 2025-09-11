@@ -42,6 +42,11 @@ export const VirtualList = <T,>({
   const [startIndex, endIndex, totalHeight] = useMemo<
     [number, number, number]
   >(() => {
+    // 防护性检查：确保data存在且为数组
+    if (!data || !Array.isArray(data) || data.length === 0) {
+      return [0, 0, 0];
+    }
+
     let total = 0;
     let start = 0;
     let end = data.length;
@@ -94,24 +99,26 @@ export const VirtualList = <T,>({
     >
       <VirtualListContent totalHeight={totalHeight}>
         <VisibleArea offsetTop={offsetTop}>
-          {data.slice(startIndex, endIndex).map((item, i) => {
-            const index = startIndex + i;
-            return (
-              <VirtualListItem
-                key={getKey?.(item) ?? index}
-                ref={ref => {
-                  if (ref) {
-                    const h = ref.offsetHeight;
-                    if (h && itemHeights[index] !== h) {
-                      updateHeight(index, h);
-                    }
-                  }
-                }}
-              >
-                {renderItem(item, index)}
-              </VirtualListItem>
-            );
-          })}
+          {data && Array.isArray(data)
+            ? data.slice(startIndex, endIndex).map((item, i) => {
+                const index = startIndex + i;
+                return (
+                  <VirtualListItem
+                    key={getKey?.(item) ?? index}
+                    ref={ref => {
+                      if (ref) {
+                        const h = ref.offsetHeight;
+                        if (h && itemHeights[index] !== h) {
+                          updateHeight(index, h);
+                        }
+                      }
+                    }}
+                  >
+                    {renderItem(item, index)}
+                  </VirtualListItem>
+                );
+              })
+            : null}
         </VisibleArea>
       </VirtualListContent>
     </VirtualListContainer>

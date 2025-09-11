@@ -8,13 +8,13 @@
 
 ```bash
 # 使用 npm
-npm install daomu-flexi-ui
+npm install @daomu/flexi-ui
 
 # 使用 pnpm
-pnpm add daomu-flexi-ui
+pnpm add @daomu/flexi-ui
 
 # 使用 yarn
-yarn add daomu-flexi-ui
+yarn add @daomu/flexi-ui
 ```
 
 ### 安装依赖
