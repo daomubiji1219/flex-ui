@@ -537,7 +537,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
   };
 
   return (
-    <div className={`${themeClass} ${className}`}>
+    <div className={`${themeClass} ${className}`} data-testid="file-uploader">
       <div className="w-full max-w-2xl mx-auto font-sans">
         {/* 拖拽区域 */}
         <div
@@ -554,6 +554,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
+          data-testid="drop-zone"
         >
           {isDragging && (
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent animate-pulse" />
@@ -573,6 +574,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
             multiple={multiple}
             accept={accept}
             className="hidden"
+            data-testid="file-input"
             onChange={e => {
               if (e.target.files) {
                 addFiles(e.target.files);

@@ -5,7 +5,7 @@ export const TableSkeleton: React.FC = () => {
   const skeletonRows = Array.from({ length: 5 }, (_, index) => index);
 
   return (
-    <div className="table-skeleton">
+    <div className="table-skeleton" data-testid="table-skeleton">
       {skeletonRows.map(index => (
         <div
           key={index}

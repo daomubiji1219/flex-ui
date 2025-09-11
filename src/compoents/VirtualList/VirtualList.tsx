@@ -84,6 +84,7 @@ export const VirtualList = <T,>({
       className="overflow-y-auto bg-gray-50"
       style={{ height: `${containerHeight}px` }}
       onScroll={handleScroll}
+      data-testid="virtual-list"
     >
       <div className="relative" style={{ height: `${totalHeight}px` }}>
         <div

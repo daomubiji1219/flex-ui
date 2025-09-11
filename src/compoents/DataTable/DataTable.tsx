@@ -185,7 +185,7 @@ export const DataTable = <T extends Record<string, unknown>>({
   ]);
 
   return (
-    <div className="data-table">
+    <div className="data-table" data-testid="data-table">
       {/* 表头 */}
       <TableHeader
         columns={processedColumns}

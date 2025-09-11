@@ -72,6 +72,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <div
+      data-testid="pagination"
       style={{
         display: 'flex',
         alignItems: 'center',
