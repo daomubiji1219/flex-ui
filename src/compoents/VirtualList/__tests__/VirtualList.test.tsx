@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { VirtualList } from '../VirtualList';
 import type { VirtualListProps } from '../VirtualList';
@@ -22,7 +22,7 @@ const generateTestData = (count: number): TestItem[] => {
   }));
 };
 
-const renderTestItem = (item: TestItem, index?: number) => (
+const renderTestItem = (item: TestItem) => (
   <div data-testid={`item-${item.id}`} key={item.id}>
     {item.name}: {item.value}
   </div>
@@ -93,9 +93,10 @@ describe('VirtualList Component', () => {
     });
 
     it('should use custom render function', () => {
-      const customRender = (item: TestItem, index?: number) => (
+      const customRender = (item: TestItem) => (
         <div data-testid={`custom-item-${item.id}`}>
-          Custom: {item.name}
+Custom: {item.name}
+
         </div>
       );
       
