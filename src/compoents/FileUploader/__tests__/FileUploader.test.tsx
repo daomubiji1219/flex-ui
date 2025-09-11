@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { FileUploader } from '../FileUploader';
 import type { FileUploaderProps } from '../FileUploader';
@@ -9,9 +9,13 @@ global.fetch = vi.fn();
 // Mock FileReader
 class MockFileReader {
   result: string | ArrayBuffer | null = null;
-  onload: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null;
-  onerror: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null;
-  
+  onload:
+    | ((this: FileReader, ev: ProgressEvent<FileReader>) => unknown)
+    | null = null;
+  onerror:
+    | ((this: FileReader, ev: ProgressEvent<FileReader>) => unknown)
+    | null = null;
+
   readAsArrayBuffer() {
     setTimeout(() => {
       this.result = new ArrayBuffer(8);
@@ -38,10 +42,10 @@ describe('FileUploader Component', () => {
     action: '/upload',
   };
 
-  const mockFile = new File(['test content'], 'test.txt', {
-    type: 'text/plain',
-    lastModified: Date.now(),
-  });
+  // const mockFile = new File(['test content'], 'test.txt', {
+  //   type: 'text/plain',
+  //   lastModified: Date.now(),
+  // });
 
   beforeEach(() => {
     vi.clearAllMocks();

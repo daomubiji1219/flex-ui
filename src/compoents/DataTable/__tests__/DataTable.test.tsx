@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { DataTable } from '../DataTable';
 import type { DataTableProps, Column } from '../DataTable';
@@ -7,7 +7,7 @@ import type { DataTableProps, Column } from '../DataTable';
 vi.mock('../../VirtualList/VirtualList', () => ({
   VirtualList: ({ data, renderItem }: any) => (
     <div data-testid="virtual-list">
-      {data.map((item: any, index: number) => (
+      {data.map((item: unknown, index: number) => (
         <div key={index}>{renderItem(item, index)}</div>
       ))}
     </div>
@@ -98,13 +98,9 @@ describe('DataTable Component', () => {
     it('should render selectable table when selectable is true', () => {
       const onRowSelect = vi.fn();
       render(
-        <DataTable
-          {...defaultProps}
-          selectable
-          onRowSelect={onRowSelect}
-        />
+        <DataTable {...defaultProps} selectable onRowSelect={onRowSelect} />
       );
-      
+
       expect(screen.getByTestId('data-table')).toBeInTheDocument();
     });
   });

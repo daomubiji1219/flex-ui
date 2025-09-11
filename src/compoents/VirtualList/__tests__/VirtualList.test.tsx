@@ -30,7 +30,7 @@ const renderTestItem = (item: TestItem) => (
 
 describe('VirtualList Component', () => {
   const mockData = generateTestData(100);
-  
+
   const defaultProps: VirtualListProps<TestItem> = {
     data: mockData,
     renderItem: renderTestItem,
@@ -45,13 +45,9 @@ describe('VirtualList Component', () => {
 
     it('should render visible items only', () => {
       render(
-        <VirtualList
-          {...defaultProps}
-          itemHeight={50}
-          containerHeight={200}
-        />
+        <VirtualList {...defaultProps} itemHeight={50} containerHeight={200} />
       );
-      
+
       // With 200px container height and 50px item height, should show ~4 items + overscan
       const visibleItems = screen.getAllByTestId(/^item-/);
       expect(visibleItems.length).toBeLessThan(mockData.length);
@@ -60,7 +56,7 @@ describe('VirtualList Component', () => {
 
     it('should render first few items initially', () => {
       render(<VirtualList {...defaultProps} />);
-      
+
       expect(screen.getByTestId('item-1')).toBeInTheDocument();
       expect(screen.getByTestId('item-2')).toBeInTheDocument();
       expect(screen.getByTestId('item-3')).toBeInTheDocument();
@@ -69,44 +65,26 @@ describe('VirtualList Component', () => {
 
   describe('Configuration', () => {
     it('should use custom container height', () => {
-      render(
-        <VirtualList
-          {...defaultProps}
-          containerHeight={500}
-        />
-      );
-      
+      render(<VirtualList {...defaultProps} containerHeight={500} />);
+
       const container = screen.getByTestId('virtual-list');
       expect(container).toHaveStyle({ height: '500px' });
     });
 
     it('should handle empty data array', () => {
-      render(
-        <VirtualList
-          data={[]}
-          renderItem={renderTestItem}
-        />
-      );
-      
+      render(<VirtualList data={[]} renderItem={renderTestItem} />);
+
       const container = screen.getByTestId('virtual-list');
       expect(container).toBeInTheDocument();
     });
 
     it('should use custom render function', () => {
       const customRender = (item: TestItem) => (
-        <div data-testid={`custom-item-${item.id}`}>
-Custom: {item.name}
+        <div data-testid={`custom-item-${item.id}`}>Custom: {item.name}</div>
+      );
 
-        </div>
-      );
-      
-      render(
-        <VirtualList
-          {...defaultProps}
-          renderItem={customRender}
-        />
-      );
-      
+      render(<VirtualList {...defaultProps} renderItem={customRender} />);
+
       expect(screen.getByTestId('custom-item-1')).toBeInTheDocument();
     });
   });

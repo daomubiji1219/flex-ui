@@ -5,15 +5,57 @@
   "type": "module",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/types/index.d.ts",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js"
+    },
+    "./Button": {
+      "types": "./dist/types/compoents/Button/Button.d.ts",
+      "import": "./dist/esm/compoents/Button/Button.js"
+    },
+    "./DataTable": {
+      "types": "./dist/types/compoents/DataTable/DataTable.d.ts",
+      "import": "./dist/esm/compoents/DataTable/DataTable.js"
+    },
+    "./FileUploader": {
+      "types": "./dist/types/compoents/FileUploader/FileUploader.d.ts",
+      "import": "./dist/esm/compoents/FileUploader/FileUploader.js"
+    },
+    "./VirtualList": {
+      "types": "./dist/types/compoents/VirtualList/VirtualList.d.ts",
+      "import": "./dist/esm/compoents/VirtualList/VirtualList.js"
+    },
+    "./hooks/useLocalStorage": {
+      "types": "./dist/types/hooks/useLocalStorage.d.ts",
+      "import": "./dist/esm/hooks/useLocalStorage.js"
+    },
+    "./hooks/useTheme": {
+      "types": "./dist/types/hooks/useTheme.d.ts",
+      "import": "./dist/esm/hooks/useTheme.js"
+    },
+    "./hooks/useForm": {
+      "types": "./dist/types/hooks/form/useFormRefactored.d.ts",
+      "import": "./dist/esm/hooks/form/useFormRefactored.js"
+    },
+    "./theme/tokens": {
+      "types": "./dist/types/theme/tokens.d.ts",
+      "import": "./dist/esm/theme/tokens.js"
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "build:lib": "rollup -c",
-    "build:types": "tsc --emitDeclarationOnly --outDir dist/types",
+    "build:lib": "rollup -c && pnpm run build:types",
+    "build:types": "tsc -p tsconfig.lib.json",
     "prepublishOnly": "pnpm run build:lib",
     "lint": "eslint .",
     "preview": "vite preview",

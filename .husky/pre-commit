@@ -1,17 +1,19 @@
-@echo off
-REM Windows pre-commit hook wrapper for Husky
+#!/bin/sh
+# Windows Git Bash/WSL 环境的 Husky pre-commit 钩子
 
-echo Running tests before commit...
+echo "Running tests before commit..."
 pnpm run test:run
-if errorlevel 1 (
-  echo Tests failed, commit aborted
-  exit /b 1
-)
+# 检查上一条命令是否执行失败（$? 是上一条命令的退出码，非 0 表示失败）
+if [ $? -ne 0 ]; then
+  echo "Tests failed, commit aborted"
+  exit 1
+fi
 
-echo Tests passed, running lint-staged...
+echo "Tests passed, running lint-staged..."
 pnpm exec lint-staged
-if errorlevel 1 (
-  echo lint-staged failed
-  exit /b 1
-)
-exit /b 0
+if [ $? -ne 0 ]; then
+  echo "lint-staged failed"
+  exit 1
+fi
+
+exit 0

@@ -38,6 +38,15 @@ export default {
       // 生成源映射文件
       sourcemap: true,
     },
+    // 生成按需导入所需的原子化ESM产物（与源码目录结构一一对应）
+    {
+      dir: 'dist/esm',
+      format: 'esm',
+      sourcemap: true,
+      preserveModules: true,
+      preserveModulesRoot: 'src',
+      entryFileNames: '[name].js',
+    },
   ],
   // 配置使用的Rollup插件
   plugins: [
@@ -52,7 +61,7 @@ export default {
     commonjs(),
     // 配置typescript插件：处理TypeScript编译
     typescript({
-      tsconfig: './tsconfig.app.json', // 指定TypeScript配置文件路径
+      tsconfig: './tsconfig.rollup.json', // 使用专用 tsconfig，禁用 allowImportingTsExtensions 以避免告警
       declaration: false, // 不生成类型声明文件（通常单独配置生成）
       exclude: [
         // 排除不需要打包的文件（测试、示例等非核心代码）
