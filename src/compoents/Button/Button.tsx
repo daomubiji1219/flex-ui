@@ -35,7 +35,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { variant = 'primary', size = 'md', loading, icon, children, ...props },
+    { variant = 'primary', size = 'md', loading, icon, children, type = 'button', ...props },
     ref
   ) => {
     const theme = useTheme();
@@ -94,6 +94,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
+        type={type}
         style={combinedStyles}
         disabled={loading || props.disabled}
         {...props}
