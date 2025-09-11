@@ -17,19 +17,31 @@
 
 <script setup lang="ts">
 interface Props {
-  title?: string
-  code?: string
-  showCode?: boolean
+  title?: string;
+  code?: string;
+  showCode?: boolean;
 }
 
 withDefaults(defineProps<Props>(), {
-  showCode: true
-})
+  showCode: true,
+});
 </script>
 
 <style scoped>
-.demo-container { border: 1px solid var(--vp-c-divider); border-radius: 8px; padding: 12px; margin: 16px 0; }
-.demo-title { font-weight: 600; margin-bottom: 8px; }
-.demo-code { margin-top: 12px; }
-.demo-content { padding: 8px 0; }
+.demo-container {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 16px 0;
+}
+.demo-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.demo-code {
+  margin-top: 12px;
+}
+.demo-content {
+  padding: 8px 0;
+}
 </style>

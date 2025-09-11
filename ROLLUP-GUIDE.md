@@ -51,10 +51,10 @@ function App() {
   return (
     <div>
       <Button variant="primary">点击我</Button>
-      <DataTable 
-        data={[...]} 
-        columns={[...]} 
-        rowKey="id" 
+      <DataTable
+        data={[...]}
+        columns={[...]}
+        rowKey="id"
       />
     </div>
   );

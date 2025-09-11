@@ -28,7 +28,7 @@ export default {
       // 生成源映射文件（方便调试，映射打包后的代码到原始源码）
       sourcemap: true,
       // 导出模式：命名导出（确保模块可以通过const { x } = require('')方式导入）
-      exports: 'named'
+      exports: 'named',
     },
     {
       // 输出文件路径：从package.json的module字段获取（通常是ES模块格式入口）
@@ -36,8 +36,8 @@ export default {
       // 输出格式：ES模块（适用于现代浏览器或支持ES模块的打包工具）
       format: 'esm',
       // 生成源映射文件
-      sourcemap: true
-    }
+      sourcemap: true,
+    },
   ],
   // 配置使用的Rollup插件
   plugins: [
@@ -46,7 +46,7 @@ export default {
     // 配置resolve插件：解析模块路径
     resolve({
       browser: true, // 针对浏览器环境优化解析
-      preferBuiltins: false // 不优先使用Node.js内置模块（适用于前端库）
+      preferBuiltins: false, // 不优先使用Node.js内置模块（适用于前端库）
     }),
     // 启用commonjs插件：转换CommonJS模块为ES6模块
     commonjs(),
@@ -54,7 +54,8 @@ export default {
     typescript({
       tsconfig: './tsconfig.app.json', // 指定TypeScript配置文件路径
       declaration: false, // 不生成类型声明文件（通常单独配置生成）
-      exclude: [ // 排除不需要打包的文件（测试、示例等非核心代码）
+      exclude: [
+        // 排除不需要打包的文件（测试、示例等非核心代码）
         '**/*.test.tsx',
         '**/*.test.ts',
         '**/*.stories.tsx',
@@ -63,14 +64,14 @@ export default {
         'src/test/**',
         'src/tests/**',
         'src/main.tsx',
-        'src/App.tsx'
-      ]
+        'src/App.tsx',
+      ],
     }),
     // 配置postcss插件：处理CSS
     postcss({
       extract: true, // 将CSS提取为单独的文件（而非内联到JS中）
-      minimize: true // 压缩CSS代码（减小文件体积）
-    })
+      minimize: true, // 压缩CSS代码（减小文件体积）
+    }),
   ],
   // 声明外部依赖（这些模块不会被打包，由使用该库的项目提供）
   external: [
@@ -81,6 +82,6 @@ export default {
     'framer-motion', // 动画库
     'clsx', // 类名拼接工具
     'crypto-js', // 加密工具库
-    'lodash-es' // 工具函数库（ES模块版本）
-  ]
+    'lodash-es', // 工具函数库（ES模块版本）
+  ],
 };

@@ -42,7 +42,14 @@ const FileUploaderTExample: React.FC = () => {
     }
 
     // 检查文件类型
-    const allowedTypes = ['image/', 'video/', 'application/pdf', 'text/', 'application/zip', 'application/x-pdf'];
+    const allowedTypes = [
+      'image/',
+      'video/',
+      'application/pdf',
+      'text/',
+      'application/zip',
+      'application/x-pdf',
+    ];
     const isAllowed = allowedTypes.some(type => file.type.startsWith(type));
     if (!isAllowed) {
       alert(`文件 ${file.name} 类型不支持`);
@@ -54,17 +61,23 @@ const FileUploaderTExample: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">增强版文件上传组件示例</h1>
-      
+      <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">
+        增强版文件上传组件示例
+      </h1>
+
       <div className="mb-10 p-6 border border-gray-200 rounded-lg bg-white shadow-sm">
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">拖拽上传文件</h2>
-        <p className="text-gray-600 mb-5">支持拖拽上传、分片上传、断点续传，美观的UI界面</p>
+        <h2 className="text-xl font-semibold text-gray-800 mb-2">
+          拖拽上传文件
+        </h2>
+        <p className="text-gray-600 mb-5">
+          支持拖拽上传、分片上传、断点续传，美观的UI界面
+        </p>
         <FileUploader
           action="http://localhost:3000/upload"
           urls={{
-            check: "http://localhost:3000/upload/check",
-            chunk: "http://localhost:3000/upload/chunk",
-            merge: "http://localhost:3000/upload/merge"
+            check: 'http://localhost:3000/upload/check',
+            chunk: 'http://localhost:3000/upload/chunk',
+            merge: 'http://localhost:3000/upload/merge',
           }}
           multiple={true}
           chunkSize={2 * 1024 * 1024} // 2MB分片
@@ -84,9 +97,9 @@ const FileUploaderTExample: React.FC = () => {
         <FileUploader
           action="http://localhost:3001/upload"
           urls={{
-            check: "http://localhost:3001/upload/check",
-            chunk: "http://localhost:3001/upload/chunk",
-            merge: "http://localhost:3001/upload/merge"
+            check: 'http://localhost:3001/upload/check',
+            chunk: 'http://localhost:3001/upload/chunk',
+            merge: 'http://localhost:3001/upload/merge',
           }}
           multiple={false}
           chunkSize={1 * 1024 * 1024} // 1MB分片
@@ -100,14 +113,16 @@ const FileUploaderTExample: React.FC = () => {
       </div>
 
       <div className="p-6 border border-gray-200 rounded-lg bg-white shadow-sm">
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">文档文件上传</h2>
+        <h2 className="text-xl font-semibold text-gray-800 mb-2">
+          文档文件上传
+        </h2>
         <p className="text-gray-600 mb-5">仅支持PDF和文本文件上传</p>
         <FileUploader
           action="http://localhost:3002/upload"
           urls={{
-            check: "http://localhost:3002/upload/check",
-            chunk: "http://localhost:3002/upload/chunk",
-            merge: "http://localhost:3002/upload/merge"
+            check: 'http://localhost:3002/upload/check',
+            chunk: 'http://localhost:3002/upload/chunk',
+            merge: 'http://localhost:3002/upload/merge',
           }}
           multiple={true}
           chunkSize={5 * 1024 * 1024} // 5MB分片

@@ -1,5 +1,5 @@
 // FileUploader组件核心实现
-import React, { useState, useRef } from "react";
+import React, { useState, useRef } from 'react';
 // import crypto from 'crypto-js';
 
 interface UploadUrls {
@@ -13,7 +13,7 @@ export interface UploadFile {
   name: string;
   size: number;
   type: string;
-  status: "ready" | "uploading" | "success" | "error" | "paused";
+  status: 'ready' | 'uploading' | 'success' | 'error' | 'paused';
   progress: number;
   file: File;
   chunks?: Blob[];
@@ -65,10 +65,10 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
   const generateFileHash = async (file: File): Promise<string> => {
     try {
       // 需要先安装crypto-js依赖: npm install crypto-js @types/crypto-js
-      const crypto = (await import("crypto-js")) as typeof import("crypto-js");
+      const crypto = (await import('crypto-js')) as typeof import('crypto-js');
       return new Promise((resolve, reject) => {
         const reader = new FileReader(); //浏览器环境提供的API
-        reader.onload = (e) => {
+        reader.onload = e => {
           try {
             const arrayBuffer = e.target?.result as ArrayBuffer; //获得二进制文件
             const wordArray = crypto.lib.WordArray.create(arrayBuffer); //将二进制文件转化为可加密的文件类型
@@ -79,7 +79,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
             reject(error);
           }
         };
-        reader.onerror = (error) => {
+        reader.onerror = error => {
           console.error(`文件 ${file.name} 读取失败:`, error);
           reject(error);
         };
@@ -108,10 +108,10 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
   // 检查已上传的分片
   const checkUploadedChunks = async (hash: string): Promise<number[]> => {
     try {
-      const response = await fetch(getApiUrl("check"), {
-        method: "POST",
+      const response = await fetch(getApiUrl('check'), {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ hash }),
       });
@@ -121,7 +121,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
         return data.uploadedChunks || []; //返回已上传的分片索引
       }
     } catch (error) {
-      console.warn("检查已上传分片失败:", error);
+      console.warn('检查已上传分片失败:', error);
     }
 
     return [];
@@ -136,23 +136,23 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
   ): Promise<boolean> => {
     const formData = new FormData(); //表单数据对象
 
-    formData.append("chunk", chunk);
-    formData.append("hash", file.hash!);
-    formData.append("chunkIndex", chunkIndex.toString());
-    formData.append("totalChunks", file.chunks!.length.toString());
-    formData.append("filename", file.name);
+    formData.append('chunk', chunk);
+    formData.append('hash', file.hash!);
+    formData.append('chunkIndex', chunkIndex.toString());
+    formData.append('totalChunks', file.chunks!.length.toString());
+    formData.append('filename', file.name);
 
     try {
-      const response = await fetch(getApiUrl("chunk"), {
-        method: "POST",
+      const response = await fetch(getApiUrl('chunk'), {
+        method: 'POST',
         body: formData,
         signal: controller.signal,
       });
 
       if (response.ok) {
         // 更新分片上传状态
-        setFiles((prev) =>
-          prev.map((f) => {
+        setFiles(prev =>
+          prev.map(f => {
             if (f.uid === file.uid) {
               const newUploadedChunks = [...(f.uploadedChunks || [])];
               newUploadedChunks[chunkIndex] = true;
@@ -176,8 +176,8 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        if (error.name !== "AbortError") {
-          console.error("分片上传失败:", error);
+        if (error.name !== 'AbortError') {
+          console.error('分片上传失败:', error);
         }
       }
     }
@@ -190,7 +190,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
     // 检查哪些分片已上传
     const uploadedChunkIndexes = await checkUploadedChunks(file.hash!);
     const uploadedChunks = new Array(file.chunks!.length).fill(false);
-    uploadedChunkIndexes.forEach((index) => {
+    uploadedChunkIndexes.forEach(index => {
       uploadedChunks[index] = true;
     });
 
@@ -203,7 +203,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
     }
 
     console.log(
-      `发现 ${missingChunks.length} 个缺失分片: [${missingChunks.join(", ")}]`
+      `发现 ${missingChunks.length} 个缺失分片: [${missingChunks.join(', ')}]`
     );
 
     if (missingChunks.length > 0) {
@@ -237,10 +237,10 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
     const maxRetries = 2;
 
     try {
-      const response = await fetch(getApiUrl("merge"), {
-        method: "POST",
+      const response = await fetch(getApiUrl('merge'), {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           hash: file.hash,
@@ -251,23 +251,23 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
 
       if (response.ok) {
         const result = await response.json();
-        setFiles((prev) =>
-          prev.map((f) =>
+        setFiles(prev =>
+          prev.map(f =>
             f.uid === file.uid
-              ? { ...f, status: "success" as const, progress: 100 }
+              ? { ...f, status: 'success' as const, progress: 100 }
               : f
           )
         );
         onSuccess?.(file, result);
       } else {
         // 处理HTTP错误状态码
-        const errorText = await response.text().catch(() => "未知错误");
+        const errorText = await response.text().catch(() => '未知错误');
 
         // 检查是否是分片丢失错误
         if (
           response.status === 500 &&
-          errorText.includes("分片") &&
-          errorText.includes("不存在")
+          errorText.includes('分片') &&
+          errorText.includes('不存在')
         ) {
           if (retryCount < maxRetries) {
             console.warn(
@@ -291,18 +291,18 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
       }
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "合并分片时发生未知错误";
+        error instanceof Error ? error.message : '合并分片时发生未知错误';
 
       // 如果不是HTTP错误（已经在上面处理过alert），则显示网络错误提示
-      if (error instanceof Error && !error.message.includes("HTTP")) {
+      if (error instanceof Error && !error.message.includes('HTTP')) {
         const networkErrorMessage = `文件"${file.name}"合并分片失败: ${errorMessage}`;
         console.error(networkErrorMessage);
         alert(networkErrorMessage);
       }
 
-      setFiles((prev) =>
-        prev.map((f) =>
-          f.uid === file.uid ? { ...f, status: "error" as const } : f
+      setFiles(prev =>
+        prev.map(f =>
+          f.uid === file.uid ? { ...f, status: 'error' as const } : f
         )
       );
       onError?.(file, error as Error);
@@ -315,9 +315,9 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
       `开始上传文件: ${file.name}, 大小: ${file.size} bytes, 类型: ${file.type}`
     );
     try {
-      setFiles((prev) =>
-        prev.map((f) =>
-          f.uid === file.uid ? { ...f, status: "uploading" as const } : f
+      setFiles(prev =>
+        prev.map(f =>
+          f.uid === file.uid ? { ...f, status: 'uploading' as const } : f
         )
       );
 
@@ -326,7 +326,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
       const hash = await generateFileHash(file.file);
 
       // 验证哈希生成是否成功
-      if (!hash || hash.trim() === "") {
+      if (!hash || hash.trim() === '') {
         throw new Error(`文件 ${file.name} 哈希生成失败，无法继续上传`);
       }
 
@@ -336,7 +336,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
       // 检查已上传的分片
       const uploadedChunkIndexes = await checkUploadedChunks(hash);
       const uploadedChunks = new Array(chunks.length).fill(false);
-      uploadedChunkIndexes.forEach((index) => {
+      uploadedChunkIndexes.forEach(index => {
         uploadedChunks[index] = true;
       });
 
@@ -349,9 +349,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
         progress: (uploadedChunkIndexes.length / chunks.length) * 100,
       };
 
-      setFiles((prev) =>
-        prev.map((f) => (f.uid === file.uid ? updatedFile : f))
-      );
+      setFiles(prev => prev.map(f => (f.uid === file.uid ? updatedFile : f)));
 
       // 如果所有分片都已上传，直接合并
       if (uploadedChunkIndexes.length === chunks.length) {
@@ -394,9 +392,9 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
       // 合并分片
       await mergeChunks(updatedFile);
     } catch (error) {
-      setFiles((prev) =>
-        prev.map((f) =>
-          f.uid === file.uid ? { ...f, status: "error" as const } : f
+      setFiles(prev =>
+        prev.map(f =>
+          f.uid === file.uid ? { ...f, status: 'error' as const } : f
         )
       );
       onError?.(file, error as Error);
@@ -418,9 +416,9 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
 
       // 文件类型检查
       if (accept) {
-        const acceptTypes = accept.split(",").map((type) => type.trim());
-        const isAccepted = acceptTypes.some((type) => {
-          if (type.startsWith(".")) {
+        const acceptTypes = accept.split(',').map(type => type.trim());
+        const isAccepted = acceptTypes.some(type => {
+          if (type.startsWith('.')) {
             // 扩展名检查
             return file.name.toLowerCase().endsWith(type.toLowerCase());
           } else {
@@ -446,7 +444,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
         name: file.name,
         size: file.size,
         type: file.type,
-        status: "ready",
+        status: 'ready',
         progress: 0,
         file,
       };
@@ -454,10 +452,10 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
       validFiles.push(uploadFile);
     }
 
-    setFiles((prev) => [...prev, ...validFiles]);
+    setFiles(prev => [...prev, ...validFiles]);
 
     // 自动开始上传
-    validFiles.forEach((file) => {
+    validFiles.forEach(file => {
       uploadFile(file);
     });
   };
@@ -490,50 +488,50 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
     <div
       className="file-uploader"
       style={{
-        maxWidth: "800px",
-        margin: "20px auto",
-        fontFamily: "system-ui, -apple-system, sans-serif",
+        maxWidth: '800px',
+        margin: '20px auto',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
       }}
     >
       {/* 1. 拖拽上传区域（优化视觉与交互） */}
       <div
-        className={`upload-area ${isDragging ? "dragging" : ""}`}
+        className={`upload-area ${isDragging ? 'dragging' : ''}`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
         style={{
-          border: "2px dashed #e0e0e0",
-          borderRadius: "12px",
-          padding: "60px 20px",
-          textAlign: "center",
-          cursor: "pointer",
-          backgroundColor: isDragging ? "#f8fafc" : "#ffffff",
-          borderColor: isDragging ? "#3b82f6" : "#e0e0e0",
-          transition: "all 0.3s ease", // 平滑过渡
+          border: '2px dashed #e0e0e0',
+          borderRadius: '12px',
+          padding: '60px 20px',
+          textAlign: 'center',
+          cursor: 'pointer',
+          backgroundColor: isDragging ? '#f8fafc' : '#ffffff',
+          borderColor: isDragging ? '#3b82f6' : '#e0e0e0',
+          transition: 'all 0.3s ease', // 平滑过渡
           boxShadow: isDragging
-            ? "0 4px 20px rgba(59, 130, 246, 0.15)"
-            : "0 2px 8px rgba(0, 0, 0, 0.05)",
-          marginBottom: "30px",
+            ? '0 4px 20px rgba(59, 130, 246, 0.15)'
+            : '0 2px 8px rgba(0, 0, 0, 0.05)',
+          marginBottom: '30px',
         }}
       >
         {/* 上传图标（增强视觉引导） */}
         <div
           style={{
-            fontSize: "48px",
-            color: "#3b82f6",
-            marginBottom: "16px",
+            fontSize: '48px',
+            color: '#3b82f6',
+            marginBottom: '16px',
             opacity: isDragging ? 1 : 0.8,
           }}
         >
-          ⬆️{" "}
+          ⬆️{' '}
           {/* 若引入 Font Awesome，可替换为 <i className="fa-solid fa-cloud-upload"></i> */}
         </div>
         <h3
           style={{
-            margin: "0 0 8px",
-            fontSize: "18px",
-            color: "#1e293b",
+            margin: '0 0 8px',
+            fontSize: '18px',
+            color: '#1e293b',
           }}
         >
           点击或拖拽文件到此处上传
@@ -541,15 +539,15 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
         <p
           style={{
             // margin: "0",
-            fontSize: "14px",
-            color: "#64748b",
-            maxWidth: "500px",
-            margin: "0 auto",
+            fontSize: '14px',
+            color: '#64748b',
+            maxWidth: '500px',
+            margin: '0 auto',
           }}
         >
-          支持多文件上传，单文件最大{" "}
-          {maxSize ? (maxSize / 1024 / 1024).toFixed(0) + "MB" : "无限制"}
-          ，支持格式：{accept || "所有格式"}
+          支持多文件上传，单文件最大{' '}
+          {maxSize ? (maxSize / 1024 / 1024).toFixed(0) + 'MB' : '无限制'}
+          ，支持格式：{accept || '所有格式'}
         </p>
 
         {/* 隐藏的文件选择输入 */}
@@ -558,8 +556,8 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
           type="file"
           multiple={multiple}
           accept={accept}
-          style={{ display: "none" }}
-          onChange={(e) => {
+          style={{ display: 'none' }}
+          onChange={e => {
             if (e.target.files) {
               addFiles(e.target.files);
             }
@@ -570,57 +568,57 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
       {/* 2. 文件列表（优化卡片式布局与进度条） */}
       <div
         className="file-list"
-        style={{ gap: "16px", display: "flex", flexDirection: "column" }}
+        style={{ gap: '16px', display: 'flex', flexDirection: 'column' }}
       >
         {files.length > 0 ? (
-          files.map((file) => (
+          files.map(file => (
             <div
               key={file.uid}
               className="file-item"
               style={{
-                backgroundColor: "#ffffff",
-                borderRadius: "8px",
-                padding: "16px",
-                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.05)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "12px",
+                backgroundColor: '#ffffff',
+                borderRadius: '8px',
+                padding: '16px',
+                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.05)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
               }}
             >
               {/* 2.1 文件基本信息（名称、大小、状态） */}
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
                 }}
               >
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
                 >
                   {/* 文件类型图标（简单区分） */}
                   <div
                     style={{
-                      width: "24px",
-                      height: "24px",
-                      borderRadius: "4px",
-                      backgroundColor: "#f1f5f9",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "#64748b",
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '4px',
+                      backgroundColor: '#f1f5f9',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#64748b',
                     }}
                   >
                     📄 {/* 可根据文件类型替换：如图片用 🖼️，视频用 🎥 */}
                   </div>
                   <span
                     style={{
-                      fontSize: "14px",
-                      color: "#1e293b",
-                      maxWidth: "300px",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
+                      fontSize: '14px',
+                      color: '#1e293b',
+                      maxWidth: '300px',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
                     }}
                   >
                     {file.name}
@@ -628,13 +626,13 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                 </div>
 
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "16px" }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '16px' }}
                 >
                   {/* 文件大小 */}
                   <span
                     style={{
-                      fontSize: "12px",
-                      color: "#64748b",
+                      fontSize: '12px',
+                      color: '#64748b',
                     }}
                   >
                     {(file.size / 1024 / 1024).toFixed(2)} MB
@@ -643,25 +641,25 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                   {/* 文件状态（颜色区分） */}
                   <span
                     style={{
-                      fontSize: "12px",
-                      fontWeight: "500",
+                      fontSize: '12px',
+                      fontWeight: '500',
                       color:
-                        file.status === "uploading"
-                          ? "#3b82f6"
-                          : file.status === "success"
-                          ? "#10b981"
-                          : file.status === "error"
-                          ? "#ef4444"
-                          : "#f59e0b", // paused
+                        file.status === 'uploading'
+                          ? '#3b82f6'
+                          : file.status === 'success'
+                            ? '#10b981'
+                            : file.status === 'error'
+                              ? '#ef4444'
+                              : '#f59e0b', // paused
                     }}
                   >
-                    {file.status === "uploading"
-                      ? "上传中"
-                      : file.status === "success"
-                      ? "上传成功"
-                      : file.status === "error"
-                      ? "上传失败"
-                      : "已暂停"}
+                    {file.status === 'uploading'
+                      ? '上传中'
+                      : file.status === 'success'
+                        ? '上传成功'
+                        : file.status === 'error'
+                          ? '上传失败'
+                          : '已暂停'}
                   </span>
                 </div>
               </div>
@@ -669,12 +667,12 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
               {/* 2.2 进度条（增强视觉与百分比显示） */}
               <div
                 style={{
-                  width: "100%",
-                  height: "8px",
-                  backgroundColor: "#f1f5f9",
-                  borderRadius: "4px",
-                  overflow: "hidden",
-                  position: "relative",
+                  width: '100%',
+                  height: '8px',
+                  backgroundColor: '#f1f5f9',
+                  borderRadius: '4px',
+                  overflow: 'hidden',
+                  position: 'relative',
                 }}
               >
                 {/* 进度条填充（渐变效果） */}
@@ -682,28 +680,28 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                   className="progress"
                   style={{
                     width: `${file.progress}%`,
-                    height: "100%",
+                    height: '100%',
                     backgroundColor:
-                      file.status === "error"
-                        ? "#ef4444"
-                        : file.status === "success"
-                        ? "#10b981"
-                        : "linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%)",
-                    transition: "width 0.3s ease-in-out", // 进度平滑变化
-                    borderRadius: "4px",
+                      file.status === 'error'
+                        ? '#ef4444'
+                        : file.status === 'success'
+                          ? '#10b981'
+                          : 'linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%)',
+                    transition: 'width 0.3s ease-in-out', // 进度平滑变化
+                    borderRadius: '4px',
                   }}
                 />
 
                 {/* 进度百分比文字（居中显示） */}
                 <div
                   style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    fontSize: "10px",
-                    fontWeight: "600",
-                    color: "#1e293b",
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    fontSize: '10px',
+                    fontWeight: '600',
+                    color: '#1e293b',
                   }}
                 >
                   {Math.round(file.progress)}%
@@ -713,71 +711,71 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
               {/* 2.3 操作按钮（优化样式与交互） */}
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "8px",
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  gap: '8px',
                 }}
               >
                 {/* 暂停/继续按钮 */}
-                {file.status === "uploading" && (
+                {file.status === 'uploading' && (
                   <button
                     onClick={() => {
                       const controller = uploadQueueRef.current.get(file.uid);
                       controller?.abort();
                       uploadQueueRef.current.delete(file.uid);
-                      setFiles((prev) =>
-                        prev.map((f) =>
+                      setFiles(prev =>
+                        prev.map(f =>
                           f.uid === file.uid
-                            ? { ...f, status: "paused" as const }
+                            ? { ...f, status: 'paused' as const }
                             : f
                         )
                       );
                     }}
                     style={{
-                      padding: "6px 12px",
-                      border: "none",
-                      borderRadius: "4px",
-                      backgroundColor: "#f59e0b",
-                      color: "white",
-                      fontSize: "12px",
-                      fontWeight: "500",
-                      cursor: "pointer",
-                      transition: "background-color 0.2s",
+                      padding: '6px 12px',
+                      border: 'none',
+                      borderRadius: '4px',
+                      backgroundColor: '#f59e0b',
+                      color: 'white',
+                      fontSize: '12px',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.2s',
                     }}
-                    onMouseOver={(e) =>
+                    onMouseOver={e =>
                       ((e.target as HTMLButtonElement).style.backgroundColor =
-                        "#d97706")
+                        '#d97706')
                     }
-                    onMouseOut={(e) =>
+                    onMouseOut={e =>
                       ((e.target as HTMLButtonElement).style.backgroundColor =
-                        "#f59e0b")
+                        '#f59e0b')
                     }
                   >
                     暂停
                   </button>
                 )}
 
-                {file.status === "paused" && (
+                {file.status === 'paused' && (
                   <button
                     onClick={() => uploadFile(file)}
                     style={{
-                      padding: "6px 12px",
-                      border: "none",
-                      borderRadius: "4px",
-                      backgroundColor: "#3b82f6",
-                      color: "white",
-                      fontSize: "12px",
-                      fontWeight: "500",
-                      cursor: "pointer",
-                      transition: "background-color 0.2s",
+                      padding: '6px 12px',
+                      border: 'none',
+                      borderRadius: '4px',
+                      backgroundColor: '#3b82f6',
+                      color: 'white',
+                      fontSize: '12px',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.2s',
                     }}
-                    onMouseOver={(e) =>
+                    onMouseOver={e =>
                       ((e.target as HTMLButtonElement).style.backgroundColor =
-                        "#2563eb")
+                        '#2563eb')
                     }
-                    onMouseOut={(e) =>
+                    onMouseOut={e =>
                       ((e.target as HTMLButtonElement).style.backgroundColor =
-                        "#3b82f6")
+                        '#3b82f6')
                     }
                   >
                     继续上传
@@ -785,27 +783,27 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                 )}
 
                 {/* 失败重试按钮（新增） */}
-                {file.status === "error" && (
+                {file.status === 'error' && (
                   <button
                     onClick={() => uploadFile(file)}
                     style={{
-                      padding: "6px 12px",
-                      border: "none",
-                      borderRadius: "4px",
-                      backgroundColor: "#10b981",
-                      color: "white",
-                      fontSize: "12px",
-                      fontWeight: "500",
-                      cursor: "pointer",
-                      transition: "background-color 0.2s",
+                      padding: '6px 12px',
+                      border: 'none',
+                      borderRadius: '4px',
+                      backgroundColor: '#10b981',
+                      color: 'white',
+                      fontSize: '12px',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.2s',
                     }}
-                    onMouseOver={(e) =>
+                    onMouseOver={e =>
                       ((e.target as HTMLButtonElement).style.backgroundColor =
-                        "#059669")
+                        '#059669')
                     }
-                    onMouseOut={(e) =>
+                    onMouseOut={e =>
                       ((e.target as HTMLButtonElement).style.backgroundColor =
-                        "#10b981")
+                        '#10b981')
                     }
                   >
                     重试上传
@@ -818,12 +816,12 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
           // 空状态提示
           <div
             style={{
-              textAlign: "center",
-              padding: "40px 20px",
-              color: "#64748b",
-              fontSize: "14px",
-              backgroundColor: "#f8fafc",
-              borderRadius: "8px",
+              textAlign: 'center',
+              padding: '40px 20px',
+              color: '#64748b',
+              fontSize: '14px',
+              backgroundColor: '#f8fafc',
+              borderRadius: '8px',
             }}
           >
             暂无上传文件

@@ -1,7 +1,6 @@
-import { useState, useRef, useMemo, useCallback } from "react";
-import type { ReactNode } from "react";
-import { throttle } from "lodash-es";
-
+import { useState, useRef, useMemo, useCallback } from 'react';
+import type { ReactNode } from 'react';
+import { throttle } from 'lodash-es';
 
 // 定义组件属性接口
 interface VirtualListProps<T> {
@@ -10,7 +9,7 @@ interface VirtualListProps<T> {
   containerHeight?: number;
   overscan?: number;
   getKey?: (item: T) => number | string;
-  renderItem: (item: T, index?: number) => ReactNode;//列表引索得节点
+  renderItem: (item: T, index?: number) => ReactNode; //列表引索得节点
 }
 
 //jsx场景下防止误认<T>为标签
@@ -27,13 +26,15 @@ export const VirtualList = <T,>({
   const [itemHeights, setItemHeights] = useState<Record<number, number>>({});
 
   const updateHeight = useCallback((index: number, height: number) => {
-    setItemHeights((prev) => {
+    setItemHeights(prev => {
       if (prev[index] === height) return prev;
       return { ...prev, [index]: height };
     });
   }, []);
 
-  const [startIndex, endIndex, totalHeight] = useMemo<[number, number, number]>(() => {
+  const [startIndex, endIndex, totalHeight] = useMemo<
+    [number, number, number]
+  >(() => {
     let total = 0;
     let start = 0;
     let end = data.length;
@@ -77,7 +78,6 @@ export const VirtualList = <T,>({
     setScrollTop(containerRef.current?.scrollTop || 0);
   }, 50);
 
-
   return (
     <div
       ref={containerRef}
@@ -97,7 +97,7 @@ export const VirtualList = <T,>({
             return (
               <div
                 key={getKey?.(item) ?? index}
-                ref={(ref) => {
+                ref={ref => {
                   if (ref) {
                     const h = ref.offsetHeight;
                     if (h && itemHeights[index] !== h) {
@@ -137,7 +137,7 @@ export const Demo = () => {
       data={data}
       containerHeight={400}
       itemHeight={70}
-      renderItem={(item) => (
+      renderItem={item => (
         <div key={item.id}>
           <h3>{item.name}</h3>
           <p>{item.description}</p>

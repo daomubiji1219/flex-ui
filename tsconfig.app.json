@@ -20,7 +20,6 @@
       "@/*": ["src/*"]
     },
 
-
     /* 打包工具模式配置（适用于webpack、vite等打包工具） */
     // 模块解析策略（使用打包工具的解析逻辑）
     "moduleResolution": "bundler",

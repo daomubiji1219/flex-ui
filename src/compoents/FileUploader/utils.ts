@@ -1,4 +1,3 @@
-  
 //   // 生成文件哈希
 //   const generateFileHash = async (file: File): Promise<string> => {
 //     // 需要先安装crypto-js依赖: npm install crypto-js @types/crypto-js
@@ -17,13 +16,13 @@
 //   const createFileChunks = (file: File): Blob[] => {
 //     const chunks: Blob[] = [];
 //     let start = 0;
-    
+
 //     while (start < file.size) {
 //       const end = Math.min(start + chunkSize, file.size);
 //       chunks.push(file.slice(start, end));
 //       start = end;
 //     }
-    
+
 //     return chunks;
 //   };
 
@@ -37,7 +36,7 @@
 //         },
 //         body: JSON.stringify({ hash })
 //       });
-      
+
 //       if (response.ok) {
 //         const data = await response.json();
 //         return data.uploadedChunks || [];
@@ -45,10 +44,9 @@
 //     } catch (error) {
 //       console.warn('检查已上传分片失败:', error);
 //     }
-    
+
 //     return [];
 //   };
-
 
 //   export {
 //     generateFileHash,

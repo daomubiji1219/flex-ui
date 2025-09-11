@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useState } from 'react';
 // import DataTableExample from './examples/DataTableExample'
-import FileUploaderExample from './examples/FileUploaderExample'
-import FileUploaderTExample from './examples/FileUploaderTExample'
+import FileUploaderExample from './examples/FileUploaderExample';
+import FileUploaderTExample from './examples/FileUploaderTExample';
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'datatable' | 'fileuploader' | 'fileuploadert'>('fileuploadert')
+  const [activeTab, setActiveTab] = useState<
+    'datatable' | 'fileuploader' | 'fileuploadert'
+  >('fileuploadert');
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -13,7 +15,9 @@ function App() {
           <div className="flex justify-between h-16">
             <div className="flex">
               <div className="flex-shrink-0 flex items-center">
-                <h1 className="text-xl font-bold text-gray-900">Flexi UI Components</h1>
+                <h1 className="text-xl font-bold text-gray-900">
+                  Flexi UI Components
+                </h1>
               </div>
               <div className="ml-6 flex space-x-8">
                 <button
@@ -51,14 +55,14 @@ function App() {
           </div>
         </div>
       </nav>
-      
+
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {/* {activeTab === 'datatable' && <DataTableExample />} */}
         {activeTab === 'fileuploader' && <FileUploaderExample />}
         {activeTab === 'fileuploadert' && <FileUploaderTExample />}
       </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

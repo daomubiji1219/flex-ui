@@ -18,7 +18,7 @@
 </DemoContainer>
 
 ```tsx
-import { FileUploader } from '@flexi-ui/components'
+import { FileUploader } from '@flexi-ui/components';
 
 function App() {
   return (
@@ -29,7 +29,7 @@ function App() {
       onSuccess={(file, resp) => console.log('成功', file.name, resp)}
       onError={(file, err) => console.error('失败', file.name, err)}
     />
-  )
+  );
 }
 ```
 
@@ -38,19 +38,19 @@ function App() {
 ```tsx
 <FileUploader
   action="/api/upload"
-  beforeUpload={async (file) => {
+  beforeUpload={async file => {
     // 例如：限制 10MB 以内且为图片类型
-    const isImage = file.type.startsWith('image/')
-    const isLt10M = file.size / 1024 / 1024 < 10
+    const isImage = file.type.startsWith('image/');
+    const isLt10M = file.size / 1024 / 1024 < 10;
     if (!isImage) {
-      alert('仅支持图片类型')
-      return false
+      alert('仅支持图片类型');
+      return false;
     }
     if (!isLt10M) {
-      alert('文件需小于 10MB')
-      return false
+      alert('文件需小于 10MB');
+      return false;
     }
-    return true
+    return true;
   }}
 />
 ```
@@ -68,11 +68,7 @@ function App() {
 ## 断点续传与秒传
 
 ```tsx
-<FileUploader
-  action="/api/upload"
-  enableResume={true}
-  enableInstant={true}
-/>
+<FileUploader action="/api/upload" enableResume={true} enableInstant={true} />
 ```
 
 <!-- ## API

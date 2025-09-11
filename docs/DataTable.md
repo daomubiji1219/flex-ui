@@ -20,15 +20,15 @@
 </DemoContainer>
 
 ```tsx
-import { DataTable } from '@flexi-ui/components'
-import type { Column } from '@flexi-ui/components'
+import { DataTable } from '@flexi-ui/components';
+import type { Column } from '@flexi-ui/components';
 
 interface User {
-  id: number
-  name: string
-  email: string
-  age: number
-  status: 'active' | 'inactive'
+  id: number;
+  name: string;
+  email: string;
+  age: number;
+  status: 'active' | 'inactive';
 }
 
 const columns: Column<User>[] = [
@@ -36,50 +36,50 @@ const columns: Column<User>[] = [
     key: 'id',
     title: 'ID',
     width: 80,
-    sortable: true
+    sortable: true,
   },
   {
     key: 'name',
     title: '姓名',
     sortable: true,
-    filterable: true
+    filterable: true,
   },
   {
     key: 'email',
     title: '邮箱',
-    filterable: true
+    filterable: true,
   },
   {
     key: 'age',
     title: '年龄',
     width: 100,
-    sortable: true
+    sortable: true,
   },
   {
     key: 'status',
     title: '状态',
-    render: (value) => (
+    render: value => (
       <span className={`status ${value}`}>
         {value === 'active' ? '活跃' : '非活跃'}
       </span>
-    )
-  }
-]
+    ),
+  },
+];
 
 const data: User[] = [
-  { id: 1, name: '张三', email: 'zhang@example.com', age: 25, status: 'active' },
+  {
+    id: 1,
+    name: '张三',
+    email: 'zhang@example.com',
+    age: 25,
+    status: 'active',
+  },
   { id: 2, name: '李四', email: 'li@example.com', age: 30, status: 'inactive' },
   // ... 更多数据
-]
+];
 
 function App() {
-  return (
-    <DataTable
-      data={data}
-      columns={columns}
-      rowKey="id"
-    />
-  )
+  return <DataTable data={data} columns={columns} rowKey="id" />;
 }
 ```
 
@@ -92,7 +92,7 @@ function App() {
   rowKey="id"
   pagination={{
     pageSize: 10,
-    showSizeChanger: true
+    showSizeChanger: true,
   }}
 />
 ```
@@ -102,8 +102,8 @@ function App() {
 ```tsx
 function SelectableTable() {
   const handleRowSelect = (selectedRows: User[]) => {
-    console.log('选中的行:', selectedRows)
-  }
+    console.log('选中的行:', selectedRows);
+  };
 
   return (
     <DataTable
@@ -113,7 +113,7 @@ function SelectableTable() {
       selectable
       onRowSelect={handleRowSelect}
     />
-  )
+  );
 }
 ```
 
@@ -127,7 +127,7 @@ function SelectableTable() {
   rowKey="id"
   virtualScroll
   pagination={{
-    pageSize: 100
+    pageSize: 100,
   }}
 />
 ```
@@ -136,24 +136,19 @@ function SelectableTable() {
 
 ```tsx
 function LoadingTable() {
-  const [loading, setLoading] = useState(true)
-  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     fetchData().then(result => {
-      setData(result)
-      setLoading(false)
-    })
-  }, [])
+      setData(result);
+      setLoading(false);
+    });
+  }, []);
 
   return (
-    <DataTable
-      data={data}
-      columns={columns}
-      rowKey="id"
-      loading={loading}
-    />
-  )
+    <DataTable data={data} columns={columns} rowKey="id" loading={loading} />
+  );
 }
 ```
 
@@ -165,12 +160,12 @@ const columns: Column<User>[] = [
     key: 'avatar',
     title: '头像',
     render: (value, record) => (
-      <img 
-        src={record.avatar} 
+      <img
+        src={record.avatar}
         alt={record.name}
         className="w-8 h-8 rounded-full"
       />
-    )
+    ),
   },
   {
     key: 'name',
@@ -180,7 +175,7 @@ const columns: Column<User>[] = [
         <div className="font-medium">{record.name}</div>
         <div className="text-sm text-gray-500">{record.email}</div>
       </div>
-    )
+    ),
   },
   {
     key: 'actions',
@@ -190,42 +185,42 @@ const columns: Column<User>[] = [
         <button onClick={() => editUser(record.id)}>编辑</button>
         <button onClick={() => deleteUser(record.id)}>删除</button>
       </div>
-    )
-  }
-]
+    ),
+  },
+];
 ```
 
 ## API
 
 ### DataTableProps
 
-| 属性 | 类型 | 默认值 | 描述 |
-|------|------|--------|------|
-| data | `T[]` | `[]` | 表格数据 |
-| columns | `Column<T>[]` | `[]` | 列配置 |
-| rowKey | `keyof T` | - | 行唯一标识字段 |
-| pagination | `PaginationConfig` | - | 分页配置 |
-| loading | `boolean` | `false` | 加载状态 |
-| onRowSelect | `(selectedRows: T[]) => void` | - | 行选择回调 |
-| virtualScroll | `boolean` | `false` | 是否启用虚拟滚动 |
-| selectable | `boolean` | `false` | 是否可选择行 |
+| 属性          | 类型                          | 默认值  | 描述             |
+| ------------- | ----------------------------- | ------- | ---------------- |
+| data          | `T[]`                         | `[]`    | 表格数据         |
+| columns       | `Column<T>[]`                 | `[]`    | 列配置           |
+| rowKey        | `keyof T`                     | -       | 行唯一标识字段   |
+| pagination    | `PaginationConfig`            | -       | 分页配置         |
+| loading       | `boolean`                     | `false` | 加载状态         |
+| onRowSelect   | `(selectedRows: T[]) => void` | -       | 行选择回调       |
+| virtualScroll | `boolean`                     | `false` | 是否启用虚拟滚动 |
+| selectable    | `boolean`                     | `false` | 是否可选择行     |
 
 ### Column
 
-| 属性 | 类型 | 默认值 | 描述 |
-|------|------|--------|------|
-| key | `keyof T` | - | 列数据字段 |
-| title | `string` | - | 列标题 |
-| width | `number` | - | 列宽度 |
-| sortable | `boolean` | `false` | 是否可排序 |
-| filterable | `boolean` | `false` | 是否可筛选 |
-| render | `(value: unknown, record: T, index: number) => React.ReactNode` | - | 自定义渲染函数 |
+| 属性       | 类型                                                            | 默认值  | 描述           |
+| ---------- | --------------------------------------------------------------- | ------- | -------------- |
+| key        | `keyof T`                                                       | -       | 列数据字段     |
+| title      | `string`                                                        | -       | 列标题         |
+| width      | `number`                                                        | -       | 列宽度         |
+| sortable   | `boolean`                                                       | `false` | 是否可排序     |
+| filterable | `boolean`                                                       | `false` | 是否可筛选     |
+| render     | `(value: unknown, record: T, index: number) => React.ReactNode` | -       | 自定义渲染函数 |
 
 ### PaginationConfig
 
-| 属性 | 类型 | 默认值 | 描述 |
-|------|------|--------|------|
-| pageSize | `number` | `10` | 每页条数 |
+| 属性            | 类型      | 默认值  | 描述                   |
+| --------------- | --------- | ------- | ---------------------- |
+| pageSize        | `number`  | `10`    | 每页条数               |
 | showSizeChanger | `boolean` | `false` | 是否显示页面大小选择器 |
 
 ## 高级用法
@@ -238,20 +233,22 @@ const columns: Column<User>[] = [
     key: 'status',
     title: '状态',
     filterable: true,
-    render: (value) => {
+    render: value => {
       const statusMap = {
         active: { text: '活跃', color: 'green' },
-        inactive: { text: '非活跃', color: 'red' }
-      }
-      const status = statusMap[value as keyof typeof statusMap]
+        inactive: { text: '非活跃', color: 'red' },
+      };
+      const status = statusMap[value as keyof typeof statusMap];
       return (
-        <span className={`px-2 py-1 rounded text-${status.color}-600 bg-${status.color}-100`}>
+        <span
+          className={`px-2 py-1 rounded text-${status.color}-600 bg-${status.color}-100`}
+        >
           {status.text}
         </span>
-      )
-    }
-  }
-]
+      );
+    },
+  },
+];
 ```
 
 ### 多级排序
@@ -273,18 +270,18 @@ const responsiveColumns: Column<User>[] = [
   {
     key: 'name',
     title: '姓名',
-    width: window.innerWidth > 768 ? 200 : 150
+    width: window.innerWidth > 768 ? 200 : 150,
   },
   {
     key: 'email',
     title: '邮箱',
-    render: (value) => (
+    render: value => (
       <div className="truncate max-w-xs" title={value as string}>
         {value as string}
       </div>
-    )
-  }
-]
+    ),
+  },
+];
 ```
 
 ## 性能优化
@@ -311,19 +308,19 @@ const shouldUseVirtualScroll = data.length > 100
 ```tsx
 // 对于超大数据集，建议结合服务端分页
 function BigDataTable() {
-  const [data, setData] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [pagination, setPagination] = useState({ current: 1, pageSize: 20 })
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 20 });
 
   const fetchData = async (page: number, size: number) => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const result = await api.getData({ page, size })
-      setData(result.data)
+      const result = await api.getData({ page, size });
+      setData(result.data);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <DataTable
@@ -333,10 +330,10 @@ function BigDataTable() {
       loading={loading}
       virtualScroll
       pagination={{
-        pageSize: pagination.pageSize
+        pageSize: pagination.pageSize,
       }}
     />
-  )
+  );
 }
 ```
 

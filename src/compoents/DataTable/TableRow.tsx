@@ -1,24 +1,24 @@
 // src/components/DataTable/TableRow.tsx
-import React from 'react'
+import React from 'react';
 
 interface Column<T> {
-  key: keyof T
-  title: string
-  width?: number
-  sortable?: boolean
-  filterable?: boolean
-  render?: (value: unknown, record: T, index: number) => React.ReactNode
-  sortDirection?: 'asc' | 'desc'
-  filterValue?: unknown
+  key: keyof T;
+  title: string;
+  width?: number;
+  sortable?: boolean;
+  filterable?: boolean;
+  render?: (value: unknown, record: T, index: number) => React.ReactNode;
+  sortDirection?: 'asc' | 'desc';
+  filterValue?: unknown;
 }
 
 interface TableRowProps<T> {
-  data: T
-  columns: Column<T>[]
-  index: number
-  selected?: boolean
-  onSelect: (selected: boolean) => void
-  selectable?: boolean
+  data: T;
+  columns: Column<T>[];
+  index: number;
+  selected?: boolean;
+  onSelect: (selected: boolean) => void;
+  selectable?: boolean;
 }
 
 export const TableRow = <T extends Record<string, unknown>>({
@@ -27,19 +27,23 @@ export const TableRow = <T extends Record<string, unknown>>({
   index,
   selected,
   onSelect,
-  selectable = false
+  selectable = false,
 }: TableRowProps<T>) => {
   return (
-    <div 
+    <div
       className={`table-row ${selected ? 'selected' : ''} ${index % 2 === 0 ? 'even' : 'odd'}`}
       style={{
         display: 'flex',
         alignItems: 'center',
         padding: '12px 16px',
         borderBottom: '1px solid #e5e7eb',
-        backgroundColor: selected ? '#eff6ff' : index % 2 === 0 ? '#f9fafb' : 'white',
+        backgroundColor: selected
+          ? '#eff6ff'
+          : index % 2 === 0
+            ? '#f9fafb'
+            : 'white',
         cursor: 'pointer',
-        transition: 'background-color 0.2s ease'
+        transition: 'background-color 0.2s ease',
       }}
       onClick={() => onSelect(!selected)}
     >
@@ -49,19 +53,19 @@ export const TableRow = <T extends Record<string, unknown>>({
           <input
             type="checkbox"
             checked={selected}
-            onChange={(e) => onSelect(e.target.checked)}
-            onClick={(e) => e.stopPropagation()}
+            onChange={e => onSelect(e.target.checked)}
+            onClick={e => e.stopPropagation()}
           />
         </div>
       )}
-      
+
       {/* 数据列 */}
-      {columns.map((column) => {
-        const value = data[column.key]
-        const displayValue = column.render 
+      {columns.map(column => {
+        const value = data[column.key];
+        const displayValue = column.render
           ? column.render(value, data, index)
-          : String(value || '')
-        
+          : String(value || '');
+
         return (
           <div
             key={String(column.key)}
@@ -70,13 +74,13 @@ export const TableRow = <T extends Record<string, unknown>>({
               padding: '0 8px',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap'
+              whiteSpace: 'nowrap',
             }}
           >
             {displayValue}
           </div>
-        )
+        );
       })}
     </div>
-  )
-}
+  );
+};

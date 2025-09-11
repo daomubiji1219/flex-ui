@@ -9,7 +9,7 @@
   - 要点：
     - globals: true
     - environment: jsdom
-    - setupFiles: ['./src/test/setup.ts']  // 若不存在需创建
+    - setupFiles: ['./src/test/setup.ts'] // 若不存在需创建
     - include: ['src/**/*.{test,spec}.{ts,tsx}']
     - alias: '@' -> './src'
 
@@ -48,7 +48,7 @@
 - VitePress 主配置（关键信息）：
   - base: '/'
   - vite.plugins: [react()]
-  - vite.resolve.alias: { '@': path.resolve(__dirname, '../../src') }
+  - vite.resolve.alias: { '@': path.resolve(\_\_dirname, '../../src') }
   - server.fs.allow: ['..', '../..']
 
 - 主题配置（关键信息）：
@@ -77,20 +77,19 @@
   - devCommand: "pnpm docs:dev"
   - installCommand: "pnpm install"
   - env: { NODE_VERSION: "18" }
-
 - 基础路径说明：
   - 本方案统一使用 base: '/'，适配 Vercel 根域名或自定义域
 
 ## 4. 组件开发与测试流程（TDD）
 
 - 新建组件时：
-  1) 先编写失败的测试（组件的可访问性、属性、事件、样式快照等）
-  2) 实现最小功能使测试通过
-  3) 重构与补充边界测试
+  1. 先编写失败的测试（组件的可访问性、属性、事件、样式快照等）
+  2. 实现最小功能使测试通过
+  3. 重构与补充边界测试
 
 - 基础测试模板建议（tsx）：
   - render、screen、within、userEvent
-  - getByRole、getByText、findBy* 的合理选择
+  - getByRole、getByText、findBy\* 的合理选择
   - 断言使用 jest-dom 匹配器（toBeInTheDocument, toHaveClass 等）
 
 ## 5. 依赖版本建议（与 Vite 7 兼容）

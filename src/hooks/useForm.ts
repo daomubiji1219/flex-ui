@@ -20,7 +20,7 @@
 // }
 
 // // 表单动作类型
-// type FormAction<T> = 
+// type FormAction<T> =
 //   | { type: 'SET_FIELD_VALUE'; payload: { name: keyof T; value: unknown } }
 //   | { type: 'SET_FIELD_ERROR'; payload: { name: keyof T; error: string } }
 //   | { type: 'CLEAR_FIELD_ERROR'; payload: { name: keyof T } }
@@ -79,14 +79,14 @@
 //     touched: {},
 //     isSubmitting: false
 //   })
-  
+
 //   // 字段验证 - 展示异步处理能力
 //   const validateField = useCallback(async (
-//     name: keyof T, 
+//     name: keyof T,
 //     value: unknown
 //   ): Promise<string | null> => {
 //     if (!validationSchema?.[name]) return null
-    
+
 //     try {
 //       await validationSchema[name]!.validate(value)
 //       return null
@@ -94,16 +94,16 @@
 //       return (error as Error).message || '验证失败'
 //     }
 //   }, [validationSchema])
-  
+
 //   // 防抖验证 - 性能优化展示
 //   const debouncedValidate = useMemo(
 //     () => simpleDebounce(validateField, 300),
 //     [validateField]
 //   )
-  
+
 //   const setFieldValue = useCallback(async (name: keyof T, value: unknown) => {
 //     setState({ type: 'SET_FIELD_VALUE', payload: { name, value } })
-    
+
 //     // 实时验证
 //     const error = await debouncedValidate(name, value)
 //     if (error) {
@@ -112,16 +112,16 @@
 //       setState({ type: 'CLEAR_FIELD_ERROR', payload: { name } })
 //     }
 //   }, [debouncedValidate])
-  
+
 //   // 验证所有字段
 //   const validateAllFields = useCallback(async (
-//     values: T, 
+//     values: T,
 //     schema?: ValidationSchema<T>
 //   ): Promise<Partial<Record<keyof T, string>>> => {
 //     if (!schema) return {}
-    
+
 //     const errors: Partial<Record<keyof T, string>> = {}
-    
+
 //     for (const [key, rule] of Object.entries(schema) as [keyof T, ValidationRule][]) {
 //       try {
 //         await rule.validate(values[key])
@@ -129,10 +129,10 @@
 //          errors[key] = (error as Error).message || '验证失败'
 //       }
 //     }
-    
+
 //     return errors
 //   }, [])
-  
+
 //   return {
 //     values: state.values,
 //     errors: state.errors,
@@ -171,16 +171,16 @@
 //   children: React.ReactNode
 // }) {
 //   const form = useForm(initialValues, validationSchema)
-  
+
 //   const handleSubmit = async (e: React.FormEvent) => {
 //     e.preventDefault()
-    
+
 //     const errors = await form.validateForm()
 //     if (Object.keys(errors).length === 0) {
 //       await onSubmit(form.values)
 //     }
 //   }
-  
+
 //   return React.createElement(
 //     FormContext.Provider,
 //     { value: form as FormContextValue<Record<string, unknown>> },

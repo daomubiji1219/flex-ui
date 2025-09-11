@@ -40,7 +40,7 @@ Flexi-UI 采用测试驱动开发方法，每个组件都先编写测试用例�
 
 ```tsx
 // 只导入需要的组件
-import { Button, Input } from '@daomu/flexi-ui'
+import { Button, Input } from '@daomu/flexi-ui';
 ```
 
 ### 🔧 TypeScript 支持
@@ -48,12 +48,12 @@ import { Button, Input } from '@daomu/flexi-ui'
 完整的 TypeScript 类型定义，提供优秀的开发体验：
 
 ```tsx
-import { Button, ButtonProps } from '@daomu/flexi-ui'
+import { Button, ButtonProps } from '@daomu/flexi-ui';
 
 // 完整的类型提示和检查
-const MyButton: React.FC<ButtonProps> = (props) => {
-  return <Button {...props} />
-}
+const MyButton: React.FC<ButtonProps> = props => {
+  return <Button {...props} />;
+};
 ```
 
 ### 🌍 国际化支持
@@ -61,15 +61,11 @@ const MyButton: React.FC<ButtonProps> = (props) => {
 内置国际化支持，轻松构建多语言应用：
 
 ```tsx
-import { ConfigProvider } from '@daomu/flexi-ui'
-import zhCN from '@daomu/flexi-ui/locale/zh-CN'
+import { ConfigProvider } from '@daomu/flexi-ui';
+import zhCN from '@daomu/flexi-ui/locale/zh-CN';
 
 function App() {
-  return (
-    <ConfigProvider locale={zhCN}>
-      {/* 你的应用 */}
-    </ConfigProvider>
-  )
+  return <ConfigProvider locale={zhCN}>{/* 你的应用 */}</ConfigProvider>;
 }
 ```
 
@@ -82,8 +78,8 @@ function App() {
 现代浏览器和 IE11+（需要 polyfills）。
 
 | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>IE / Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Safari |
-| --- | --- | --- | --- |
-| IE11, Edge | last 2 versions | last 2 versions | last 2 versions |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| IE11, Edge                                                                                                                                                                                                      | last 2 versions                                                                                                                                                                                                   | last 2 versions                                                                                                                                                                                               | last 2 versions                                                                                                                                                                                               |
 
 ## 参与贡献
 

@@ -18,19 +18,19 @@ pnpm add -D @types/node vue
 
 ```typescript
 // docs/.vitepress/config.ts
-import { defineConfig } from 'vitepress'
-import path from 'path'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vitepress';
+import path from 'path';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   title: 'Flexi-UI',
   description: '现代化的 React 组件库 - 灵活、高效、易用',
   base: '/',
   lang: 'zh-CN',
-  
+
   themeConfig: {
     logo: '/logo.svg',
-    
+
     nav: [
       { text: '指南', link: '/guide/', activeMatch: '/guide/' },
       { text: '组件', link: '/components/', activeMatch: '/components/' },
@@ -39,12 +39,15 @@ export default defineConfig({
         text: '生态系统',
         items: [
           { text: 'GitHub', link: 'https://github.com/your-org/flexi-ui' },
-          { text: 'NPM', link: 'https://www.npmjs.com/package/@daomu/flexi-ui' },
-          { text: '更新日志', link: '/changelog' }
-        ]
-      }
+          {
+            text: 'NPM',
+            link: 'https://www.npmjs.com/package/@daomu/flexi-ui',
+          },
+          { text: '更新日志', link: '/changelog' },
+        ],
+      },
     ],
-    
+
     sidebar: {
       '/guide/': [
         {
@@ -54,8 +57,8 @@ export default defineConfig({
             { text: '介绍', link: '/guide/' },
             { text: '快速开始', link: '/guide/getting-started' },
             { text: '安装', link: '/guide/installation' },
-            { text: '主题定制', link: '/guide/theming' }
-          ]
+            { text: '主题定制', link: '/guide/theming' },
+          ],
         },
         {
           text: '开发指南',
@@ -64,9 +67,9 @@ export default defineConfig({
             { text: 'TDD 开发流程', link: '/guide/tdd-development' },
             { text: '组件开发规范', link: '/guide/component-standards' },
             { text: '测试指南', link: '/guide/testing' },
-            { text: '贡献指南', link: '/guide/contributing' }
-          ]
-        }
+            { text: '贡献指南', link: '/guide/contributing' },
+          ],
+        },
       ],
       '/components/': [
         {
@@ -74,24 +77,27 @@ export default defineConfig({
           collapsed: false,
           items: [
             { text: 'Button 按钮', link: '/components/button' },
-            { text: 'ThemeToggle 主题切换', link: '/components/theme-toggle' }
-          ]
+            { text: 'ThemeToggle 主题切换', link: '/components/theme-toggle' },
+          ],
         },
         {
           text: '数据展示',
           collapsed: false,
           items: [
             { text: 'DataTable 数据表格', link: '/components/data-table' },
-            { text: 'VirtualList 虚拟列表', link: '/components/virtual-list' }
-          ]
+            { text: 'VirtualList 虚拟列表', link: '/components/virtual-list' },
+          ],
         },
         {
           text: '数据录入',
           collapsed: false,
           items: [
-            { text: 'FileUploader 文件上传', link: '/components/file-uploader' }
-          ]
-        }
+            {
+              text: 'FileUploader 文件上传',
+              link: '/components/file-uploader',
+            },
+          ],
+        },
       ],
       '/api/': [
         {
@@ -100,34 +106,34 @@ export default defineConfig({
             { text: '组件 API', link: '/api/components' },
             { text: 'Hooks API', link: '/api/hooks' },
             { text: '工具函数', link: '/api/utils' },
-            { text: '类型定义', link: '/api/types' }
-          ]
-        }
-      ]
+            { text: '类型定义', link: '/api/types' },
+          ],
+        },
+      ],
     },
-    
+
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/your-org/flexi-ui' }
+      { icon: 'github', link: 'https://github.com/your-org/flexi-ui' },
     ],
-    
+
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2024 Flexi-UI Team'
+      copyright: 'Copyright © 2024 Flexi-UI Team',
     },
-    
+
     editLink: {
       pattern: 'https://github.com/your-org/flexi-ui/edit/main/docs/:path',
-      text: '在 GitHub 上编辑此页面'
+      text: '在 GitHub 上编辑此页面',
     },
-    
+
     lastUpdated: {
       text: '最后更新于',
       formatOptions: {
         dateStyle: 'short',
-        timeStyle: 'medium'
-      }
+        timeStyle: 'medium',
+      },
     },
-    
+
     search: {
       provider: 'local',
       options: {
@@ -136,56 +142,56 @@ export default defineConfig({
             translations: {
               button: {
                 buttonText: '搜索文档',
-                buttonAriaLabel: '搜索文档'
+                buttonAriaLabel: '搜索文档',
               },
               modal: {
                 noResultsText: '无法找到相关结果',
                 resetButtonTitle: '清除查询条件',
                 footer: {
                   selectText: '选择',
-                  navigateText: '切换'
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                  navigateText: '切换',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
-  
+
   vite: {
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '../../src')
-      }
+        '@': path.resolve(__dirname, '../../src'),
+      },
     },
     server: {
       fs: {
-        allow: ['..', '../..']
-      }
-    }
+        allow: ['..', '../..'],
+      },
+    },
   },
-  
+
   markdown: {
     theme: {
       light: 'github-light',
-      dark: 'github-dark'
+      dark: 'github-dark',
     },
     lineNumbers: true,
-    config: (md) => {
+    config: md => {
       // 自定义 markdown 插件
-    }
-  }
-})
+    },
+  },
+});
 ```
 
 #### 主题自定义配置
 
 ```typescript
 // docs/.vitepress/theme/index.ts
-import DefaultTheme from 'vitepress/theme'
-import type { Theme } from 'vitepress'
-import { h } from 'vue'
+import DefaultTheme from 'vitepress/theme';
+import type { Theme } from 'vitepress';
+import { h } from 'vue';
 
 // 注意：不要在这里直接导入并注册 React 组件
 // import { Button } from '../../../src/compoents/Button/Button'
@@ -194,30 +200,30 @@ import { h } from 'vue'
 // import { VirtualList } from '../../../src/compoents/VirtualList/VirtualList'
 
 // 导入自定义样式
-import './custom.css'
-import '../../../src/index.css'
+import './custom.css';
+import '../../../src/index.css';
 
 // 导入演示组件（Vue）
-import DemoContainer from './components/DemoContainer.vue'
-import ApiTable from './components/ApiTable.vue'
-import ReactDemo from './components/ReactDemo.vue'
+import DemoContainer from './components/DemoContainer.vue';
+import ApiTable from './components/ApiTable.vue';
+import ReactDemo from './components/ReactDemo.vue';
 
 const theme: Theme = {
   ...DefaultTheme,
   Layout: () => {
     return h(DefaultTheme.Layout, null, {
       // 自定义布局插槽（可选）
-    })
+    });
   },
   enhanceApp({ app }) {
     // 仅注册 Vue 演示组件
-    app.component('DemoContainer', DemoContainer)
-    app.component('ApiTable', ApiTable)
-    app.component('ReactDemo', ReactDemo)
-  }
-}
+    app.component('DemoContainer', DemoContainer);
+    app.component('ApiTable', ApiTable);
+    app.component('ReactDemo', ReactDemo);
+  },
+};
 
-export default theme
+export default theme;
 ```
 
 > 说明：React 组件通过 `<ReactDemo name="ComponentName" :props="{...}" />` 在 Markdown 中渲染，底层在 ReactDemo 中使用 ReactDOM.createRoot 进行挂载；请确保在 docs/.vitepress/config.ts 中启用 @vitejs/plugin-react。
@@ -297,11 +303,11 @@ export default theme
   .demo-container {
     padding: 16px;
   }
-  
+
   .api-table {
     font-size: 14px;
   }
-  
+
   .api-table th,
   .api-table td {
     padding: 8px;
@@ -334,14 +340,14 @@ export default theme
 
 <script setup lang="ts">
 interface Props {
-  title?: string
-  code?: string
-  showCode?: boolean
+  title?: string;
+  code?: string;
+  showCode?: boolean;
 }
 
 withDefaults(defineProps<Props>(), {
-  showCode: true
-})
+  showCode: true,
+});
 </script>
 ```
 
@@ -362,10 +368,17 @@ withDefaults(defineProps<Props>(), {
     </thead>
     <tbody>
       <tr v-for="prop in props" :key="prop.name">
-        <td><code>{{ prop.name }}</code></td>
+        <td>
+          <code>{{ prop.name }}</code>
+        </td>
         <td>{{ prop.description }}</td>
-        <td><code>{{ prop.type }}</code></td>
-        <td><code v-if="prop.default">{{ prop.default }}</code><span v-else>-</span></td>
+        <td>
+          <code>{{ prop.type }}</code>
+        </td>
+        <td>
+          <code v-if="prop.default">{{ prop.default }}</code
+          ><span v-else>-</span>
+        </td>
         <td>{{ prop.required ? '是' : '否' }}</td>
       </tr>
     </tbody>
@@ -374,18 +387,18 @@ withDefaults(defineProps<Props>(), {
 
 <script setup lang="ts">
 interface PropItem {
-  name: string
-  description: string
-  type: string
-  default?: string
-  required?: boolean
+  name: string;
+  description: string;
+  type: string;
+  default?: string;
+  required?: boolean;
 }
 
 interface Props {
-  props: PropItem[]
+  props: PropItem[];
 }
 
-defineProps<Props>()
+defineProps<Props>();
 </script>
 ```
 
@@ -393,48 +406,47 @@ defineProps<Props>()
 
 ### 首页
 
-```markdown
-<!-- docs/index.md -->
----
+````markdown
+## <!-- docs/index.md -->
+
 layout: home
 
 hero:
-  name: "Flexi-UI"
-  text: "现代化的 React 组件库"
-  tagline: "灵活、高效、易用 - 为现代 Web 应用而生"
-  image:
-    src: /logo.svg
-    alt: Flexi-UI
-  actions:
-    - theme: brand
-      text: 快速开始
-      link: /guide/getting-started
-    - theme: alt
-      text: 查看组件
-      link: /components/
-    - theme: alt
-      text: GitHub
-      link: https://github.com/your-org/flexi-ui
+name: "Flexi-UI"
+text: "现代化的 React 组件库"
+tagline: "灵活、高效、易用 - 为现代 Web 应用而生"
+image:
+src: /logo.svg
+alt: Flexi-UI
+actions: - theme: brand
+text: 快速开始
+link: /guide/getting-started - theme: alt
+text: 查看组件
+link: /components/ - theme: alt
+text: GitHub
+link: https://github.com/your-org/flexi-ui
 
 features:
-  - icon: ⚡️
-    title: 高性能
-    details: 基于 React 18 和现代浏览器 API，提供卓越的性能体验
-  - icon: 🎨
-    title: 主题定制
-    details: 支持深度主题定制，轻松适配各种设计系统
-  - icon: 📱
-    title: 响应式设计
-    details: 移动优先的响应式设计，完美适配各种设备
-  - icon: 🔧
-    title: TypeScript
-    details: 完整的 TypeScript 支持，提供优秀的开发体验
-  - icon: 🧪
-    title: 测试驱动
-    details: 基于 TDD 开发，确保组件的稳定性和可靠性
-  - icon: 📚
-    title: 丰富文档
-    details: 详细的文档和示例，快速上手和深度使用
+
+- icon: ⚡️
+  title: 高性能
+  details: 基于 React 18 和现代浏览器 API，提供卓越的性能体验
+- icon: 🎨
+  title: 主题定制
+  details: 支持深度主题定制，轻松适配各种设计系统
+- icon: 📱
+  title: 响应式设计
+  details: 移动优先的响应式设计，完美适配各种设备
+- icon: 🔧
+  title: TypeScript
+  details: 完整的 TypeScript 支持，提供优秀的开发体验
+- icon: 🧪
+  title: 测试驱动
+  details: 基于 TDD 开发，确保组件的稳定性和可靠性
+- icon: 📚
+  title: 丰富文档
+  details: 详细的文档和示例，快速上手和深度使用
+
 ---
 
 ## 快速体验
@@ -455,17 +467,18 @@ pnpm add @daomu/flexi-ui
 # 使用 yarn
 yarn add @daomu/flexi-ui
 ```
+````
 
 ```tsx
-import { Button, DataTable } from '@daomu/flexi-ui'
-import '@daomu/flexi-ui/dist/style.css'
+import { Button, DataTable } from '@daomu/flexi-ui';
+import '@daomu/flexi-ui/dist/style.css';
 
 function App() {
   return (
     <div>
       <Button variant="primary">Hello Flexi-UI</Button>
     </div>
-  )
+  );
 }
 ```
 
@@ -491,7 +504,8 @@ function App() {
 - **SSR 支持**: 服务端渲染友好
 - **CDN 分发**: 全球 CDN 加速
 - **版本管理**: 语义化版本控制
-```
+
+````
 
 ### 组件文档模板
 
@@ -604,17 +618,17 @@ const buttonProps = [
   --button-border-radius: 6px;
   --button-font-size: 14px;
   --button-font-weight: 500;
-  
+
   /* 主题色 */
   --button-primary-bg: #1890ff;
   --button-primary-border: #1890ff;
   --button-primary-color: #fff;
-  
+
   /* 悬停状态 */
   --button-primary-hover-bg: #40a9ff;
   --button-primary-hover-border: #40a9ff;
 }
-```
+````
 
 ## 无障碍访问
 
@@ -622,7 +636,8 @@ const buttonProps = [
 - 支持键盘导航（Enter 和 Space 键）
 - 禁用状态下会设置 `aria-disabled` 属性
 - 加载状态下会设置 `aria-busy` 属性
-```
+
+````
 
 ## 4. 构建和部署脚本
 
@@ -637,7 +652,7 @@ const buttonProps = [
     "docs:serve": "vitepress serve docs"
   }
 }
-```
+````
 
 > 提示：库构建（如 build:lib）与文档构建请在 PowerShell 中分步执行，例如先运行 `pnpm run build:lib`，完成后再运行 `pnpm run docs:build`；避免使用 `&&` 串联。
 
@@ -655,5 +670,6 @@ const buttonProps = [
 - @types/node: ^20.11.x
 
 提示：
+
 - 使用 pnpm 管理依赖与脚本。
 - 在 PowerShell 中请分步顺序执行命令，避免使用 && 进行串联。

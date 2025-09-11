@@ -20,9 +20,9 @@
 </DemoContainer>
 
 ```tsx
-import { VirtualList } from '@flexi-ui/components'
+import { VirtualList } from '@flexi-ui/components';
 
-const items = Array.from({ length: 10000 }, (_, i) => `Item ${i + 1}`)
+const items = Array.from({ length: 10000 }, (_, i) => `Item ${i + 1}`);
 
 function App() {
   return (
@@ -36,7 +36,7 @@ function App() {
         </div>
       )}
     />
-  )
+  );
 }
 ```
 
@@ -46,8 +46,8 @@ function App() {
 <VirtualList
   items={items}
   height={500}
-  itemHeight={(index) => (index % 2 === 0 ? 40 : 60)}
-  renderItem={(item) => <div>{item}</div>}
+  itemHeight={index => (index % 2 === 0 ? 40 : 60)}
+  renderItem={item => <div>{item}</div>}
 />
 ```
 
@@ -70,34 +70,34 @@ const ref = useRef<{ scrollTo: (index: number) => void }>(null)
 - overscan?: number 预渲染行数
 
 ```tsx
-import { VirtualList } from '@flexi-ui/components'
+import { VirtualList } from '@flexi-ui/components';
 
 interface Item {
-  id: number
-  name: string
-  description: string
+  id: number;
+  name: string;
+  description: string;
 }
 
 function App() {
   const data = Array.from({ length: 10000 }, (_, i) => ({
     id: i,
     name: `Item ${i}`,
-    description: `Description for item ${i}`
-  }))
+    description: `Description for item ${i}`,
+  }));
 
   return (
     <VirtualList
       data={data}
       containerHeight={400}
       itemHeight={60}
-      renderItem={(item) => (
+      renderItem={item => (
         <div className="p-4 border-b">
           <h3 className="font-medium">{item.name}</h3>
           <p className="text-gray-600">{item.description}</p>
         </div>
       )}
     />
-  )
+  );
 }
 ```
 
@@ -134,7 +134,7 @@ const renderItem = (item: Item) => (
   data={data}
   containerHeight={400}
   itemHeight={80}
-  getKey={(item) => item.id}  // 使用自定义键值
+  getKey={item => item.id} // 使用自定义键值
   renderItem={(item, index) => (
     <div className="flex items-center p-4 border-b">
       <span className="w-12 text-gray-500">#{index}</span>
@@ -151,21 +151,21 @@ const renderItem = (item: Item) => (
 
 ```tsx
 interface User {
-  id: number
-  name: string
-  email: string
-  avatar: string
-  posts: number
-  followers: number
+  id: number;
+  name: string;
+  email: string;
+  avatar: string;
+  posts: number;
+  followers: number;
 }
 
 const UserList = () => {
-  const users: User[] = generateUsers(50000) // 5万用户数据
+  const users: User[] = generateUsers(50000); // 5万用户数据
 
   const renderUser = (user: User, index?: number) => (
     <div className="flex items-center p-4 hover:bg-gray-50 border-b">
-      <img 
-        src={user.avatar} 
+      <img
+        src={user.avatar}
         alt={user.name}
         className="w-12 h-12 rounded-full mr-4"
       />
@@ -184,38 +184,38 @@ const UserList = () => {
         关注
       </button>
     </div>
-  )
+  );
 
   return (
     <VirtualList
       data={users}
       containerHeight={600}
-      itemHeight={88}  // 固定高度便于性能优化
+      itemHeight={88} // 固定高度便于性能优化
       overscan={3}
       renderItem={renderUser}
-      getKey={(user) => user.id}
+      getKey={user => user.id}
     />
-  )
-}
+  );
+};
 ```
 
 ## 响应式高度
 
 ```tsx
 function ResponsiveVirtualList() {
-  const [containerHeight, setContainerHeight] = useState(400)
+  const [containerHeight, setContainerHeight] = useState(400);
 
   useEffect(() => {
     const updateHeight = () => {
       // 根据窗口大小调整容器高度
-      const height = window.innerHeight - 200
-      setContainerHeight(Math.max(300, height))
-    }
+      const height = window.innerHeight - 200;
+      setContainerHeight(Math.max(300, height));
+    };
 
-    updateHeight()
-    window.addEventListener('resize', updateHeight)
-    return () => window.removeEventListener('resize', updateHeight)
-  }, [])
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
 
   return (
     <VirtualList
@@ -224,7 +224,7 @@ function ResponsiveVirtualList() {
       itemHeight={60}
       renderItem={renderItem}
     />
-  )
+  );
 }
 ```
 
@@ -232,25 +232,25 @@ function ResponsiveVirtualList() {
 
 ### VirtualListProps
 
-| 属性 | 类型 | 默认值 | 描述 |
-|------|------|--------|------|
-| data | `T[]` | `[]` | 列表数据 |
-| itemHeight | `number` | `50` | 列表项高度（像素） |
-| containerHeight | `number` | `1000` | 容器高度（像素） |
-| overscan | `number` | `3` | 预渲染项目数量 |
-| getKey | `(item: T) => number \| string` | - | 获取列表项唯一键值 |
-| renderItem | `(item: T, index?: number) => ReactNode` | - | 渲染列表项的函数 |
+| 属性            | 类型                                     | 默认值 | 描述               |
+| --------------- | ---------------------------------------- | ------ | ------------------ |
+| data            | `T[]`                                    | `[]`   | 列表数据           |
+| itemHeight      | `number`                                 | `50`   | 列表项高度（像素） |
+| containerHeight | `number`                                 | `1000` | 容器高度（像素）   |
+| overscan        | `number`                                 | `3`    | 预渲染项目数量     |
+| getKey          | `(item: T) => number \| string`          | -      | 获取列表项唯一键值 |
+| renderItem      | `(item: T, index?: number) => ReactNode` | -      | 渲染列表项的函数   |
 
 ### 类型定义
 
 ```tsx
 interface VirtualListProps<T> {
-  data: T[]                                    // 数据数组
-  itemHeight?: number                          // 项目高度
-  containerHeight?: number                     // 容器高度
-  overscan?: number                           // 预渲染数量
-  getKey?: (item: T) => number | string       // 键值获取函数
-  renderItem: (item: T, index?: number) => ReactNode  // 渲染函数
+  data: T[]; // 数据数组
+  itemHeight?: number; // 项目高度
+  containerHeight?: number; // 容器高度
+  overscan?: number; // 预渲染数量
+  getKey?: (item: T) => number | string; // 键值获取函数
+  renderItem: (item: T, index?: number) => ReactNode; // 渲染函数
 }
 ```
 
@@ -279,7 +279,7 @@ interface VirtualListProps<T> {
 
 ### 2. 渲染函数优化
 
-```tsx
+````tsx
 // ✅ 好的做法：使用 React.memo 优化渲染
 const ListItem = React.memo<{ item: Item; index: number }>(({ item, index }) => (
   <div className="p-4 border-b">
@@ -298,33 +298,35 @@ const renderItem = useCallback((item: Item, index?: number) => (
   renderItem={renderItem}
   // ... 其他属性
 />
-```
-
+````
 
 ### 3. 大数据集处理
 
 ```tsx
 // 处理超大数据集（10万+）
 function MassiveDataList() {
-  const [data] = useState(() => generateMassiveData(100000))
+  const [data] = useState(() => generateMassiveData(100000));
 
-  const renderItem = useCallback((item: Item) => (
-    <div className="p-2 border-b text-sm">
-      <span className="font-medium">{item.name}</span>
-      <span className="ml-2 text-gray-500">{item.id}</span>
-    </div>
-  ), [])
+  const renderItem = useCallback(
+    (item: Item) => (
+      <div className="p-2 border-b text-sm">
+        <span className="font-medium">{item.name}</span>
+        <span className="ml-2 text-gray-500">{item.id}</span>
+      </div>
+    ),
+    []
+  );
 
   return (
     <VirtualList
       data={data}
       containerHeight={500}
-      itemHeight={40}      // 较小的行高
-      overscan={2}         // 较少的预渲染
+      itemHeight={40} // 较小的行高
+      overscan={2} // 较少的预渲染
       renderItem={renderItem}
-      getKey={(item) => item.id}
+      getKey={item => item.id}
     />
-  )
+  );
 }
 ```
 
@@ -334,31 +336,27 @@ function MassiveDataList() {
 
 ```tsx
 interface Category {
-  id: number
-  name: string
-  items: Item[]
+  id: number;
+  name: string;
+  items: Item[];
 }
 
 const NestedVirtualList = () => {
-  const categories: Category[] = generateCategories()
+  const categories: Category[] = generateCategories();
 
   const renderCategory = (category: Category) => (
     <div className="mb-4">
-      <h2 className="text-lg font-bold p-4 bg-gray-100">
-        {category.name}
-      </h2>
+      <h2 className="text-lg font-bold p-4 bg-gray-100">{category.name}</h2>
       <VirtualList
         data={category.items}
         containerHeight={200}
         itemHeight={40}
-        renderItem={(item) => (
-          <div className="p-2 pl-8 border-b">
-            {item.name}
-          </div>
+        renderItem={item => (
+          <div className="p-2 pl-8 border-b">{item.name}</div>
         )}
       />
     </div>
-  )
+  );
 
   return (
     <VirtualList
@@ -366,23 +364,23 @@ const NestedVirtualList = () => {
       containerHeight={600}
       renderItem={renderCategory}
     />
-  )
-}
+  );
+};
 ```
 
 ### 2. 搜索和筛选
 
 ```tsx
 function SearchableVirtualList() {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [allData] = useState(generateLargeDataset())
+  const [searchTerm, setSearchTerm] = useState('');
+  const [allData] = useState(generateLargeDataset());
 
   const filteredData = useMemo(() => {
-    if (!searchTerm) return allData
-    return allData.filter(item => 
+    if (!searchTerm) return allData;
+    return allData.filter(item =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  }, [allData, searchTerm])
+    );
+  }, [allData, searchTerm]);
 
   return (
     <div>
@@ -390,14 +388,14 @@ function SearchableVirtualList() {
         type="text"
         placeholder="搜索..."
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={e => setSearchTerm(e.target.value)}
         className="w-full p-2 border rounded mb-4"
       />
       <VirtualList
         data={filteredData}
         containerHeight={400}
         itemHeight={60}
-        renderItem={(item) => (
+        renderItem={item => (
           <div className="p-4 border-b">
             <h3>{item.name}</h3>
             <p className="text-gray-600">{item.description}</p>
@@ -405,7 +403,7 @@ function SearchableVirtualList() {
         )}
       />
     </div>
-  )
+  );
 }
 ```
 
@@ -413,36 +411,39 @@ function SearchableVirtualList() {
 
 ```tsx
 function InfiniteVirtualList() {
-  const [data, setData] = useState<Item[]>([])
-  const [loading, setLoading] = useState(false)
-  const [hasMore, setHasMore] = useState(true)
+  const [data, setData] = useState<Item[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
   const loadMore = useCallback(async () => {
-    if (loading || !hasMore) return
-    
-    setLoading(true)
+    if (loading || !hasMore) return;
+
+    setLoading(true);
     try {
-      const newData = await fetchMoreData(data.length)
-      setData(prev => [...prev, ...newData])
-      setHasMore(newData.length > 0)
+      const newData = await fetchMoreData(data.length);
+      setData(prev => [...prev, ...newData]);
+      setHasMore(newData.length > 0);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [data.length, loading, hasMore])
+  }, [data.length, loading, hasMore]);
 
-  const renderItem = useCallback((item: Item, index?: number) => {
-    // 在接近末尾时触发加载
-    if (index === data.length - 10) {
-      loadMore()
-    }
+  const renderItem = useCallback(
+    (item: Item, index?: number) => {
+      // 在接近末尾时触发加载
+      if (index === data.length - 10) {
+        loadMore();
+      }
 
-    return (
-      <div className="p-4 border-b">
-        <h3>{item.name}</h3>
-        <p>{item.description}</p>
-      </div>
-    )
-  }, [data.length, loadMore])
+      return (
+        <div className="p-4 border-b">
+          <h3>{item.name}</h3>
+          <p>{item.description}</p>
+        </div>
+      );
+    },
+    [data.length, loadMore]
+  );
 
   return (
     <VirtualList
@@ -451,7 +452,7 @@ function InfiniteVirtualList() {
       itemHeight={80}
       renderItem={renderItem}
     />
-  )
+  );
 }
 ```
 
@@ -491,13 +492,15 @@ function InfiniteVirtualList() {
 
 ```tsx
 // ✅ 预处理数据，避免在渲染时计算
-const processedData = useMemo(() => 
-  rawData.map(item => ({
-    ...item,
-    displayName: `${item.firstName} ${item.lastName}`,
-    formattedDate: formatDate(item.createdAt)
-  })), [rawData]
-)
+const processedData = useMemo(
+  () =>
+    rawData.map(item => ({
+      ...item,
+      displayName: `${item.firstName} ${item.lastName}`,
+      formattedDate: formatDate(item.createdAt),
+    })),
+  [rawData]
+);
 ```
 
 ### 2. 键值优化
@@ -506,7 +509,7 @@ const processedData = useMemo(() =>
 // ✅ 使用稳定的唯一键值
 <VirtualList
   data={data}
-  getKey={(item) => item.id}  // 使用数据库ID
+  getKey={item => item.id} // 使用数据库ID
   // 避免使用索引作为键值
 />
 ```
@@ -515,24 +518,27 @@ const processedData = useMemo(() =>
 
 ```tsx
 // ✅ 大数据集时考虑分页加载
-const CHUNK_SIZE = 1000
+const CHUNK_SIZE = 1000;
 
 function ChunkedVirtualList() {
-  const [visibleData, setVisibleData] = useState([])
-  
+  const [visibleData, setVisibleData] = useState([]);
+
   // 只保持可见区域附近的数据在内存中
-  const updateVisibleData = useCallback((startIndex: number) => {
-    const start = Math.max(0, startIndex - CHUNK_SIZE)
-    const end = Math.min(allData.length, startIndex + CHUNK_SIZE * 2)
-    setVisibleData(allData.slice(start, end))
-  }, [allData])
+  const updateVisibleData = useCallback(
+    (startIndex: number) => {
+      const start = Math.max(0, startIndex - CHUNK_SIZE);
+      const end = Math.min(allData.length, startIndex + CHUNK_SIZE * 2);
+      setVisibleData(allData.slice(start, end));
+    },
+    [allData]
+  );
 
   return (
     <VirtualList
       data={visibleData}
       // ... 其他属性
     />
-  )
+  );
 }
 ```
 

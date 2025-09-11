@@ -40,14 +40,16 @@
 ## 带图标
 
 ```tsx
-import { Button } from '@flexi-ui/components'
-import { PlusIcon, DownloadIcon } from '@heroicons/react/24/outline'
+import { Button } from '@flexi-ui/components';
+import { PlusIcon, DownloadIcon } from '@heroicons/react/24/outline';
 
 <div>
   <Button icon={<PlusIcon />}>添加</Button>
-  <Button icon={<DownloadIcon />} variant="outline">下载</Button>
+  <Button icon={<DownloadIcon />} variant="outline">
+    下载
+  </Button>
   <Button icon={<PlusIcon />} /> {/* 仅图标 */}
-</div>
+</div>;
 ```
 
 ## 禁用状态
@@ -61,18 +63,18 @@ import { PlusIcon, DownloadIcon } from '@heroicons/react/24/outline'
 
 ### ButtonProps
 
-| 属性 | 类型 | 默认值 | 描述 |
-|------|------|--------|------|
-| variant | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | 按钮样式变体 |
-| size | `'sm' \| 'md' \| 'lg'` | `'md'` | 按钮尺寸 |
-| loading | `boolean` | `false` | 是否显示加载状态 |
-| icon | `React.ReactNode` | - | 按钮图标 |
-| fullWidth | `boolean` | `false` | 是否占满容器宽度 |
-| disabled | `boolean` | `false` | 是否禁用 |
-| onClick | `(event: React.MouseEvent) => void` | - | 点击事件处理函数 |
-| children | `React.ReactNode` | - | 按钮内容 |
-| className | `string` | - | 自定义 CSS 类名 |
-| style | `React.CSSProperties` | - | 自定义样式 |
+| 属性      | 类型                                               | 默认值      | 描述             |
+| --------- | -------------------------------------------------- | ----------- | ---------------- |
+| variant   | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | 按钮样式变体     |
+| size      | `'sm' \| 'md' \| 'lg'`                             | `'md'`      | 按钮尺寸         |
+| loading   | `boolean`                                          | `false`     | 是否显示加载状态 |
+| icon      | `React.ReactNode`                                  | -           | 按钮图标         |
+| fullWidth | `boolean`                                          | `false`     | 是否占满容器宽度 |
+| disabled  | `boolean`                                          | `false`     | 是否禁用         |
+| onClick   | `(event: React.MouseEvent) => void`                | -           | 点击事件处理函数 |
+| children  | `React.ReactNode`                                  | -           | 按钮内容         |
+| className | `string`                                           | -           | 自定义 CSS 类名  |
+| style     | `React.CSSProperties`                              | -           | 自定义样式       |
 
 ### 样式变体说明
 
@@ -92,10 +94,10 @@ import { PlusIcon, DownloadIcon } from '@heroicons/react/24/outline'
 ### 自定义样式
 
 ```tsx
-<Button 
-  style={{ 
+<Button
+  style={{
     borderRadius: '20px',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
   }}
 >
   自定义样式按钮
@@ -106,22 +108,22 @@ import { PlusIcon, DownloadIcon } from '@heroicons/react/24/outline'
 
 ```tsx
 function AsyncButton() {
-  const [loading, setLoading] = useState(false)
-  
+  const [loading, setLoading] = useState(false);
+
   const handleClick = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      await someAsyncOperation()
+      await someAsyncOperation();
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-  
+  };
+
   return (
     <Button loading={loading} onClick={handleClick}>
       提交数据
     </Button>
-  )
+  );
 }
 ```
 

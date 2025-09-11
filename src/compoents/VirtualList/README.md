@@ -36,7 +36,7 @@ interface ListItem {
 const data: ListItem[] = Array.from({ length: 10000 }, (_, i) => ({
   id: i,
   title: `项目 ${i}`,
-  description: `这是第 ${i} 个项目的描述信息`
+  description: `这是第 ${i} 个项目的描述信息`,
 }));
 
 function App() {
@@ -45,7 +45,7 @@ function App() {
       data={data}
       containerHeight={400}
       itemHeight={60}
-      getKey={(item) => item.id}
+      getKey={item => item.id}
       renderItem={(item, index) => (
         <div
           style={{
@@ -53,7 +53,7 @@ function App() {
             padding: '16px',
             borderBottom: '1px solid #eee',
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
           }}
         >
           <div>
@@ -71,14 +71,14 @@ function App() {
 
 ### VirtualListProps<T>
 
-| 属性 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| data | `T[]` | - | 列表数据数组 |
-| containerHeight | `number` | `1000` | 容器高度（px） |
-| itemHeight | `number` | `50` | 项目高度（px） |
-| renderItem | `(item: T, index?: number) => ReactNode` | - | 项目渲染函数 |
-| overscan | `number` | `3` | 缓冲区项目数量 |
-| getKey | `(item: T) => number \| string` | - | 获取项目唯一标识的函数，如果不提供则使用索引 |
+| 属性            | 类型                                     | 默认值 | 说明                                         |
+| --------------- | ---------------------------------------- | ------ | -------------------------------------------- |
+| data            | `T[]`                                    | -      | 列表数据数组                                 |
+| containerHeight | `number`                                 | `1000` | 容器高度（px）                               |
+| itemHeight      | `number`                                 | `50`   | 项目高度（px）                               |
+| renderItem      | `(item: T, index?: number) => ReactNode` | -      | 项目渲染函数                                 |
+| overscan        | `number`                                 | `3`    | 缓冲区项目数量                               |
+| getKey          | `(item: T) => number \| string`          | -      | 获取项目唯一标识的函数，如果不提供则使用索引 |
 
 ## 高级用法
 
@@ -91,21 +91,21 @@ function DynamicHeightList() {
   const items = Array.from({ length: 5000 }, (_, i) => ({
     id: i,
     title: `项目 ${i}`,
-    content: `内容 ${i}`.repeat(Math.floor(Math.random() * 10) + 1)
+    content: `内容 ${i}`.repeat(Math.floor(Math.random() * 10) + 1),
   }));
-  
+
   return (
     <VirtualList
       data={items}
       containerHeight={500}
       itemHeight={80} // 初始估计高度，组件会自动调整
-      getKey={(item) => item.id}
+      getKey={item => item.id}
       renderItem={(item, index) => (
         <div
           style={{
             padding: '16px',
             borderBottom: '1px solid #eee',
-            boxSizing: 'border-box'
+            boxSizing: 'border-box',
           }}
         >
           <h4>{item.title}</h4>
@@ -134,13 +134,13 @@ interface ComplexItem {
 
 function ComplexItemList() {
   const items: ComplexItem[] = generateComplexItems(10000);
-  
+
   return (
     <VirtualList
       data={items}
       containerHeight={600}
       itemHeight={120}
-      getKey={(item) => item.id}
+      getKey={item => item.id}
       renderItem={(item, index) => (
         <div
           className="complex-item"
@@ -150,7 +150,7 @@ function ComplexItemList() {
             borderBottom: '1px solid #e5e7eb',
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: index % 2 === 0 ? '#f9fafb' : '#ffffff'
+            backgroundColor: index % 2 === 0 ? '#f9fafb' : '#ffffff',
           }}
         >
           <img
@@ -160,12 +160,18 @@ function ComplexItemList() {
               width: '48px',
               height: '48px',
               borderRadius: '50%',
-              marginRight: '16px'
+              marginRight: '16px',
             }}
           />
-          
+
           <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginBottom: '4px',
+              }}
+            >
               <h4 style={{ margin: 0, marginRight: '8px' }}>{item.name}</h4>
               <span
                 className={`status-indicator ${item.status}`}
@@ -173,13 +179,16 @@ function ComplexItemList() {
                   width: '8px',
                   height: '8px',
                   borderRadius: '50%',
-                  backgroundColor: item.status === 'online' ? '#10b981' : '#6b7280'
+                  backgroundColor:
+                    item.status === 'online' ? '#10b981' : '#6b7280',
                 }}
               />
             </div>
-            
-            <p style={{ margin: '0 0 8px 0', color: '#6b7280' }}>{item.email}</p>
-            
+
+            <p style={{ margin: '0 0 8px 0', color: '#6b7280' }}>
+              {item.email}
+            </p>
+
             <div style={{ display: 'flex', gap: '4px' }}>
               {item.tags.map(tag => (
                 <span
@@ -189,7 +198,7 @@ function ComplexItemList() {
                     backgroundColor: '#e5e7eb',
                     borderRadius: '12px',
                     fontSize: '12px',
-                    color: '#374151'
+                    color: '#374151',
                   }}
                 >
                   {tag}
@@ -197,9 +206,13 @@ function ComplexItemList() {
               ))}
             </div>
           </div>
-          
-          <div style={{ textAlign: 'right', color: '#6b7280', fontSize: '12px' }}>
-            {item.status === 'online' ? '在线' : `最后在线: ${formatDate(item.lastSeen)}`}
+
+          <div
+            style={{ textAlign: 'right', color: '#6b7280', fontSize: '12px' }}
+          >
+            {item.status === 'online'
+              ? '在线'
+              : `最后在线: ${formatDate(item.lastSeen)}`}
           </div>
         </div>
       )}
@@ -214,17 +227,19 @@ function ComplexItemList() {
 function SearchableVirtualList() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive'>('all');
-  
+
   const allItems = useMemo(() => generateItems(10000), []);
-  
+
   const filteredItems = useMemo(() => {
     return allItems.filter(item => {
-      const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = item.title
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
       const matchesFilter = filter === 'all' || item.status === filter;
       return matchesSearch && matchesFilter;
     });
   }, [allItems, searchTerm, filter]);
-  
+
   return (
     <div>
       <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb' }}>
@@ -232,40 +247,40 @@ function SearchableVirtualList() {
           type="text"
           placeholder="搜索项目..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={e => setSearchTerm(e.target.value)}
           style={{
             width: '300px',
             padding: '8px 12px',
             border: '1px solid #d1d5db',
             borderRadius: '6px',
-            marginRight: '16px'
+            marginRight: '16px',
           }}
         />
-        
+
         <select
           value={filter}
-          onChange={(e) => setFilter(e.target.value as any)}
+          onChange={e => setFilter(e.target.value as any)}
           style={{
             padding: '8px 12px',
             border: '1px solid #d1d5db',
-            borderRadius: '6px'
+            borderRadius: '6px',
           }}
         >
           <option value="all">全部</option>
           <option value="active">活跃</option>
           <option value="inactive">非活跃</option>
         </select>
-        
+
         <span style={{ marginLeft: '16px', color: '#6b7280' }}>
           共 {filteredItems.length} 项
         </span>
       </div>
-      
+
       <VirtualList
         data={filteredItems}
         containerHeight={400}
         itemHeight={60}
-        getKey={(item) => item.id}
+        getKey={item => item.id}
         renderItem={(item, index) => (
           <div
             style={{
@@ -274,7 +289,7 @@ function SearchableVirtualList() {
               borderBottom: '1px solid #e5e7eb',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
             }}
           >
             <div>
@@ -299,10 +314,10 @@ function InfiniteScrollList() {
   const [items, setItems] = useState<ListItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  
+
   const loadMoreItems = useCallback(async () => {
     if (loading || !hasMore) return;
-    
+
     setLoading(true);
     try {
       const newItems = await fetchItems(items.length, 50);
@@ -315,24 +330,27 @@ function InfiniteScrollList() {
       setLoading(false);
     }
   }, [items.length, loading, hasMore]);
-  
+
   useEffect(() => {
     loadMoreItems(); // 初始加载
   }, []);
-  
-  const handleScroll = useCallback((scrollTop: number, containerHeight: number, totalHeight: number) => {
-    // 当滚动到底部附近时加载更多
-    if (scrollTop + containerHeight >= totalHeight - 200) {
-      loadMoreItems();
-    }
-  }, [loadMoreItems]);
-  
+
+  const handleScroll = useCallback(
+    (scrollTop: number, containerHeight: number, totalHeight: number) => {
+      // 当滚动到底部附近时加载更多
+      if (scrollTop + containerHeight >= totalHeight - 200) {
+        loadMoreItems();
+      }
+    },
+    [loadMoreItems]
+  );
+
   return (
     <VirtualList
       data={items}
       containerHeight={500}
       itemHeight={80}
-      getKey={(item) => item.id}
+      getKey={item => item.id}
       renderItem={(item, index) => (
         <div
           style={{
@@ -340,7 +358,7 @@ function InfiniteScrollList() {
             padding: '16px',
             borderBottom: '1px solid #e5e7eb',
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
           }}
         >
           <div>
@@ -363,50 +381,55 @@ function InfiniteScrollList() {
 function PerformanceMonitoredList() {
   const [renderCount, setRenderCount] = useState(0);
   const [visibleRange, setVisibleRange] = useState({ start: 0, end: 0 });
-  
+
   const items = useMemo(() => generateItems(50000), []);
-  
-  const renderItem = useCallback((item: ListItem, index: number) => {
-    // 监控渲染次数
-    useEffect(() => {
-      setRenderCount(prev => prev + 1);
-    }, []);
-    
-    return (
-      <div
-        key={item.id}
-        style={{
-          height: '60px',
-          padding: '16px',
-          borderBottom: '1px solid #e5e7eb',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between'
-        }}
-      >
-        <div>
-          <h4>{item.title}</h4>
-          <p>索引: {index}</p>
+
+  const renderItem = useCallback(
+    (item: ListItem, index: number) => {
+      // 监控渲染次数
+      useEffect(() => {
+        setRenderCount(prev => prev + 1);
+      }, []);
+
+      return (
+        <div
+          key={item.id}
+          style={{
+            height: '60px',
+            padding: '16px',
+            borderBottom: '1px solid #e5e7eb',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div>
+            <h4>{item.title}</h4>
+            <p>索引: {index}</p>
+          </div>
+          <small>渲染次数: {renderCount}</small>
         </div>
-        <small>渲染次数: {renderCount}</small>
-      </div>
-    );
-  }, [renderCount]);
-  
+      );
+    },
+    [renderCount]
+  );
+
   return (
     <div>
       <div style={{ padding: '16px', backgroundColor: '#f3f4f6' }}>
         <p>总项目数: {items.length}</p>
-        <p>可见范围: {visibleRange.start} - {visibleRange.end}</p>
+        <p>
+          可见范围: {visibleRange.start} - {visibleRange.end}
+        </p>
         <p>渲染的项目数: {visibleRange.end - visibleRange.start}</p>
         <p>总渲染次数: {renderCount}</p>
       </div>
-      
+
       <VirtualList
         data={items}
         containerHeight={400}
         itemHeight={60}
-        getKey={(item) => item.id}
+        getKey={item => item.id}
         renderItem={renderItem}
       />
     </div>
@@ -426,11 +449,7 @@ const memoizedItems = useMemo(() => {
 
 // ✅ 使用 useCallback 缓存渲染函数
 const renderItem = useCallback((item: ListItem, index: number) => {
-  return (
-    <div key={item.id}>
-      {/* 项目内容 */}
-    </div>
-  );
+  return <div key={item.id}>{/* 项目内容 */}</div>;
 }, []);
 
 // ✅ 合理设置缓冲区大小
@@ -439,9 +458,9 @@ const renderItem = useCallback((item: ListItem, index: number) => {
   containerHeight={400}
   itemHeight={60}
   overscan={5} // 不要设置过大
-  getKey={(item) => item.id}
+  getKey={item => item.id}
   renderItem={renderItem}
-/>
+/>;
 ```
 
 ### 避免常见性能问题
@@ -476,7 +495,7 @@ const badRenderItem2 = (item: ListItem, index: number) => (
 const processedItems = useMemo(() => {
   return items.map(item => ({
     ...item,
-    processedValue: expensiveCalculation(item)
+    processedValue: expensiveCalculation(item),
   }));
 }, [items]);
 ```
@@ -501,14 +520,14 @@ VirtualList 组件使用 Tailwind CSS 提供默认样式：
   data={items}
   containerHeight={400}
   itemHeight={60}
-  getKey={(item) => item.id}
+  getKey={item => item.id}
   renderItem={(item, index) => (
     <div
       className="custom-item-class"
       style={{
         backgroundColor: index % 2 === 0 ? '#f9fafb' : '#ffffff',
         padding: '12px 16px',
-        borderBottom: '1px solid #e5e7eb'
+        borderBottom: '1px solid #e5e7eb',
       }}
     >
       {/* 项目内容 */}
@@ -553,13 +572,13 @@ VirtualList 组件使用 Tailwind CSS 提供默认样式：
   data={items}
   containerHeight={400}
   itemHeight={60}
-  getKey={(item) => item.id}
+  getKey={item => item.id}
   renderItem={(item, index) => (
     <div
       role="listitem"
       aria-label={`项目 ${index + 1}: ${item.title}`}
       tabIndex={0}
-      onKeyDown={(e) => {
+      onKeyDown={e => {
         if (e.key === 'Enter' || e.key === ' ') {
           handleItemClick(item);
         }
@@ -580,7 +599,7 @@ import { VirtualList } from './VirtualList';
 const mockData = Array.from({ length: 1000 }, (_, i) => ({
   id: i,
   name: `Item ${i}`,
-  description: `Description for item ${i}`
+  description: `Description for item ${i}`,
 }));
 
 test('renders only visible items', () => {
@@ -589,15 +608,11 @@ test('renders only visible items', () => {
       data={mockData}
       containerHeight={200}
       itemHeight={50}
-      getKey={(item) => item.id}
-      renderItem={(item) => (
-        <div data-testid="list-item">
-          {item.name}
-        </div>
-      )}
+      getKey={item => item.id}
+      renderItem={item => <div data-testid="list-item">{item.name}</div>}
     />
   );
-  
+
   // 应该只渲染可见的元素，而不是1000个
   const renderedItems = container.querySelectorAll('[data-testid="list-item"]');
   expect(renderedItems.length).toBeLessThan(20);
@@ -610,20 +625,16 @@ test('handles scroll events', () => {
       data={mockData}
       containerHeight={200}
       itemHeight={50}
-      getKey={(item) => item.id}
-      renderItem={(item) => (
-        <div data-testid="list-item">
-          {item.name}
-        </div>
-      )}
+      getKey={item => item.id}
+      renderItem={item => <div data-testid="list-item">{item.name}</div>}
     />
   );
-  
+
   const scrollContainer = container.firstChild as HTMLElement;
-  
+
   // 模拟滚动
   fireEvent.scroll(scrollContainer, { target: { scrollTop: 250 } });
-  
+
   // 验证滚动后的状态
   expect(scrollContainer.scrollTop).toBe(250);
 });
@@ -653,7 +664,7 @@ A: 减少 `overscan` 值，避免在渲染函数中创建大量对象。
   data={items}
   containerHeight={400}
   itemHeight={60}
-  getKey={(item) => item.id}
+  getKey={item => item.id}
   renderItem={(item, index) => {
     console.log(`渲染项目 ${index}:`, item);
     return (
@@ -668,14 +679,17 @@ A: 减少 `overscan` 值，避免在渲染函数中创建大量对象。
 ## 更新日志
 
 ### v1.0.0
+
 - 初始版本发布
 - 支持固定高度虚拟滚动
 
 ### v1.1.0
+
 - 添加动态高度支持
 - 优化滚动性能
 
 ### v1.2.0
+
 - 添加缓冲区配置
 - 改进内存管理
 - 修复边界情况

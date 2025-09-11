@@ -44,36 +44,30 @@ const columns = [
     key: 'id' as keyof User,
     title: 'ID',
     width: 80,
-    sortable: true
+    sortable: true,
   },
   {
     key: 'name' as keyof User,
     title: '姓名',
     width: 120,
     sortable: true,
-    filterable: true
+    filterable: true,
   },
   {
     key: 'email' as keyof User,
     title: '邮箱',
-    width: 200
+    width: 200,
   },
   {
     key: 'age' as keyof User,
     title: '年龄',
     width: 80,
-    sortable: true
-  }
+    sortable: true,
+  },
 ];
 
 function App() {
-  return (
-    <DataTable
-      data={users}
-      columns={columns}
-      rowKey="id"
-    />
-  );
+  return <DataTable data={users} columns={columns} rowKey="id" />;
 }
 ```
 
@@ -81,26 +75,26 @@ function App() {
 
 ### DataTableProps<T>
 
-| 属性 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| data | `T[]` | - | 表格数据数组 |
-| columns | `Column<T>[]` | - | 列配置数组 |
-| rowKey | `keyof T` | - | 行唯一标识字段 |
-| pagination | `{ pageSize: number, showSizeChanger?: boolean }` | - | 分页配置 |
-| loading | `boolean` | `false` | 是否显示加载状态 |
-| onRowSelect | `(selectedRows: T[]) => void` | - | 行选择回调函数 |
-| virtualScroll | `boolean` | `false` | 是否启用虚拟滚动 |
+| 属性          | 类型                                              | 默认值  | 说明             |
+| ------------- | ------------------------------------------------- | ------- | ---------------- |
+| data          | `T[]`                                             | -       | 表格数据数组     |
+| columns       | `Column<T>[]`                                     | -       | 列配置数组       |
+| rowKey        | `keyof T`                                         | -       | 行唯一标识字段   |
+| pagination    | `{ pageSize: number, showSizeChanger?: boolean }` | -       | 分页配置         |
+| loading       | `boolean`                                         | `false` | 是否显示加载状态 |
+| onRowSelect   | `(selectedRows: T[]) => void`                     | -       | 行选择回调函数   |
+| virtualScroll | `boolean`                                         | `false` | 是否启用虚拟滚动 |
 
 ### Column<T>
 
-| 属性 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| key | `keyof T` | - | 列数据字段名 |
-| title | `string` | - | 列标题 |
-| width | `number` | - | 列宽度 |
-| sortable | `boolean` | `false` | 是否可排序 |
-| filterable | `boolean` | `false` | 是否可筛选 |
-| render | `(value: unknown, record: T, index: number) => React.ReactNode` | - | 自定义渲染函数 |
+| 属性       | 类型                                                            | 默认值  | 说明           |
+| ---------- | --------------------------------------------------------------- | ------- | -------------- |
+| key        | `keyof T`                                                       | -       | 列数据字段名   |
+| title      | `string`                                                        | -       | 列标题         |
+| width      | `number`                                                        | -       | 列宽度         |
+| sortable   | `boolean`                                                       | `false` | 是否可排序     |
+| filterable | `boolean`                                                       | `false` | 是否可筛选     |
+| render     | `(value: unknown, record: T, index: number) => React.ReactNode` | -       | 自定义渲染函数 |
 
 ## 高级用法
 
@@ -122,7 +116,7 @@ function SelectableTable() {
   const handleRowSelect = (selectedRows: User[]) => {
     console.log('选中的行:', selectedRows);
   };
-  
+
   return (
     <DataTable
       data={users}
@@ -147,7 +141,7 @@ const columnsWithRender = [
       <span className={`status-${record.status}`}>
         {record.status === 'active' ? '活跃' : '非活跃'}
       </span>
-    )
+    ),
   },
   {
     key: 'actions' as keyof UserWithStatus,
@@ -158,8 +152,8 @@ const columnsWithRender = [
         <button onClick={() => handleEdit(record.id)}>编辑</button>
         <button onClick={() => handleDelete(record.id)}>删除</button>
       </div>
-    )
-  }
+    ),
+  },
 ];
 ```
 
@@ -171,7 +165,7 @@ const largeDataSet = Array.from({ length: 10000 }, (_, i) => ({
   id: i + 1,
   name: `用户 ${i + 1}`,
   email: `user${i + 1}@example.com`,
-  age: 20 + Math.floor(Math.random() * 50)
+  age: 20 + Math.floor(Math.random() * 50),
 }));
 
 <DataTable
@@ -179,7 +173,7 @@ const largeDataSet = Array.from({ length: 10000 }, (_, i) => ({
   columns={columns}
   rowKey="id"
   virtualScroll={true}
-/>
+/>;
 ```
 
 ### 加载状态
@@ -188,21 +182,16 @@ const largeDataSet = Array.from({ length: 10000 }, (_, i) => ({
 function LoadingTable() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<User[]>([]);
-  
+
   useEffect(() => {
     fetchData().then(result => {
       setData(result);
       setLoading(false);
     });
   }, []);
-  
+
   return (
-    <DataTable
-      data={data}
-      columns={columns}
-      rowKey="id"
-      loading={loading}
-    />
+    <DataTable data={data} columns={columns} rowKey="id" loading={loading} />
   );
 }
 ```
@@ -215,13 +204,13 @@ function DynamicColumnsTable() {
     id: true,
     name: true,
     email: true,
-    age: true
+    age: true,
   });
-  
-  const filteredColumns = columns.filter(col => 
-    visibleColumns[col.key as string]
+
+  const filteredColumns = columns.filter(
+    col => visibleColumns[col.key as string]
   );
-  
+
   return (
     <div>
       <div className="column-toggles">
@@ -233,7 +222,7 @@ function DynamicColumnsTable() {
               onChange={() => {
                 setVisibleColumns(prev => ({
                   ...prev,
-                  [col.key]: !prev[col.key as string]
+                  [col.key]: !prev[col.key as string],
                 }));
               }}
             />
@@ -241,12 +230,8 @@ function DynamicColumnsTable() {
           </label>
         ))}
       </div>
-      
-      <DataTable
-        data={users}
-        columns={filteredColumns}
-        rowKey="id"
-      />
+
+      <DataTable data={users} columns={filteredColumns} rowKey="id" />
     </div>
   );
 }
@@ -258,14 +243,21 @@ function DynamicColumnsTable() {
 function ServerSideTable() {
   const [data, setData] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
-  const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 });
-  const [sorting, setSorting] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(null);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+  const [sorting, setSorting] = useState<{
+    key: string;
+    direction: 'asc' | 'desc';
+  } | null>(null);
   const [filters, setFilters] = useState<Record<string, any>>({});
-  
+
   useEffect(() => {
     fetchData();
   }, [pagination.current, pagination.pageSize, sorting, filters]);
-  
+
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -274,39 +266,39 @@ function ServerSideTable() {
         pageSize: pagination.pageSize,
         sortField: sorting?.key,
         sortOrder: sorting?.direction,
-        ...filters
+        ...filters,
       };
-      
+
       const response = await fetch('/api/users?' + new URLSearchParams(params));
       const result = await response.json();
-      
+
       setData(result.data);
       setPagination(prev => ({ ...prev, total: result.total }));
     } finally {
       setLoading(false);
     }
   };
-  
+
   const handleSort = (key: string, direction: 'asc' | 'desc') => {
     setSorting({ key, direction });
   };
-  
+
   const handleFilter = (key: string, value: any) => {
     setFilters(prev => ({ ...prev, [key]: value }));
     setPagination(prev => ({ ...prev, current: 1 })); // 重置到第一页
   };
-  
+
   const handlePageChange = (page: number) => {
     setPagination(prev => ({ ...prev, current: page }));
   };
-  
+
   // 自定义列配置，添加排序和筛选处理
   const enhancedColumns = columns.map(col => ({
     ...col,
     onSort: col.sortable ? handleSort : undefined,
-    onFilter: col.filterable ? handleFilter : undefined
+    onFilter: col.filterable ? handleFilter : undefined,
   }));
-  
+
   return (
     <DataTable
       data={data}
@@ -317,7 +309,7 @@ function ServerSideTable() {
         pageSize: pagination.pageSize,
         current: pagination.current,
         total: pagination.total,
-        onChange: handlePageChange
+        onChange: handlePageChange,
       }}
     />
   );
@@ -416,7 +408,7 @@ function ServerSideTable() {
 const memoizedColumns = useMemo(() => {
   return columns.map(col => ({
     ...col,
-    render: col.render ? col.render : undefined
+    render: col.render ? col.render : undefined,
   }));
 }, [columns]);
 
@@ -425,11 +417,7 @@ const memoizedData = useMemo(() => {
   return processData(rawData);
 }, [rawData]);
 
-<DataTable
-  data={memoizedData}
-  columns={memoizedColumns}
-  rowKey="id"
-/>
+<DataTable data={memoizedData} columns={memoizedColumns} rowKey="id" />;
 ```
 
 ## 测试
@@ -451,20 +439,14 @@ const mockColumns = [
 ];
 
 test('renders table with correct data', () => {
-  render(
-    <DataTable
-      data={mockData}
-      columns={mockColumns}
-      rowKey="id"
-    />
-  );
-  
+  render(<DataTable data={mockData} columns={mockColumns} rowKey="id" />);
+
   // 检查表头
   expect(screen.getByText('ID')).toBeInTheDocument();
   expect(screen.getByText('姓名')).toBeInTheDocument();
   expect(screen.getByText('邮箱')).toBeInTheDocument();
   expect(screen.getByText('年龄')).toBeInTheDocument();
-  
+
   // 检查数据行
   expect(screen.getByText('张三')).toBeInTheDocument();
   expect(screen.getByText('李四')).toBeInTheDocument();
@@ -476,7 +458,7 @@ test('renders table with correct data', () => {
 
 test('handles row selection', () => {
   const handleRowSelect = jest.fn();
-  
+
   render(
     <DataTable
       data={mockData}
@@ -485,13 +467,13 @@ test('handles row selection', () => {
       onRowSelect={handleRowSelect}
     />
   );
-  
+
   // 选择第一行
   const rows = screen.getAllByRole('row');
   const firstRowCheckbox = within(rows[1]).getByRole('checkbox');
-  
+
   fireEvent.click(firstRowCheckbox);
-  
+
   expect(handleRowSelect).toHaveBeenCalledWith([mockData[0]]);
 });
 ```
@@ -520,7 +502,7 @@ A: 确保正确使用泛型，例如 `DataTable<User>`，并且列的 `key` 属�
   data={data}
   columns={columns}
   rowKey="id"
-  onRowSelect={(selectedRows) => {
+  onRowSelect={selectedRows => {
     console.log('选中的行:', selectedRows);
   }}
   // 添加自定义属性以便在开发工具中识别
@@ -531,14 +513,17 @@ A: 确保正确使用泛型，例如 `DataTable<User>`，并且列的 `key` 属�
 ## 更新日志
 
 ### v1.0.0
+
 - 初始版本发布
 - 支持基础表格功能
 
 ### v1.1.0
+
 - 添加排序和筛选功能
 - 添加分页支持
 
 ### v1.2.0
+
 - 添加虚拟滚动支持
 - 优化性能
 - 改进可访问性

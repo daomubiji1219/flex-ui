@@ -27,9 +27,7 @@ pnpm add flexi-ui
 import { Button } from 'flexi-ui';
 
 function App() {
-  return (
-    <Button onClick={() => alert('Hello!')}>点击我</Button>
-  );
+  return <Button onClick={() => alert('Hello!')}>点击我</Button>;
 }
 ```
 
@@ -37,17 +35,17 @@ function App() {
 
 ### Props
 
-| 属性 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| variant | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | 按钮样式变体 |
-| size | `'sm' \| 'md' \| 'lg'` | `'md'` | 按钮尺寸 |
-| loading | `boolean` | `false` | 是否显示加载状态 |
-| icon | `React.ReactNode` | - | 按钮图标 |
-| fullWidth | `boolean` | `false` | 是否全宽度显示 |
-| disabled | `boolean` | `false` | 是否禁用 |
-| children | `React.ReactNode` | - | 按钮内容 |
-| onClick | `(event: MouseEvent<HTMLButtonElement>) => void` | - | 点击事件处理函数 |
-| ...rest | `ButtonHTMLAttributes<HTMLButtonElement>` | - | 其他原生 button 属性 |
+| 属性      | 类型                                               | 默认值      | 说明                 |
+| --------- | -------------------------------------------------- | ----------- | -------------------- |
+| variant   | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | 按钮样式变体         |
+| size      | `'sm' \| 'md' \| 'lg'`                             | `'md'`      | 按钮尺寸             |
+| loading   | `boolean`                                          | `false`     | 是否显示加载状态     |
+| icon      | `React.ReactNode`                                  | -           | 按钮图标             |
+| fullWidth | `boolean`                                          | `false`     | 是否全宽度显示       |
+| disabled  | `boolean`                                          | `false`     | 是否禁用             |
+| children  | `React.ReactNode`                                  | -           | 按钮内容             |
+| onClick   | `(event: MouseEvent<HTMLButtonElement>) => void`   | -           | 点击事件处理函数     |
+| ...rest   | `ButtonHTMLAttributes<HTMLButtonElement>`          | -           | 其他原生 button 属性 |
 
 ### Ref
 
@@ -56,7 +54,7 @@ function App() {
 ```tsx
 const buttonRef = useRef<HTMLButtonElement>(null);
 
-<Button ref={buttonRef}>按钮</Button>
+<Button ref={buttonRef}>按钮</Button>;
 ```
 
 ## 样式变体
@@ -144,7 +142,7 @@ import { PlusIcon } from '@heroicons/react/24/outline';
 ```tsx
 function AsyncButton() {
   const [loading, setLoading] = useState(false);
-  
+
   const handleClick = async () => {
     setLoading(true);
     try {
@@ -153,7 +151,7 @@ function AsyncButton() {
       setLoading(false);
     }
   };
-  
+
   return (
     <Button loading={loading} onClick={handleClick}>
       提交数据
@@ -167,11 +165,8 @@ function AsyncButton() {
 ```tsx
 function ConditionalButton({ canEdit }: { canEdit: boolean }) {
   return (
-    <Button 
-      variant={canEdit ? "primary" : "outline"}
-      disabled={!canEdit}
-    >
-      {canEdit ? "编辑" : "只读"}
+    <Button variant={canEdit ? 'primary' : 'outline'} disabled={!canEdit}>
+      {canEdit ? '编辑' : '只读'}
     </Button>
   );
 }
@@ -208,10 +203,10 @@ function FormButton() {
 ### 自定义样式
 
 ```tsx
-<Button 
-  style={{ 
+<Button
+  style={{
     backgroundColor: '#ff4d4f',
-    borderColor: '#ff4d4f'
+    borderColor: '#ff4d4f',
   }}
 >
   自定义颜色
@@ -228,10 +223,7 @@ function FormButton() {
 - 语义化的 HTML 结构
 
 ```tsx
-<Button 
-  aria-label="删除项目"
-  aria-describedby="delete-help"
->
+<Button aria-label="删除项目" aria-describedby="delete-help">
   删除
 </Button>
 ```
@@ -242,14 +234,14 @@ function FormButton() {
 
 ```tsx
 // ❌ 每次渲染都会创建新的函数
-<Button onClick={() => handleClick(id)}>点击</Button>
+<Button onClick={() => handleClick(id)}>点击</Button>;
 
 // ✅ 使用 useCallback 优化
 const handleButtonClick = useCallback(() => {
   handleClick(id);
 }, [id]);
 
-<Button onClick={handleButtonClick}>点击</Button>
+<Button onClick={handleButtonClick}>点击</Button>;
 ```
 
 ### 大量按钮的场景
@@ -264,7 +256,7 @@ function ButtonList({ items }: { items: Item[] }) {
       handleItemClick(id);
     }
   };
-  
+
   return (
     <div onClick={handleClick}>
       {items.map(item => (
@@ -291,7 +283,7 @@ test('renders button with text', () => {
 test('calls onClick when clicked', () => {
   const handleClick = jest.fn();
   render(<Button onClick={handleClick}>Click me</Button>);
-  
+
   fireEvent.click(screen.getByRole('button'));
   expect(handleClick).toHaveBeenCalledTimes(1);
 });
@@ -299,7 +291,7 @@ test('calls onClick when clicked', () => {
 test('shows loading state', () => {
   render(<Button loading>Loading</Button>);
   const button = screen.getByRole('button');
-  
+
   expect(button).toBeDisabled();
   expect(button).toHaveStyle({ opacity: '0.6' });
 });
@@ -322,8 +314,8 @@ A: 确保使用的 props 类型正确，参考 `ButtonProps` 接口定义。
 
 ```tsx
 // 添加调试信息
-<Button 
-  onClick={(e) => {
+<Button
+  onClick={e => {
     console.log('Button clicked:', e);
     handleClick(e);
   }}
@@ -335,15 +327,18 @@ A: 确保使用的 props 类型正确，参考 `ButtonProps` 接口定义。
 ## 更新日志
 
 ### v1.0.0
+
 - 初始版本发布
 - 支持基础功能和样式变体
 
 ### v1.1.0
+
 - 添加图标支持
 - 优化加载状态动画
 - 改进可访问性
 
 ### v1.2.0
+
 - 添加全宽度支持
 - 优化性能
 - 修复样式问题

@@ -26,7 +26,7 @@
 - 主配置（docs/.vitepress/config.ts）要点：
   - base: '/'
   - vite.plugins: [react()]
-  - vite.resolve.alias: { '@': path.resolve(__dirname, '../../src') }
+  - vite.resolve.alias: { '@': path.resolve(\_\_dirname, '../../src') }
 
 - 主题（docs/.vitepress/theme/index.ts）要点：
   - 不要直接注册 React 组件到 app.component
@@ -58,7 +58,7 @@
 ## 4. 组件开发最佳实践
 
 - 类型：在 ts/tsx 中尽量避免 any，使用明确的类型定义；导入 React 类型时使用 `import type { ReactNode } from 'react'`
-- 无障碍：使用语义化标签与 aria-* 属性；键盘可访问性
+- 无障碍：使用语义化标签与 aria-\* 属性；键盘可访问性
 - 样式：遵循 BEM 或原子化方案；主题变量统一管理
 - 测试：关注可访问性（getByRole）、关键交互、边界条件与回归
 

@@ -18,7 +18,7 @@
 // const generateSampleData = (): User[] => {
 //   const departments = ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance']
 //   const statuses: ('active' | 'inactive')[] = ['active', 'inactive']
-  
+
 //   return Array.from({ length: 100 }, (_, index) => ({
 //     id: index + 1,
 //     name: `User ${index + 1}`,
