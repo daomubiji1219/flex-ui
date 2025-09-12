@@ -34,6 +34,10 @@ export const DropZone = styled.div<{
           : theme.tokens.colors.neutral[300]}; // 亮色模式：中性色 300（偏浅灰）
     border-radius: ${theme.tokens.radii.lg}; // 从主题获取大圆角（统一圆角风格）
     padding: ${theme.tokens.spacing[9]}; // 从主题获取大间距（控制内部留白）
+    min-height: 200px; // 设置最小高度，避免显示过扁
+    display: flex; // 使用flex布局
+    align-items: center; // 垂直居中
+    justify-content: center; // 水平居中
     text-align: center; // 内部内容居中对齐
     // 背景色：拖拽中显示主色透明层，否则按明暗模式显示中性透明层
     background-color: ${isDragging
