@@ -1,6 +1,9 @@
 import React, { useMemo, useState } from 'react';
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 import { VirtualList } from '../components/VirtualList/VirtualList';
 import { Button } from '../components/Button/Button';
+import { useTheme } from '../hooks/useTheme';
 
 // 示例数据类型
 interface ListItem {
@@ -29,7 +32,47 @@ const generateSampleData = (count: number): ListItem[] => {
   }));
 };
 
+// 样式化组件
+const ExampleContainer = styled.div`
+  ${({ theme }) => css`
+    padding: ${theme.tokens.spacing[6]}px;
+    background-color: ${theme.colors.background};
+    min-height: 100vh;
+  `}
+`;
+
+const ControlsContainer = styled.div`
+  ${({ theme }) => css`
+    display: flex;
+    flex-wrap: wrap;
+    gap: ${theme.tokens.spacing[4]}px;
+    margin-bottom: ${theme.tokens.spacing[6]}px;
+    padding: ${theme.tokens.spacing[4]}px;
+    background-color: ${theme.colors.surface};
+    border-radius: ${theme.tokens.radii.lg};
+    border: 1px solid ${theme.colors.border};
+  `}
+`;
+
+const ControlGroup = styled.div`
+  ${({ theme }) => css`
+    display: flex;
+    align-items: center;
+    gap: ${theme.tokens.spacing[2]}px;
+  `}
+`;
+
+const Label = styled.label`
+  ${({ theme }) => css`
+    font-size: ${theme.tokens.typography.sizes[1]}px;
+    font-weight: ${theme.tokens.typography.weights.medium};
+    color: ${theme.colors.text.primary};
+    white-space: nowrap;
+  `}
+`;
+
 const VirtualListExample: React.FC = () => {
+  const { theme } = useTheme();
   const [itemCount, setItemCount] = useState(1000);
   const [containerHeight, setContainerHeight] = useState(400);
   const [itemHeight, setItemHeight] = useState(80);
@@ -39,17 +82,20 @@ const VirtualListExample: React.FC = () => {
   // 渲染列表项
   const renderItem = (item: ListItem, index?: number) => {
     const priorityColors = {
-      high: '#ff4d4f',
-      medium: '#faad14',
-      low: '#52c41a',
+      high: theme.colors.semantic.error,
+      medium: theme.colors.semantic.warning,
+      low: theme.colors.semantic.success,
     };
 
     return (
       <div
         style={{
           padding: '12px 16px',
-          borderBottom: '1px solid #f0f0f0',
-          backgroundColor: index && index % 2 === 0 ? '#fafafa' : '#ffffff',
+          borderBottom: `1px solid ${theme.colors.border}`,
+          backgroundColor:
+            index && index % 2 === 0
+              ? theme.colors.surface
+              : theme.colors.background,
           display: 'flex',
           flexDirection: 'column',
           gap: '4px',
@@ -62,7 +108,14 @@ const VirtualListExample: React.FC = () => {
             alignItems: 'center',
           }}
         >
-          <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 600 }}>
+          <h4
+            style={{
+              margin: 0,
+              fontSize: '14px',
+              fontWeight: 600,
+              color: theme.colors.text.primary,
+            }}
+          >
             {item.title}
           </h4>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -81,7 +134,9 @@ const VirtualListExample: React.FC = () => {
                   ? '中'
                   : '低'}
             </span>
-            <span style={{ fontSize: '12px', color: '#666' }}>
+            <span
+              style={{ fontSize: '12px', color: theme.colors.text.secondary }}
+            >
               {item.category}
             </span>
           </div>
@@ -90,13 +145,13 @@ const VirtualListExample: React.FC = () => {
           style={{
             margin: 0,
             fontSize: '12px',
-            color: '#666',
+            color: theme.colors.text.secondary,
             lineHeight: '1.4',
           }}
         >
           {item.description}
         </p>
-        <div style={{ fontSize: '11px', color: '#999' }}>
+        <div style={{ fontSize: '11px', color: theme.colors.text.disabled }}>
           创建时间: {item.createdAt} | ID: {item.id}
         </div>
       </div>
@@ -104,36 +159,41 @@ const VirtualListExample: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>VirtualList 虚拟列表示例</h2>
-      <p style={{ color: '#666', marginBottom: '20px' }}>
+    <ExampleContainer>
+      <h2
+        style={{
+          marginBottom: theme.tokens.spacing[5] + 'px',
+          color: theme.colors.text.primary,
+        }}
+      >
+        VirtualList 虚拟列表示例
+      </h2>
+      <p
+        style={{
+          color: theme.colors.text.secondary,
+          marginBottom: theme.tokens.spacing[5] + 'px',
+        }}
+      >
         虚拟列表组件可以高效渲染大量数据，只渲染可视区域内的元素，提升性能。
       </p>
 
       {/* 控制面板 */}
-      <div
-        style={{
-          marginBottom: '20px',
-          padding: '16px',
-          backgroundColor: '#f8f9fa',
-          borderRadius: '8px',
-          display: 'flex',
-          gap: '16px',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-        }}
-      >
-        <div>
-          <label style={{ fontSize: '14px', marginRight: '8px' }}>
-            数据量:
-          </label>
+      <ControlsContainer>
+        <ControlGroup>
+          <Label>数据量:</Label>
           <select
             value={itemCount}
             onChange={e => setItemCount(Number(e.target.value))}
             style={{
-              padding: '4px 8px',
-              borderRadius: '4px',
-              border: '1px solid #d9d9d9',
+              padding:
+                theme.tokens.spacing[1] +
+                'px ' +
+                theme.tokens.spacing[2] +
+                'px',
+              borderRadius: theme.tokens.radii.sm,
+              border: `1px solid ${theme.colors.border}`,
+              backgroundColor: theme.colors.background,
+              color: theme.colors.text.primary,
             }}
           >
             <option value={100}>100 条</option>
@@ -142,19 +202,23 @@ const VirtualListExample: React.FC = () => {
             <option value={10000}>10,000 条</option>
             <option value={50000}>50,000 条</option>
           </select>
-        </div>
+        </ControlGroup>
 
-        <div>
-          <label style={{ fontSize: '14px', marginRight: '8px' }}>
-            容器高度:
-          </label>
+        <ControlGroup>
+          <Label>容器高度:</Label>
           <select
             value={containerHeight}
             onChange={e => setContainerHeight(Number(e.target.value))}
             style={{
-              padding: '4px 8px',
-              borderRadius: '4px',
-              border: '1px solid #d9d9d9',
+              padding:
+                theme.tokens.spacing[1] +
+                'px ' +
+                theme.tokens.spacing[2] +
+                'px',
+              borderRadius: theme.tokens.radii.sm,
+              border: `1px solid ${theme.colors.border}`,
+              backgroundColor: theme.colors.background,
+              color: theme.colors.text.primary,
             }}
           >
             <option value={300}>300px</option>
@@ -162,19 +226,23 @@ const VirtualListExample: React.FC = () => {
             <option value={500}>500px</option>
             <option value={600}>600px</option>
           </select>
-        </div>
+        </ControlGroup>
 
-        <div>
-          <label style={{ fontSize: '14px', marginRight: '8px' }}>
-            项目高度:
-          </label>
+        <ControlGroup>
+          <Label>项目高度:</Label>
           <select
             value={itemHeight}
             onChange={e => setItemHeight(Number(e.target.value))}
             style={{
-              padding: '4px 8px',
-              borderRadius: '4px',
-              border: '1px solid #d9d9d9',
+              padding:
+                theme.tokens.spacing[1] +
+                'px ' +
+                theme.tokens.spacing[2] +
+                'px',
+              borderRadius: theme.tokens.radii.sm,
+              border: `1px solid ${theme.colors.border}`,
+              backgroundColor: theme.colors.background,
+              color: theme.colors.text.primary,
             }}
           >
             <option value={60}>60px</option>
@@ -182,7 +250,7 @@ const VirtualListExample: React.FC = () => {
             <option value={100}>100px</option>
             <option value={120}>120px</option>
           </select>
-        </div>
+        </ControlGroup>
 
         <Button
           onClick={() => setItemCount(Math.floor(Math.random() * 10000) + 1000)}
@@ -191,40 +259,56 @@ const VirtualListExample: React.FC = () => {
         >
           随机数据量
         </Button>
-      </div>
+      </ControlsContainer>
 
       {/* 信息展示 */}
       <div
         style={{
-          marginBottom: '16px',
-          fontSize: '14px',
-          color: '#666',
+          marginBottom: theme.tokens.spacing[4] + 'px',
+          fontSize: theme.tokens.typography.sizes[2] + 'px',
+          color: theme.colors.text.secondary,
           display: 'flex',
-          gap: '16px',
+          gap: theme.tokens.spacing[4] + 'px',
+          flexWrap: 'wrap',
         }}
       >
         <span>
-          总数据量: <strong>{data.length.toLocaleString()}</strong> 条
+          总数据量:{' '}
+          <strong style={{ color: theme.colors.text.primary }}>
+            {data.length.toLocaleString()}
+          </strong>{' '}
+          条
         </span>
         <span>
-          容器高度: <strong>{containerHeight}px</strong>
+          容器高度:{' '}
+          <strong style={{ color: theme.colors.text.primary }}>
+            {containerHeight}px
+          </strong>
         </span>
         <span>
-          项目高度: <strong>{itemHeight}px</strong>
+          项目高度:{' '}
+          <strong style={{ color: theme.colors.text.primary }}>
+            {itemHeight}px
+          </strong>
         </span>
         <span>
           预计可见项目:{' '}
-          <strong>{Math.ceil(containerHeight / itemHeight)}</strong> 个
+          <strong style={{ color: theme.colors.text.primary }}>
+            {Math.ceil(containerHeight / itemHeight)}
+          </strong>{' '}
+          个
         </span>
       </div>
 
       {/* 虚拟列表 */}
       <div
         style={{
-          border: '1px solid #d9d9d9',
-          borderRadius: '8px',
+          border: `1px solid ${theme.colors.border}`,
+          borderRadius: theme.tokens.radii.lg,
           overflow: 'hidden',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          boxShadow: theme.isDark
+            ? '0 2px 8px rgba(0,0,0,0.3)'
+            : '0 2px 8px rgba(0,0,0,0.1)',
         }}
       >
         <VirtualList
@@ -240,15 +324,30 @@ const VirtualListExample: React.FC = () => {
       {/* 性能说明 */}
       <div
         style={{
-          marginTop: '20px',
-          padding: '16px',
-          backgroundColor: '#e6f7ff',
-          borderRadius: '8px',
-          fontSize: '14px',
+          marginTop: theme.tokens.spacing[5] + 'px',
+          padding: theme.tokens.spacing[4] + 'px',
+          backgroundColor: theme.isDark
+            ? theme.tokens.colors.primary[900]
+            : theme.tokens.colors.primary[50],
+          borderRadius: theme.tokens.radii.lg,
+          fontSize: theme.tokens.typography.sizes[2] + 'px',
         }}
       >
-        <h4 style={{ margin: '0 0 8px 0', color: '#1890ff' }}>性能优势</h4>
-        <ul style={{ margin: 0, paddingLeft: '20px', color: '#666' }}>
+        <h4
+          style={{
+            margin: '0 0 ' + theme.tokens.spacing[2] + 'px 0',
+            color: theme.tokens.colors.primary[500],
+          }}
+        >
+          性能优势
+        </h4>
+        <ul
+          style={{
+            margin: 0,
+            paddingLeft: theme.tokens.spacing[5] + 'px',
+            color: theme.colors.text.secondary,
+          }}
+        >
           <li>只渲染可视区域内的元素，大幅减少 DOM 节点数量</li>
           <li>支持动态高度和固定高度两种模式</li>
           <li>内置节流优化，减少滚动时的重复计算</li>
@@ -256,7 +355,7 @@ const VirtualListExample: React.FC = () => {
           <li>适用于大数据量列表场景，如数据表格、聊天记录等</li>
         </ul>
       </div>
-    </div>
+    </ExampleContainer>
   );
 };
 

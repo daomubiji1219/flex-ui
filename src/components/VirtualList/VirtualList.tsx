@@ -1,6 +1,6 @@
 import { useState, useRef, useMemo, useCallback } from 'react';
 import type { ReactNode } from 'react';
-import { throttle } from 'lodash-es';
+import { throttle } from '../../utils/throttle';
 import {
   VirtualListContainer,
   VirtualListContent,

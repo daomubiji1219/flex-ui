@@ -1,5 +1,11 @@
 // src/components/DataTable/Pagination.tsx
 import React from 'react';
+import {
+  PaginationContainer,
+  PaginationInfo,
+  PaginationControls,
+  PaginationButton,
+} from './DataTable.styled';
 
 interface PaginationProps {
   current: number;
@@ -71,40 +77,18 @@ export const Pagination: React.FC<PaginationProps> = ({
   }
 
   return (
-    <div
-      data-testid="pagination"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '16px',
-        borderTop: '1px solid #e5e7eb',
-        backgroundColor: '#f9fafb',
-      }}
-    >
+    <PaginationContainer data-testid="pagination">
       {/* 信息显示 */}
-      <div style={{ fontSize: '14px', color: '#6b7280' }}>
+      <PaginationInfo>
         显示 {startItem}-{endItem} 条，共 {total} 条
-      </div>
+      </PaginationInfo>
 
       {/* 分页控件 */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+      <PaginationControls>
         {/* 上一页 */}
-        <button
-          onClick={handlePrevious}
-          disabled={current === 1}
-          style={{
-            padding: '8px 12px',
-            border: '1px solid #d1d5db',
-            borderRadius: '6px',
-            backgroundColor: current === 1 ? '#f3f4f6' : 'white',
-            color: current === 1 ? '#9ca3af' : '#374151',
-            cursor: current === 1 ? 'not-allowed' : 'pointer',
-            fontSize: '14px',
-          }}
-        >
+        <PaginationButton onClick={handlePrevious} disabled={current === 1}>
           上一页
-        </button>
+        </PaginationButton>
 
         {/* 页码 */}
         {getPageNumbers().map((page, index) => {
@@ -114,7 +98,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                 key={`ellipsis-${index}`}
                 style={{
                   padding: '8px 4px',
-                  color: '#9ca3af',
+                  color: 'inherit',
                   fontSize: '14px',
                 }}
               >
@@ -127,42 +111,25 @@ export const Pagination: React.FC<PaginationProps> = ({
           const isActive = pageNum === current;
 
           return (
-            <button
+            <PaginationButton
               key={pageNum}
               onClick={() => handlePageClick(pageNum)}
-              style={{
-                padding: '8px 12px',
-                border: '1px solid #d1d5db',
-                borderRadius: '6px',
-                backgroundColor: isActive ? '#3b82f6' : 'white',
-                color: isActive ? 'white' : '#374151',
-                cursor: 'pointer',
-                fontSize: '14px',
-                minWidth: '40px',
-              }}
+              active={isActive}
+              style={{ minWidth: '40px' }}
             >
               {pageNum}
-            </button>
+            </PaginationButton>
           );
         })}
 
         {/* 下一页 */}
-        <button
+        <PaginationButton
           onClick={handleNext}
           disabled={current === totalPages}
-          style={{
-            padding: '8px 12px',
-            border: '1px solid #d1d5db',
-            borderRadius: '6px',
-            backgroundColor: current === totalPages ? '#f3f4f6' : 'white',
-            color: current === totalPages ? '#9ca3af' : '#374151',
-            cursor: current === totalPages ? 'not-allowed' : 'pointer',
-            fontSize: '14px',
-          }}
         >
           下一页
-        </button>
-      </div>
-    </div>
+        </PaginationButton>
+      </PaginationControls>
+    </PaginationContainer>
   );
 };

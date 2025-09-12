@@ -2,6 +2,7 @@
 // import type { ReactNode } from 'react';
 import React, { useState, useRef } from 'react';
 // import crypto from 'crypto-js';
+import { useTheme } from '../../hooks/useTheme';
 import {
   Container,
   DropZone,
@@ -53,7 +54,6 @@ interface FileUploaderProps {
   onError?: (file: UploadFile, error: Error) => void;
   beforeUpload?: (file: File) => boolean | Promise<boolean>;
   className?: string;
-  theme?: 'light' | 'dark' | 'auto';
 }
 
 export const FileUploader: React.FC<FileUploaderProps> = ({
@@ -69,28 +69,15 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
   onError,
   beforeUpload,
   className = '',
-  theme = 'auto',
 }) => {
   const [files, setFiles] = useState<UploadFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null); //非受控组件
   const uploadQueueRef = useRef<Map<string, AbortController>>(new Map()); //避免重新渲染
 
-  // 主题检测
-  const isDarkMode = () => {
-    if (theme === 'dark') return true;
-    if (theme === 'light') return false;
-    // auto模式：检测系统主题
-    if (
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    ) {
-      return true;
-    }
-    return false;
-  };
-
-  const darkMode = isDarkMode();
+  // 使用ThemeProvider提供的主题
+  const { theme } = useTheme();
+  const darkMode = theme.mode === 'dark';
 
   const getApiUrl = (type: keyof UploadUrls) => {
     if (urls) {
@@ -523,9 +510,10 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
   };
 
   return (
-    <Container className={className} data-testid="file-uploader">
+    <Container theme={theme} className={className} data-testid="file-uploader">
       {/* 拖拽区域 */}
       <DropZone
+        theme={theme}
         isDragging={isDragging}
         darkMode={darkMode}
         onDragOver={handleDragOver}
@@ -535,7 +523,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
         data-testid="drop-zone"
       >
         {isDragging && <DropZoneOverlay />}
-        <DropZoneText isDragging={isDragging} darkMode={darkMode}>
+        <DropZoneText theme={theme} isDragging={isDragging} darkMode={darkMode}>
           点击或拖拽文件到此处上传
         </DropZoneText>
         <HiddenInput
@@ -555,26 +543,36 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
       {/* 文件列表 */}
       <FileList>
         {files.map(file => (
-          <FileItem key={file.uid} darkMode={darkMode}>
+          <FileItem key={file.uid} theme={theme} darkMode={darkMode}>
             <FileHeader>
-              <FileName darkMode={darkMode}>{file.name}</FileName>
-              <FileSize darkMode={darkMode}>
+              <FileName theme={theme} darkMode={darkMode}>
+                {file.name}
+              </FileName>
+              <FileSize theme={theme} darkMode={darkMode}>
                 {(file.size / 1024 / 1024).toFixed(2)} MB
               </FileSize>
-              <StatusBadge status={file.status} darkMode={darkMode}>
+              <StatusBadge
+                theme={theme}
+                status={file.status}
+                darkMode={darkMode}
+              >
                 {file.status}
               </StatusBadge>
             </FileHeader>
 
-            <ProgressBar darkMode={darkMode}>
-              <ProgressFill status={file.status} progress={file.progress}>
-                <ProgressShimmer />
-              </ProgressFill>
+            <ProgressBar theme={theme} darkMode={darkMode}>
+              <ProgressFill
+                theme={theme}
+                status={file.status}
+                progress={file.progress}
+              />
+              {file.status === 'uploading' && <ProgressShimmer />}
             </ProgressBar>
 
             <ButtonGroup>
               {file.status === 'uploading' && (
                 <ActionButton
+                  theme={theme}
                   variant="pause"
                   onClick={() => {
                     const controller = uploadQueueRef.current.get(file.uid);
@@ -593,7 +591,11 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                 </ActionButton>
               )}
               {file.status === 'paused' && (
-                <ActionButton variant="resume" onClick={() => uploadFile(file)}>
+                <ActionButton
+                  theme={theme}
+                  variant="resume"
+                  onClick={() => uploadFile(file)}
+                >
                   继续
                 </ActionButton>
               )}

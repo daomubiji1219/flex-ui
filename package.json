@@ -17,35 +17,43 @@
     },
     "./Button": {
       "types": "./dist/types/components/Button/Button.d.ts",
-      "import": "./dist/esm/components/Button/Button.js"
+      "import": "./dist/esm/components/Button/Button.js",
+      "require": "./dist/cjs/components/Button/Button.js"
     },
     "./DataTable": {
       "types": "./dist/types/components/DataTable/DataTable.d.ts",
-      "import": "./dist/esm/components/DataTable/DataTable.js"
+      "import": "./dist/esm/components/DataTable/DataTable.js",
+      "require": "./dist/cjs/components/DataTable/DataTable.js"
     },
     "./FileUploader": {
       "types": "./dist/types/components/FileUploader/FileUploader.d.ts",
-      "import": "./dist/esm/components/FileUploader/FileUploader.js"
+      "import": "./dist/esm/components/FileUploader/FileUploader.js",
+      "require": "./dist/cjs/components/FileUploader/FileUploader.js"
     },
     "./VirtualList": {
       "types": "./dist/types/components/VirtualList/VirtualList.d.ts",
-      "import": "./dist/esm/components/VirtualList/VirtualList.js"
+      "import": "./dist/esm/components/VirtualList/VirtualList.js",
+      "require": "./dist/cjs/components/VirtualList/VirtualList.js"
     },
     "./hooks/useLocalStorage": {
       "types": "./dist/types/hooks/useLocalStorage.d.ts",
-      "import": "./dist/esm/hooks/useLocalStorage.js"
+      "import": "./dist/esm/hooks/useLocalStorage.js",
+      "require": "./dist/cjs/hooks/useLocalStorage.js"
     },
     "./hooks/useTheme": {
       "types": "./dist/types/hooks/useTheme.d.ts",
-      "import": "./dist/esm/hooks/useTheme.js"
+      "import": "./dist/esm/hooks/useTheme.js",
+      "require": "./dist/cjs/hooks/useTheme.js"
     },
     "./hooks/useForm": {
       "types": "./dist/types/hooks/form/useFormRefactored.d.ts",
-      "import": "./dist/esm/hooks/form/useFormRefactored.js"
+      "import": "./dist/esm/hooks/form/useFormRefactored.js",
+      "require": "./dist/cjs/hooks/form/useFormRefactored.js"
     },
     "./theme/tokens": {
       "types": "./dist/types/theme/tokens.d.ts",
-      "import": "./dist/esm/theme/tokens.js"
+      "import": "./dist/esm/theme/tokens.js",
+      "require": "./dist/cjs/theme/tokens.js"
     }
   },
   "files": [
@@ -65,7 +73,7 @@
     "test:coverage": "vitest run --coverage",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "docs:dev": "vitepress dev docs --port 3000",
+    "docs:dev": "vitepress dev docs --port 3005",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs --port 4173",
     "format": "prettier --write .",
@@ -86,13 +94,10 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@tailwindcss/vite": "^4.1.13",
-    "@types/crypto-js": "^4.2.2",
-    "@types/lodash-es": "^4.17.12",
     "@types/node": "^24.2.0",
     "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",
     "framer-motion": "^12.23.12",
-    "lodash-es": "^4.17.21",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
@@ -121,6 +126,7 @@
     "@testing-library/jest-dom": "^6.7.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/crypto-js": "^4.2.2",
     "@types/react": "^19.1.9",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^4.7.0",

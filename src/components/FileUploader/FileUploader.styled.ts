@@ -1,10 +1,11 @@
 // 导入 Emotion 核心样式工具：styled 用于创建带样式的组件，css 用于编写嵌套/条件样式
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
+import type { Theme } from '../../theme/tokens';
 
 // 主容器组件：包裹整个文件上传区域，控制全局宽度和字体
-// 接收 theme 属性，支持 light/dark/auto 三种主题模式（实际主题逻辑通过内部 theme.tokens 实现）
-export const Container = styled.div<{ theme?: 'light' | 'dark' | 'auto' }>`
+// 接收完整的Theme对象，支持ThemeProvider主题系统
+export const Container = styled.div<{ theme?: Theme }>`
   // 使用 css 函数接收组件 props（此处解构出 theme），编写条件样式
   ${({ theme }) => css`
     width: 100%; // 占满父容器宽度
@@ -14,11 +15,13 @@ export const Container = styled.div<{ theme?: 'light' | 'dark' | 'auto' }>`
 `;
 
 // 拖拽区域组件：文件拖拽的核心交互区域，视觉状态随拖拽行为变化
-// 接收三个关键 props：
+// 接收四个关键 props：
+// - theme：完整的主题对象（从ThemeProvider获取）
 // - isDragging：是否有文件正在拖拽到区域上方（控制拖拽中样式）
 // - darkMode：是否为暗黑模式（控制明暗主题下的颜色差异）
 // - disabled：是否禁用（控制禁用态的光标和透明度）
 export const DropZone = styled.div<{
+  theme?: Theme;
   isDragging: boolean;
   darkMode: boolean;
   disabled?: boolean;
@@ -111,6 +114,7 @@ export const DropZoneOverlay = styled.div`
 // 拖拽区域文本：显示“拖拽文件到此处”等提示文字，样式随状态变化
 // 接收 isDragging（拖拽状态）和 darkMode（明暗模式）控制颜色
 export const DropZoneText = styled.p<{
+  theme?: Theme;
   isDragging: boolean;
   darkMode: boolean;
 }>`
@@ -224,7 +228,7 @@ export const FileListHeader = styled.div`
 
 // 文件项容器：单个文件的卡片，包含图标、名称、大小、进度条等
 // 接收 darkMode 控制明暗模式下的背景和边框
-export const FileItem = styled.div<{ darkMode: boolean }>`
+export const FileItem = styled.div<{ theme?: Theme; darkMode: boolean }>`
   ${({ theme, darkMode }) => css`
     // 背景色：暗黑模式深灰，亮色模式白色（卡片感）
     background-color: ${darkMode ? theme.tokens.colors.neutral[800] : 'white'};
@@ -267,6 +271,7 @@ export const FileItem = styled.div<{ darkMode: boolean }>`
 // 文件图标：显示文件类型图标（如图片、文档），颜色随上传状态变化
 // 接收 status 控制图标颜色（区分成功/失败/上传中等状态）
 export const FileIcon = styled.div<{
+  theme?: Theme;
   status: 'ready' | 'uploading' | 'success' | 'error' | 'paused';
 }>`
   ${({ theme, status }) => css`
@@ -326,7 +331,7 @@ export const FileHeader = styled.div`
 
 // 文件名：显示文件名称，超出时截断（添加省略号）
 // 接收 darkMode 控制文本颜色
-export const FileName = styled.span<{ darkMode: boolean }>`
+export const FileName = styled.span<{ theme?: Theme; darkMode: boolean }>`
   ${({ theme, darkMode }) => css`
     font-weight: ${theme.tokens.typography.weights
       .semibold}; // 半粗字重（突出文件名）
@@ -344,7 +349,7 @@ export const FileName = styled.span<{ darkMode: boolean }>`
 
 // 文件大小：显示文件体积（如 2.3MB），辅助信息
 // 接收 darkMode 控制文本颜色
-export const FileSize = styled.span<{ darkMode: boolean }>`
+export const FileSize = styled.span<{ theme?: Theme; darkMode: boolean }>`
   ${({ theme, darkMode }) => css`
     font-size: ${theme.tokens.typography
       .sizes[1]}; // 1 号文本（较小，辅助信息）
@@ -358,6 +363,7 @@ export const FileSize = styled.span<{ darkMode: boolean }>`
 // 状态标签：显示文件上传状态（如“上传中”“成功”“失败”）
 // 接收 status（状态）和 darkMode（明暗模式）控制背景和文本色
 export const StatusBadge = styled.span<{
+  theme?: Theme;
   status: 'ready' | 'uploading' | 'success' | 'error' | 'paused';
   darkMode: boolean;
 }>`
@@ -449,7 +455,7 @@ export const ProgressContainer = styled.div`
 
 // 进度条背景：进度条的底层容器，控制进度条整体样式
 // 接收 darkMode 控制背景色
-export const ProgressBar = styled.div<{ darkMode: boolean }>`
+export const ProgressBar = styled.div<{ theme?: Theme; darkMode: boolean }>`
   ${({ theme, darkMode }) => css`
     width: 100%; // 占满容器宽度
     height: 6px; // 固定高度（细进度条，不抢焦点）
@@ -467,6 +473,7 @@ export const ProgressBar = styled.div<{ darkMode: boolean }>`
 // 进度条填充：显示当前上传进度（宽度由 progress 控制）
 // 接收 progress（进度百分比）和 status（状态）控制宽度和颜色
 export const ProgressFill = styled.div<{
+  theme?: Theme;
   progress: number;
   status: 'ready' | 'uploading' | 'success' | 'error' | 'paused';
 }>`
@@ -565,6 +572,7 @@ export const ButtonGroup = styled.div`
 // 操作按钮：文件操作的核心按钮（如暂停、继续、删除）
 // 接收 variant 控制按钮类型（颜色区分功能）
 export const ActionButton = styled.button<{
+  theme?: Theme;
   variant?: 'pause' | 'resume' | 'primary' | 'secondary' | 'danger';
 }>`
   ${({ theme, variant = 'secondary' }) => css`
@@ -647,6 +655,7 @@ export const ActionButton = styled.button<{
 // 状态指示器：与 StatusBadge 功能类似，可能用于更紧凑的场景（代码中未明确使用）
 // 接收 status 控制颜色和背景
 export const StatusIndicator = styled.div<{
+  theme?: Theme;
   status: 'ready' | 'uploading' | 'success' | 'error' | 'paused';
 }>`
   ${({ theme, status }) => css`

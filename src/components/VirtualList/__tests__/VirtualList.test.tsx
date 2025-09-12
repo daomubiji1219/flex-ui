@@ -4,9 +4,9 @@ import { VirtualList } from '../VirtualList';
 import type { VirtualListProps } from '../VirtualList';
 import { ThemeProvider } from '../../../providers/ThemeProvider';
 
-// Mock lodash-es throttle
-vi.mock('lodash-es', () => ({
-  throttle: (fn: Function) => fn,
+// Mock 本地 throttle 实现，确保测试中立即执行回调
+vi.mock('../../../utils/throttle', () => ({
+  throttle: (fn: (...args: unknown[]) => void) => fn,
 }));
 
 interface TestItem {

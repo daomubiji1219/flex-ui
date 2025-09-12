@@ -34,9 +34,7 @@ function getDefaultProps(name: string): Record<string, unknown> | undefined {
         data,
         containerHeight: 320,
         itemHeight: 60,
-        renderItem: (
-          item: { id: number; name: string; description: string },
-        ) =>
+        renderItem: (item: { id: number; name: string; description: string }) =>
           React.createElement(
             'div',
             {
@@ -142,7 +140,7 @@ function mount() {
   const mergedProps = defaults
     ? { ...defaults, ...(props.props ?? {}) }
     : (props.props ?? {});
-  
+
   // 用ThemeProvider包装组件以提供主题上下文
   const ThemeProvider = (Lib as any).ThemeProvider;
   const wrappedComponent = ThemeProvider
@@ -152,7 +150,7 @@ function mount() {
         React.createElement(Comp, mergedProps)
       )
     : React.createElement(Comp, mergedProps);
-  
+
   root.render(wrappedComponent);
 }
 

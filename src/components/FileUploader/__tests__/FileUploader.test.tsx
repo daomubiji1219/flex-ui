@@ -103,13 +103,13 @@ describe('FileUploader Component', () => {
 
   describe('Theme Support', () => {
     it('should apply light theme', () => {
-      renderWithTheme(<FileUploader {...defaultProps} theme="light" />);
+      renderWithTheme(<FileUploader {...defaultProps} />);
       const uploader = screen.getByTestId('file-uploader');
       expect(uploader).toBeInTheDocument();
     });
 
     it('should apply dark theme', () => {
-      renderWithTheme(<FileUploader {...defaultProps} theme="dark" />);
+      renderWithTheme(<FileUploader {...defaultProps} />);
       const uploader = screen.getByTestId('file-uploader');
       expect(uploader).toBeInTheDocument();
     });

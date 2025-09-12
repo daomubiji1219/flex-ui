@@ -1,6 +1,11 @@
 // src/examples/DataTableExample.tsx
-import React from 'react';
-import { DataTable, type Column } from '../components/DataTable/DataTable';
+import React, { useMemo, useState } from 'react';
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
+import { DataTable } from '../components/DataTable/DataTable';
+import { Button } from '../components/Button/Button';
+import { useTheme } from '../hooks/useTheme';
+import type { Column } from '../components/DataTable/index';
 
 // 示例数据类型
 interface User extends Record<string, unknown> {
@@ -10,22 +15,183 @@ interface User extends Record<string, unknown> {
   age: number;
   department: string;
   salary: number;
-  status: 'active' | 'inactive';
+  status: 'active' | 'inactive' | 'pending';
   joinDate: string;
+  city: string;
+  phone: string;
 }
 
-// 生成示例数据
-const generateSampleData = (): User[] => {
-  const departments = ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance'];
-  const statuses: ('active' | 'inactive')[] = ['active', 'inactive'];
+// 样式化组件
+const ExampleContainer = styled.div`
+  ${({ theme }) => css`
+    background-color: ${theme.colors.background};
+    color: ${theme.colors.text.primary};
+    padding: ${theme.tokens.spacing[6]}px;
+    border-radius: ${theme.tokens.radii.lg};
+    transition: all ${theme.tokens.transitions.normal};
+  `}
+`;
 
-  return Array.from({ length: 100 }, (_, index) => ({
+const ControlsContainer = styled.div`
+  ${({ theme }) => css`
+    display: flex;
+    flex-wrap: wrap;
+    gap: ${theme.tokens.spacing[4]}px;
+    margin-bottom: ${theme.tokens.spacing[6]}px;
+    padding: ${theme.tokens.spacing[4]}px;
+    background-color: ${theme.colors.surface};
+    border: 1px solid ${theme.colors.border};
+    border-radius: ${theme.tokens.radii.md};
+  `}
+`;
+
+const ControlGroup = styled.div`
+  ${({ theme }) => css`
+    display: flex;
+    flex-direction: column;
+    gap: ${theme.tokens.spacing[2]}px;
+  `}
+`;
+
+const Label = styled.label`
+  ${({ theme }) => css`
+    font-size: ${theme.tokens.typography.sizes[1]}px;
+    font-weight: ${theme.tokens.typography.weights.medium};
+    color: ${theme.colors.text.primary};
+  `}
+`;
+
+const Select = styled.select`
+  ${({ theme }) => css`
+    padding: ${theme.tokens.spacing[2]}px ${theme.tokens.spacing[3]}px;
+    border: 1px solid ${theme.colors.border};
+    border-radius: ${theme.tokens.radii.sm};
+    background-color: ${theme.colors.background};
+    color: ${theme.colors.text.primary};
+    font-size: ${theme.tokens.typography.sizes[1]}px;
+    transition: border-color ${theme.tokens.transitions.fast};
+
+    &:focus {
+      outline: none;
+      border-color: ${theme.tokens.colors.primary[500]};
+      box-shadow: 0 0 0 1px ${theme.tokens.colors.primary[500]};
+    }
+  `}
+`;
+
+const StatusBadge = styled.span<{ status: 'active' | 'inactive' | 'pending' }>`
+  ${({ theme, status }) => {
+    const statusConfig = {
+      active: {
+        bg: theme.isDark
+          ? theme.tokens.colors.green[900]
+          : theme.tokens.colors.green[100],
+        text: theme.isDark
+          ? theme.tokens.colors.green[200]
+          : theme.tokens.colors.green[800],
+        label: '活跃',
+      },
+      inactive: {
+        bg: theme.isDark
+          ? theme.tokens.colors.red[900]
+          : theme.tokens.colors.red[100],
+        text: theme.isDark
+          ? theme.tokens.colors.red[200]
+          : theme.tokens.colors.red[800],
+        label: '非活跃',
+      },
+      pending: {
+        bg: theme.isDark
+          ? theme.tokens.colors.orange[900]
+          : theme.tokens.colors.orange[100],
+        text: theme.isDark
+          ? theme.tokens.colors.orange[200]
+          : theme.tokens.colors.orange[800],
+        label: '待定',
+      },
+    };
+
+    return css`
+      padding: ${theme.tokens.spacing[1]}px ${theme.tokens.spacing[2]}px;
+      border-radius: ${theme.tokens.radii.full};
+      font-size: ${theme.tokens.typography.sizes[0]}px;
+      font-weight: ${theme.tokens.typography.weights.medium};
+      background-color: ${statusConfig[status].bg};
+      color: ${statusConfig[status].text};
+
+      &::before {
+        content: '${statusConfig[status].label}';
+      }
+    `;
+  }}
+`;
+
+const DepartmentBadge = styled.span`
+  ${({ theme }) => css`
+    padding: ${theme.tokens.spacing[1]}px ${theme.tokens.spacing[2]}px;
+    border-radius: ${theme.tokens.radii.sm};
+    font-size: ${theme.tokens.typography.sizes[0]}px;
+    font-weight: ${theme.tokens.typography.weights.medium};
+    background-color: ${theme.isDark
+      ? theme.tokens.colors.primary[900]
+      : theme.tokens.colors.primary[100]};
+    color: ${theme.isDark
+      ? theme.tokens.colors.primary[200]
+      : theme.tokens.colors.primary[800]};
+  `}
+`;
+
+const SalaryText = styled.span`
+  ${({ theme }) => css`
+    font-weight: ${theme.tokens.typography.weights.semibold};
+    color: ${theme.isDark
+      ? theme.tokens.colors.green[400]
+      : theme.tokens.colors.green[600]};
+  `}
+`;
+
+const InfoContainer = styled.div`
+  ${({ theme }) => css`
+    margin-bottom: ${theme.tokens.spacing[4]}px;
+    padding: ${theme.tokens.spacing[3]}px;
+    background-color: ${theme.isDark
+      ? theme.tokens.colors.primary[900]
+      : theme.tokens.colors.primary[50]};
+    border: 1px solid ${theme.tokens.colors.primary[200]};
+    border-radius: ${theme.tokens.radii.md};
+    font-size: ${theme.tokens.typography.sizes[1]}px;
+    color: ${theme.colors.text.secondary};
+  `}
+`;
+
+// 生成示例数据
+const generateSampleData = (count: number): User[] => {
+  const departments = [
+    '工程部',
+    '产品部',
+    '设计部',
+    '市场部',
+    '销售部',
+    '人事部',
+  ];
+  const statuses = ['active', 'inactive', 'pending'] as const;
+  const cities = [
+    '北京',
+    '上海',
+    '广州',
+    '深圳',
+    '杭州',
+    '成都',
+    '武汉',
+    '西安',
+  ];
+
+  return Array.from({ length: count }, (_, index) => ({
     id: index + 1,
-    name: `User ${index + 1}`,
+    name: `用户${index + 1}`,
     email: `user${index + 1}@example.com`,
-    age: Math.floor(Math.random() * 40) + 25,
     department: departments[Math.floor(Math.random() * departments.length)],
-    salary: Math.floor(Math.random() * 50000) + 50000,
+    salary: Math.floor(Math.random() * 50000) + 30000,
     status: statuses[Math.floor(Math.random() * statuses.length)],
     joinDate: new Date(
       2020 + Math.floor(Math.random() * 4),
@@ -34,12 +200,49 @@ const generateSampleData = (): User[] => {
     )
       .toISOString()
       .split('T')[0],
+    city: cities[Math.floor(Math.random() * cities.length)],
+    age: Math.floor(Math.random() * 40) + 22,
+    phone: `1${Math.floor(Math.random() * 9000000000) + 1000000000}`,
   }));
 };
 
 const DataTableExample: React.FC = () => {
-  const [data] = React.useState<User[]>(generateSampleData());
+  const { theme } = useTheme();
+  const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortField, setSortField] = useState<keyof User>('id');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [dataCount, setDataCount] = useState(100);
   const [selectedRows, setSelectedRows] = React.useState<User[]>([]);
+
+  const data = useMemo(() => generateSampleData(dataCount), [dataCount]);
+
+  const sortedData = useMemo(() => {
+    return [...data].sort((a, b) => {
+      const aValue = a[sortField] as string | number;
+      const bValue = b[sortField] as string | number;
+
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [data, sortField, sortDirection]);
+
+  const getFieldLabel = (field: keyof User): string => {
+    const labels: Record<keyof User, string> = {
+      id: 'ID',
+      name: '姓名',
+      email: '邮箱',
+      age: '年龄',
+      department: '部门',
+      salary: '薪资',
+      status: '状态',
+      joinDate: '入职日期',
+      city: '城市',
+      phone: '电话',
+    };
+    return labels[field];
+  };
 
   // 定义列配置
   const columns: Column<User>[] = [
@@ -83,23 +286,7 @@ const DataTableExample: React.FC = () => {
       width: 120,
       sortable: true,
       filterable: true,
-      render: value => (
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-medium ${
-            value === 'Engineering'
-              ? 'bg-blue-100 text-blue-800'
-              : value === 'Marketing'
-                ? 'bg-green-100 text-green-800'
-                : value === 'Sales'
-                  ? 'bg-yellow-100 text-yellow-800'
-                  : value === 'HR'
-                    ? 'bg-purple-100 text-purple-800'
-                    : 'bg-gray-100 text-gray-800'
-          }`}
-        >
-          {String(value)}
-        </span>
-      ),
+      render: value => <DepartmentBadge>{String(value)}</DepartmentBadge>,
     },
     {
       key: 'salary',
@@ -107,9 +294,7 @@ const DataTableExample: React.FC = () => {
       width: 120,
       sortable: true,
       render: value => (
-        <span className="font-medium text-green-600">
-          ${(value as number).toLocaleString()}
-        </span>
+        <SalaryText>¥{(value as number).toLocaleString()}</SalaryText>
       ),
     },
     {
@@ -119,15 +304,7 @@ const DataTableExample: React.FC = () => {
       sortable: true,
       filterable: true,
       render: value => (
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-medium ${
-            value === 'active'
-              ? 'bg-green-100 text-green-800'
-              : 'bg-red-100 text-red-800'
-          }`}
-        >
-          {value === 'active' ? '活跃' : '非活跃'}
-        </span>
+        <StatusBadge status={value as 'active' | 'inactive' | 'pending'} />
       ),
     },
     {
@@ -145,81 +322,264 @@ const DataTableExample: React.FC = () => {
   }, []);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          DataTable 示例
-        </h1>
-        <p className="text-gray-600">
-          这是一个功能完整的数据表格组件示例，支持排序、过滤、分页、行选择和虚拟滚动。
-        </p>
-      </div>
+    <ExampleContainer>
+      <h2
+        style={{
+          marginBottom: theme.tokens.spacing[6] + 'px',
+          color: theme.colors.text.primary,
+          fontSize: theme.tokens.typography.sizes[5] + 'px',
+          fontWeight: theme.tokens.typography.weights.bold,
+        }}
+      >
+        数据表格示例
+      </h2>
+
+      {/* 控制面板 */}
+      <ControlsContainer>
+        <ControlGroup>
+          <Label>数据量:</Label>
+          <Select
+            value={dataCount}
+            onChange={e => {
+              setDataCount(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+          >
+            <option value={50}>50 条</option>
+            <option value={100}>100 条</option>
+            <option value={500}>500 条</option>
+            <option value={1000}>1,000 条</option>
+            <option value={5000}>5,000 条</option>
+          </Select>
+        </ControlGroup>
+
+        <ControlGroup>
+          <Label>每页显示:</Label>
+          <Select
+            value={pageSize}
+            onChange={e => {
+              setPageSize(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+          >
+            <option value={5}>5 条</option>
+            <option value={10}>10 条</option>
+            <option value={20}>20 条</option>
+            <option value={50}>50 条</option>
+            <option value={100}>100 条</option>
+          </Select>
+        </ControlGroup>
+
+        <ControlGroup>
+          <Label>排序字段:</Label>
+          <Select
+            value={sortField}
+            onChange={e => setSortField(e.target.value as keyof User)}
+          >
+            <option value="id">ID</option>
+            <option value="name">姓名</option>
+            <option value="age">年龄</option>
+            <option value="salary">薪资</option>
+            <option value="joinDate">入职日期</option>
+          </Select>
+        </ControlGroup>
+
+        <ControlGroup>
+          <Label>排序方向:</Label>
+          <Select
+            value={sortDirection}
+            onChange={e => setSortDirection(e.target.value as 'asc' | 'desc')}
+          >
+            <option value="asc">升序</option>
+            <option value="desc">降序</option>
+          </Select>
+        </ControlGroup>
+
+        <ControlGroup style={{ justifyContent: 'flex-end' }}>
+          <Button
+            variant="primary"
+            onClick={() => {
+              setDataCount(Math.floor(Math.random() * 5000) + 100);
+              setPageSize([5, 10, 20, 50][Math.floor(Math.random() * 4)]);
+              setCurrentPage(1);
+            }}
+          >
+            随机配置
+          </Button>
+        </ControlGroup>
+      </ControlsContainer>
+
+      {/* 信息展示 */}
+      <InfoContainer>
+        显示第 {(currentPage - 1) * pageSize + 1} -{' '}
+        {Math.min(currentPage * pageSize, sortedData.length)} 条， 共{' '}
+        {sortedData.length} 条数据
+        {sortField && (
+          <span style={{ marginLeft: theme.tokens.spacing[4] + 'px' }}>
+            按{' '}
+            <strong style={{ color: theme.colors.text.primary }}>
+              {getFieldLabel(sortField)}
+            </strong>{' '}
+            {sortDirection === 'asc' ? '升序' : '降序'} 排列
+          </span>
+        )}
+      </InfoContainer>
 
       {/* 选中行信息 */}
       {selectedRows.length > 0 && (
-        <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <h3 className="text-sm font-medium text-blue-900 mb-2">
+        <div
+          style={{
+            marginBottom: theme.tokens.spacing[4] + 'px',
+            padding: theme.tokens.spacing[4] + 'px',
+            backgroundColor: theme.isDark
+              ? theme.tokens.colors.primary[900]
+              : theme.tokens.colors.primary[50],
+            border: `1px solid ${theme.tokens.colors.primary[200]}`,
+            borderRadius: theme.tokens.radii.lg + 'px',
+          }}
+        >
+          <h3
+            style={{
+              fontSize: theme.tokens.typography.sizes[1] + 'px',
+              fontWeight: theme.tokens.typography.weights.medium,
+              color: theme.colors.text.primary,
+              marginBottom: theme.tokens.spacing[2] + 'px',
+            }}
+          >
             已选中 {selectedRows.length} 行:
           </h3>
-          <div className="text-sm text-blue-700">
+          <div
+            style={{
+              fontSize: theme.tokens.typography.sizes[1] + 'px',
+              color: theme.colors.text.secondary,
+            }}
+          >
             {selectedRows.map(row => row.name).join(', ')}
           </div>
         </div>
       )}
 
-      {/* 功能说明 */}
-      <div className="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <h3 className="font-medium text-gray-900 mb-1">排序</h3>
-          <p className="text-sm text-gray-600">点击列标题进行排序</p>
-        </div>
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <h3 className="font-medium text-gray-900 mb-1">过滤</h3>
-          <p className="text-sm text-gray-600">在可过滤列中输入关键词</p>
-        </div>
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <h3 className="font-medium text-gray-900 mb-1">选择</h3>
-          <p className="text-sm text-gray-600">使用复选框选择行</p>
-        </div>
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <h3 className="font-medium text-gray-900 mb-1">分页</h3>
-          <p className="text-sm text-gray-600">底部分页导航</p>
-        </div>
-      </div>
-
       {/* DataTable 组件 */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+      <div
+        style={{
+          backgroundColor: theme.colors.surface,
+          borderRadius: theme.tokens.radii.lg + 'px',
+          border: `1px solid ${theme.colors.border}`,
+        }}
+      >
         <DataTable<User>
-          data={data}
+          data={sortedData}
           columns={columns}
           rowKey="id"
-          pagination={{ pageSize: 10 }}
+          pagination={{
+            pageSize,
+          }}
           loading={false}
           onRowSelect={handleRowSelect}
-          className="w-full"
         />
       </div>
 
       {/* 数据统计 */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900 mb-2">总用户数</h3>
-          <p className="text-3xl font-bold text-blue-600">{data.length}</p>
+      <div
+        style={{
+          marginTop: theme.tokens.spacing[6] + 'px',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: theme.tokens.spacing[4] + 'px',
+        }}
+      >
+        <div
+          style={{
+            padding: theme.tokens.spacing[4] + 'px',
+            backgroundColor: theme.colors.surface,
+            borderRadius: theme.tokens.radii.lg + 'px',
+            border: `1px solid ${theme.colors.border}`,
+          }}
+        >
+          <h3
+            style={{
+              fontSize: theme.tokens.typography.sizes[3] + 'px',
+              fontWeight: theme.tokens.typography.weights.medium,
+              color: theme.colors.text.primary,
+              marginBottom: theme.tokens.spacing[2] + 'px',
+            }}
+          >
+            总用户数
+          </h3>
+          <p
+            style={{
+              fontSize: theme.tokens.typography.sizes[6] + 'px',
+              fontWeight: theme.tokens.typography.weights.bold,
+              color: theme.isDark
+                ? theme.tokens.colors.primary[400]
+                : theme.tokens.colors.primary[600],
+            }}
+          >
+            {data.length}
+          </p>
         </div>
-        <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900 mb-2">活跃用户</h3>
-          <p className="text-3xl font-bold text-green-600">
+        <div
+          style={{
+            padding: theme.tokens.spacing[4] + 'px',
+            backgroundColor: theme.colors.surface,
+            borderRadius: theme.tokens.radii.lg + 'px',
+            border: `1px solid ${theme.colors.border}`,
+          }}
+        >
+          <h3
+            style={{
+              fontSize: theme.tokens.typography.sizes[3] + 'px',
+              fontWeight: theme.tokens.typography.weights.medium,
+              color: theme.colors.text.primary,
+              marginBottom: theme.tokens.spacing[2] + 'px',
+            }}
+          >
+            活跃用户
+          </h3>
+          <p
+            style={{
+              fontSize: theme.tokens.typography.sizes[6] + 'px',
+              fontWeight: theme.tokens.typography.weights.bold,
+              color: theme.isDark
+                ? theme.tokens.colors.green[400]
+                : theme.tokens.colors.green[600],
+            }}
+          >
             {data.filter(user => user.status === 'active').length}
           </p>
         </div>
-        <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900 mb-2">已选中</h3>
-          <p className="text-3xl font-bold text-purple-600">
+        <div
+          style={{
+            padding: theme.tokens.spacing[4] + 'px',
+            backgroundColor: theme.colors.surface,
+            borderRadius: theme.tokens.radii.lg + 'px',
+            border: `1px solid ${theme.colors.border}`,
+          }}
+        >
+          <h3
+            style={{
+              fontSize: theme.tokens.typography.sizes[3] + 'px',
+              fontWeight: theme.tokens.typography.weights.medium,
+              color: theme.colors.text.primary,
+              marginBottom: theme.tokens.spacing[2] + 'px',
+            }}
+          >
+            已选中
+          </h3>
+          <p
+            style={{
+              fontSize: theme.tokens.typography.sizes[6] + 'px',
+              fontWeight: theme.tokens.typography.weights.bold,
+              color: theme.isDark
+                ? theme.tokens.colors.purple[400]
+                : theme.tokens.colors.purple[600],
+            }}
+          >
             {selectedRows.length}
           </p>
         </div>
       </div>
-    </div>
+    </ExampleContainer>
   );
 };
 

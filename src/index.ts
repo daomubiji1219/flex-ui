@@ -17,7 +17,7 @@ export type { VirtualListProps } from './components/VirtualList/VirtualList';
 export * from './hooks';
 
 // 工具函数导出
-// export { throttle } from './utils/throttle';
+export { throttle } from './utils/throttle';
 
 // 主题导出
 export * from './theme/tokens';

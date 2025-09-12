@@ -26,7 +26,6 @@ export default defineConfig({
       '@emotion/react',
       '@emotion/styled',
       'framer-motion',
-      'lodash-es',
     ],
     exclude: ['@storybook/*'], // 排除 Storybook 相关包
   },
