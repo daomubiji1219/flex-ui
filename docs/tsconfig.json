@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.app.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["../src/*"]
+    },
+    "types": ["vitepress/client"]
+  },
+  "include": [".vitepress/**/*", "**/*.md", "**/*.vue"],
+  "exclude": ["node_modules", ".vitepress/cache", ".vitepress/dist"]
+}

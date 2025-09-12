@@ -36,7 +36,6 @@ function getDefaultProps(name: string): Record<string, unknown> | undefined {
         itemHeight: 60,
         renderItem: (
           item: { id: number; name: string; description: string },
-          index?: number
         ) =>
           React.createElement(
             'div',
@@ -118,6 +117,11 @@ function getDefaultProps(name: string): Record<string, unknown> | undefined {
         theme: 'auto',
       };
     }
+    case 'Button': {
+      return {
+        children: '默认按钮',
+      };
+    }
     default:
       return undefined;
   }
@@ -138,7 +142,18 @@ function mount() {
   const mergedProps = defaults
     ? { ...defaults, ...(props.props ?? {}) }
     : (props.props ?? {});
-  root.render(React.createElement(Comp, mergedProps));
+  
+  // 用ThemeProvider包装组件以提供主题上下文
+  const ThemeProvider = (Lib as any).ThemeProvider;
+  const wrappedComponent = ThemeProvider
+    ? React.createElement(
+        ThemeProvider,
+        { defaultMode: 'light' },
+        React.createElement(Comp, mergedProps)
+      )
+    : React.createElement(Comp, mergedProps);
+  
+  root.render(wrappedComponent);
 }
 
 onMounted(() => {

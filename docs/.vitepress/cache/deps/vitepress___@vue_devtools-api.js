@@ -1,4 +1,4 @@
-import "./chunk-VUNV25KB.js";
+import "./chunk-7D4SUZUM.js";
 
 // ../../node_modules/.pnpm/@vue+devtools-shared@7.7.7/node_modules/@vue/devtools-shared/dist/index.js
 var __create = Object.create;

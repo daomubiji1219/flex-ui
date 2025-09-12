@@ -1,18 +1,56 @@
-# Button 组件
+# Button 按钮组件
 
-一个功能丰富的按钮组件，支持多种样式、尺寸、加载状态和图标。
+一个功能丰富、高度可定制的 React 按钮组件，基于 CSS-in-JS 技术构建，支持多种样式变体、尺寸和状态。
 
 ## 特性
 
-- 🎨 多种样式变体（primary、secondary、outline、ghost）
-- 📏 三种尺寸（sm、md、lg）
-- ⏳ 内置加载状态和 Spinner
-- 🖼️ 支持图标
-- 🎯 完全的 TypeScript 支持
-- 🎭 主题适配
-- ♿ 无障碍支持
+- ✅ 多种样式变体（primary、secondary、outline、ghost）
+- ✅ 多种尺寸选择（sm、md、lg）
+- ✅ 加载状态支持
+- ✅ 图标支持
+- ✅ 禁用状态
+- ✅ 全宽度显示
+- ✅ TypeScript 完整类型支持
+- ✅ forwardRef 支持
+- ✅ CSS-in-JS 样式系统（基于 @emotion）
+- ✅ 完整的主题系统集成
+- ✅ 动画过渡效果
+- ✅ 运行时样式优化
+- ✅ 类型安全的样式属性
+
+## 安装
+
+```bash
+pnpm add flexi-ui
+```
 
 ## 基础用法
+
+### 简单使用
+
+```tsx
+import { Button } from 'flexi-ui';
+
+function App() {
+  return <Button onClick={() => alert('Hello!')}>点击我</Button>;
+}
+```
+
+### 配合主题系统使用
+
+```tsx
+import { Button, ThemeProvider } from 'flexi-ui';
+
+function App() {
+  return (
+    <ThemeProvider defaultMode="light">
+      <Button onClick={() => alert('Hello!')}>点击我</Button>
+    </ThemeProvider>
+  );
+}
+```
+
+> **注意**: Button 组件需要在 `ThemeProvider` 内部使用以获得完整的主题支持。如果未使用 `ThemeProvider`，组件将抛出错误。
 
 <DemoContainer title="基础按钮">
   <ReactDemo name="Button" :props="{ children: '默认按钮' }" />
@@ -61,20 +99,29 @@ import { PlusIcon, DownloadIcon } from '@heroicons/react/24/outline';
 
 ## API
 
-### ButtonProps
+### Props
 
-| 属性      | 类型                                               | 默认值      | 描述             |
-| --------- | -------------------------------------------------- | ----------- | ---------------- |
-| variant   | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | 按钮样式变体     |
-| size      | `'sm' \| 'md' \| 'lg'`                             | `'md'`      | 按钮尺寸         |
-| loading   | `boolean`                                          | `false`     | 是否显示加载状态 |
-| icon      | `React.ReactNode`                                  | -           | 按钮图标         |
-| fullWidth | `boolean`                                          | `false`     | 是否占满容器宽度 |
-| disabled  | `boolean`                                          | `false`     | 是否禁用         |
-| onClick   | `(event: React.MouseEvent) => void`                | -           | 点击事件处理函数 |
-| children  | `React.ReactNode`                                  | -           | 按钮内容         |
-| className | `string`                                           | -           | 自定义 CSS 类名  |
-| style     | `React.CSSProperties`                              | -           | 自定义样式       |
+| 属性      | 类型                                               | 默认值      | 说明                 |
+| --------- | -------------------------------------------------- | ----------- | -------------------- |
+| variant   | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | 按钮样式变体         |
+| size      | `'sm' \| 'md' \| 'lg'`                             | `'md'`      | 按钮尺寸             |
+| loading   | `boolean`                                          | `false`     | 是否显示加载状态     |
+| icon      | `React.ReactNode`                                  | -           | 按钮图标             |
+| fullWidth | `boolean`                                          | `false`     | 是否全宽度显示       |
+| disabled  | `boolean`                                          | `false`     | 是否禁用             |
+| children  | `React.ReactNode`                                  | -           | 按钮内容             |
+| onClick   | `(event: MouseEvent<HTMLButtonElement>) => void`   | -           | 点击事件处理函数     |
+| ...rest   | `ButtonHTMLAttributes<HTMLButtonElement>`          | -           | 其他原生 button 属性 |
+
+### Ref
+
+组件使用 `forwardRef` 包装，可以直接获取到 `HTMLButtonElement` 的引用：
+
+```tsx
+const buttonRef = useRef<HTMLButtonElement>(null);
+
+<Button ref={buttonRef}>按钮</Button>;
+```
 
 ### 样式变体说明
 
@@ -89,19 +136,68 @@ import { PlusIcon, DownloadIcon } from '@heroicons/react/24/outline';
 - **md**: 中等尺寸 (padding: 8px 16px, fontSize: 16px)
 - **lg**: 大尺寸 (padding: 12px 24px, fontSize: 18px)
 
-## 高级用法
+## 样式定制
 
-### 自定义样式
+### 主题系统定制
+
+Button 组件基于 CSS-in-JS 技术构建，完全集成了主题系统。你可以通过修改主题令牌来定制按钮样式：
 
 ```tsx
-<Button
-  style={{
-    borderRadius: '20px',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-  }}
->
-  自定义样式按钮
-</Button>
+import { ThemeProvider } from 'flexi-ui';
+import type { Theme } from 'flexi-ui';
+
+// 自定义主题
+const customTheme: Partial<Theme> = {
+  tokens: {
+    colors: {
+      primary: {
+        50: '#eff6ff',
+        500: '#3b82f6', // 自定义主色调
+        900: '#1e3a8a',
+      },
+    },
+    borderRadius: {
+      md: '8px', // 自定义圆角
+    },
+  },
+};
+
+function App() {
+  return (
+    <ThemeProvider theme={customTheme}>
+      <Button variant="primary">自定义主题按钮</Button>
+    </ThemeProvider>
+  );
+}
+```
+
+## 高级用法
+
+### 条件渲染
+
+```tsx
+function ConditionalButton({ canEdit }: { canEdit: boolean }) {
+  return (
+    <Button variant={canEdit ? 'primary' : 'outline'} disabled={!canEdit}>
+      {canEdit ? '编辑' : '只读'}
+    </Button>
+  );
+}
+```
+
+### 表单集成
+
+```tsx
+function FormButton() {
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* 其他表单字段 */}
+      <Button type="submit" variant="primary">
+        提交表单
+      </Button>
+    </form>
+  );
+}
 ```
 
 ### 异步操作

@@ -6,8 +6,11 @@ export { default as VirtualList } from './components/VirtualList/VirtualList';
 
 // 类型导出
 export type { ButtonProps } from './components/Button/Button';
-export type { DataTableProps } from './components/DataTable/DataTable';
-export type { FileUploaderProps } from './components/FileUploader/FileUploader';
+export type { DataTableProps, Column } from './components/DataTable/DataTable';
+export type {
+  FileUploaderProps,
+  UploadFile,
+} from './components/FileUploader/FileUploader';
 export type { VirtualListProps } from './components/VirtualList/VirtualList';
 
 // Hooks 导出（通过统一入口，便于按需导入）

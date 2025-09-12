@@ -1,35 +1,102 @@
-# DataTable 组件
+# DataTable 数据表格组件
 
-一个功能强大的数据表格组件，支持排序、筛选、分页、行选择和虚拟滚动等高级特性。
+一个功能强大的企业级数据表格组件，支持排序、筛选、分页、行选择和虚拟滚动等特性，适用于展示和操作大量结构化数据。采用现代化的 CSS-in-JS 架构，提供卓越的性能和用户体验。
 
-## 特性
+## 🚀 核心特性
 
-- 📊 灵活的列配置和自定义渲染
-- 🔍 内置排序和筛选功能
-- 📄 分页支持
-- ✅ 行选择功能
-- 🚀 虚拟滚动优化大数据性能
-- 💀 骨架屏加载状态
-- 🎯 完全的 TypeScript 支持
-- 🎨 响应式设计
+### 数据处理能力
 
-## 基础用法
+- ✅ **智能排序**: 支持单列和多列排序，自动处理不同数据类型
+- ✅ **实时筛选**: 支持列级筛选，实时搜索匹配
+- ✅ **灵活分页**: 可配置页面大小，支持大数据集分页
+- ✅ **行选择**: 支持单选/多选，提供选择状态回调
 
-<DemoContainer title="基础用法（实时演示）">
-  <ReactDemo name="DataTable" />
-</DemoContainer>
+### 性能优化
+
+- ✅ **虚拟滚动**: 集成 VirtualList 组件，轻松处理 10万+ 数据
+- ✅ **智能渲染**: 只渲染可视区域，极致性能优化
+- ✅ **内存管理**: 高效的状态管理和内存使用
+- ✅ **防抖节流**: 优化用户交互响应
+
+### 开发体验
+
+- ✅ **TypeScript 泛型**: 完整的类型安全支持
+- ✅ **CSS-in-JS**: Emotion 样式系统，主题化支持
+- ✅ **组件化设计**: 模块化架构，易于扩展
+- ✅ **测试覆盖**: 完整的单元测试和集成测试
+
+## 安装
+
+```bash
+pnpm add flexi-ui
+```
+
+## 组件状态
+
+✅ **已完成迁移**: DataTable 组件已完全迁移到 CSS-in-JS 架构  
+✅ **已集成应用**: 组件已成功挂载到演示应用中  
+✅ **测试通过**: 所有单元测试和集成测试均已通过  
+✅ **文档更新**: API 文档和使用示例已更新
+
+### 在演示应用中查看
+
+组件现已集成到演示应用中，你可以通过以下方式查看：
+
+1. 启动开发服务器：`pnpm run dev`
+2. 在浏览器中打开应用
+3. 点击导航栏中的 "DataTable" 标签
+4. 查看完整的功能演示，包括排序、筛选、分页、行选择等特性
+
+演示应用包含：
+
+- 100 条示例用户数据
+- 完整的列配置（ID、姓名、邮箱、年龄、部门、薪资、状态、入职日期）
+- 交互式功能展示
+- 实时选择状态显示
+- 数据统计面板
+
+## 🚀 快速开始
+
+### 基础用法
 
 ```tsx
-import { DataTable } from '@flexi-ui/components';
-import type { Column } from '@flexi-ui/components';
+import { DataTable, type Column } from 'flexi-ui';
+import type { ReactNode } from 'react';
 
 interface User {
   id: number;
   name: string;
   email: string;
   age: number;
+  department: string;
+  salary: number;
   status: 'active' | 'inactive';
+  joinDate: string;
 }
+
+const users: User[] = [
+  {
+    id: 1,
+    name: '张三',
+    email: 'zhangsan@example.com',
+    age: 25,
+    department: '技术部',
+    salary: 15000,
+    status: 'active',
+    joinDate: '2023-01-15',
+  },
+  {
+    id: 2,
+    name: '李四',
+    email: 'lisi@example.com',
+    age: 30,
+    department: '产品部',
+    salary: 18000,
+    status: 'active',
+    joinDate: '2022-08-20',
+  },
+  // 更多数据...
+];
 
 const columns: Column<User>[] = [
   {
@@ -41,47 +108,72 @@ const columns: Column<User>[] = [
   {
     key: 'name',
     title: '姓名',
+    width: 120,
     sortable: true,
     filterable: true,
   },
   {
     key: 'email',
     title: '邮箱',
+    width: 200,
     filterable: true,
   },
   {
     key: 'age',
     title: '年龄',
+    width: 80,
+    sortable: true,
+  },
+  {
+    key: 'department',
+    title: '部门',
     width: 100,
     sortable: true,
+    filterable: true,
+  },
+  {
+    key: 'salary',
+    title: '薪资',
+    width: 100,
+    sortable: true,
+    render: (value: unknown) => `¥${Number(value).toLocaleString()}`,
   },
   {
     key: 'status',
     title: '状态',
-    render: value => (
-      <span className={`status ${value}`}>
-        {value === 'active' ? '活跃' : '非活跃'}
+    width: 80,
+    render: (value: unknown) => (
+      <span className={`status-${value}`}>
+        {value === 'active' ? '在职' : '离职'}
       </span>
     ),
   },
 ];
 
-const data: User[] = [
-  {
-    id: 1,
-    name: '张三',
-    email: 'zhang@example.com',
-    age: 25,
-    status: 'active',
-  },
-  { id: 2, name: '李四', email: 'li@example.com', age: 30, status: 'inactive' },
-  // ... 更多数据
-];
-
 function App() {
-  return <DataTable data={data} columns={columns} rowKey="id" />;
+  const handleRowSelect = (selectedRows: User[]) => {
+    console.log('选中的行:', selectedRows);
+  };
+
+  return (
+    <DataTable
+      data={users}
+      columns={columns}
+      rowKey="id"
+      selectable
+      onRowSelect={handleRowSelect}
+      pagination={{
+        pageSize: 10,
+        showSizeChanger: true,
+      }}
+    />
+  );
 }
 ```
+
+<DemoContainer title="基础用法（实时演示）">
+  <ReactDemo name="DataTable" />
+</DemoContainer>
 
 ## 分页功能
 
@@ -192,76 +284,135 @@ const columns: Column<User>[] = [
 
 ## API
 
-### DataTableProps
+### DataTable`<T>`
 
-| 属性          | 类型                          | 默认值  | 描述             |
-| ------------- | ----------------------------- | ------- | ---------------- |
-| data          | `T[]`                         | `[]`    | 表格数据         |
-| columns       | `Column<T>[]`                 | `[]`    | 列配置           |
-| rowKey        | `keyof T`                     | -       | 行唯一标识字段   |
-| pagination    | `PaginationConfig`            | -       | 分页配置         |
-| loading       | `boolean`                     | `false` | 加载状态         |
-| onRowSelect   | `(selectedRows: T[]) => void` | -       | 行选择回调       |
-| virtualScroll | `boolean`                     | `false` | 是否启用虚拟滚动 |
-| selectable    | `boolean`                     | `false` | 是否可选择行     |
+| 属性          | 类型                                              | 默认值  | 说明             |
+| ------------- | ------------------------------------------------- | ------- | ---------------- |
+| data          | `T[]`                                             | -       | 表格数据数组     |
+| columns       | `Column<T>[]`                                     | -       | 列配置数组       |
+| rowKey        | `keyof T`                                         | -       | 行唯一标识字段   |
+| pagination    | `{ pageSize: number, showSizeChanger?: boolean }` | -       | 分页配置         |
+| loading       | `boolean`                                         | `false` | 是否显示加载状态 |
+| onRowSelect   | `(selectedRows: T[]) => void`                     | -       | 行选择回调函数   |
+| virtualScroll | `boolean`                                         | `false` | 是否启用虚拟滚动 |
+| selectable    | `boolean`                                         | `false` | 是否支持行选择   |
 
-### Column
+### Column`<T>`
 
-| 属性       | 类型                                                            | 默认值  | 描述           |
+| 属性       | 类型                                                            | 默认值  | 说明           |
 | ---------- | --------------------------------------------------------------- | ------- | -------------- |
-| key        | `keyof T`                                                       | -       | 列数据字段     |
+| key        | `keyof T`                                                       | -       | 列数据字段名   |
 | title      | `string`                                                        | -       | 列标题         |
 | width      | `number`                                                        | -       | 列宽度         |
 | sortable   | `boolean`                                                       | `false` | 是否可排序     |
 | filterable | `boolean`                                                       | `false` | 是否可筛选     |
 | render     | `(value: unknown, record: T, index: number) => React.ReactNode` | -       | 自定义渲染函数 |
 
-### PaginationConfig
-
-| 属性            | 类型      | 默认值  | 描述                   |
-| --------------- | --------- | ------- | ---------------------- |
-| pageSize        | `number`  | `10`    | 每页条数               |
-| showSizeChanger | `boolean` | `false` | 是否显示页面大小选择器 |
-
 ## 高级用法
 
-### 复杂筛选
+### 自定义列渲染
 
 ```tsx
-const columns: Column<User>[] = [
+const columnsWithRender = [
+  // 其他列...
   {
-    key: 'status',
+    key: 'status' as keyof UserWithStatus,
     title: '状态',
-    filterable: true,
-    render: value => {
-      const statusMap = {
-        active: { text: '活跃', color: 'green' },
-        inactive: { text: '非活跃', color: 'red' },
-      };
-      const status = statusMap[value as keyof typeof statusMap];
-      return (
-        <span
-          className={`px-2 py-1 rounded text-${status.color}-600 bg-${status.color}-100`}
-        >
-          {status.text}
-        </span>
-      );
-    },
+    width: 100,
+    render: (value: unknown, record: UserWithStatus) => (
+      <span className={`status-${record.status}`}>
+        {record.status === 'active' ? '活跃' : '非活跃'}
+      </span>
+    ),
+  },
+  {
+    key: 'actions' as keyof UserWithStatus,
+    title: '操作',
+    width: 150,
+    render: (_, record: UserWithStatus) => (
+      <div className="action-buttons">
+        <button onClick={() => handleEdit(record.id)}>编辑</button>
+        <button onClick={() => handleDelete(record.id)}>删除</button>
+      </div>
+    ),
   },
 ];
 ```
 
-### 多级排序
+### 虚拟滚动（大数据量）
 
 ```tsx
-// 组件内部支持多级排序
-// 用户可以按住 Shift 键点击多个列标题进行多级排序
+// 生成大量数据
+const largeDataSet = Array.from({ length: 10000 }, (_, i) => ({
+  id: i + 1,
+  name: `用户 ${i + 1}`,
+  email: `user${i + 1}@example.com`,
+  age: 20 + Math.floor(Math.random() * 50),
+}));
+
 <DataTable
-  data={data}
-  columns={columns.map(col => ({ ...col, sortable: true }))}
+  data={largeDataSet}
+  columns={columns}
   rowKey="id"
+  virtualScroll={true}
+/>;
+```
+
+### 加载状态
+
+```tsx
+function LoadingTable() {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<User[]>([]);
+
+  useEffect(() => {
+    fetchData().then(result => {
+      setData(result);
+      setLoading(false);
+    });
+  }, []);
+
+  return (
+    <DataTable data={data} columns={columns} rowKey="id" loading={loading} />
+  );
+}
+```
+
+## 性能优化
+
+### 虚拟滚动
+
+对于大量数据（10,000+ 条记录），建议启用虚拟滚动：
+
+```tsx
+<DataTable
+  data={largeDataSet}
+  columns={columns}
+  rowKey="id"
+  virtualScroll
+  pagination={{
+    pageSize: 100, // 增大页面大小以充分利用虚拟滚动
+  }}
 />
 ```
+
+### 内存管理
+
+- 组件内部使用 `useMemo` 和 `useCallback` 优化性能
+- 虚拟滚动只渲染可视区域的行
+- 智能的状态管理避免不必要的重新渲染
+
+## 注意事项
+
+1. **rowKey 必须唯一**: 确保 `rowKey` 指定的字段在数据中是唯一的
+2. **虚拟滚动限制**: 启用虚拟滚动时，某些 CSS 样式可能受限
+3. **性能考虑**: 对于大量数据，建议使用服务端分页而非客户端分页
+4. **类型安全**: 使用 TypeScript 泛型确保类型安全
+   columns={columns.map(col => ({ ...col, sortable: true }))}
+   rowKey="id"
+   />
+
+````
 
 ### 响应式列
 
@@ -282,7 +433,7 @@ const responsiveColumns: Column<User>[] = [
     ),
   },
 ];
-```
+````
 
 ## 性能优化
 
