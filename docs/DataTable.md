@@ -31,31 +31,27 @@
 pnpm add flexi-ui
 ```
 
-## 组件状态
+## 功能演示
 
-✅ **已完成迁移**: DataTable 组件已完全迁移到 CSS-in-JS 架构  
-✅ **已集成应用**: 组件已成功挂载到演示应用中  
-✅ **测试通过**: 所有单元测试和集成测试均已通过  
-✅ **文档更新**: API 文档和使用示例已更新
+### 基础用法
 
-### 在演示应用中查看
+<DemoContainer title="基础用法">
+  <ReactDemo name="DataTable" />
+</DemoContainer>
 
-组件现已集成到演示应用中，你可以通过以下方式查看：
+### 行选择
 
-1. 启动开发服务器：`pnpm run dev`
-2. 在浏览器中打开应用
-3. 点击导航栏中的 "DataTable" 标签
-4. 查看完整的功能演示，包括排序、筛选、分页、行选择等特性
+<DemoContainer title="行选择">
+  <ReactDemo name="DataTable" variant="selection" />
+</DemoContainer>
 
-演示应用包含：
+### 虚拟滚动（1000条数据）
 
-- 100 条示例用户数据
-- 完整的列配置（ID、姓名、邮箱、年龄、部门、薪资、状态、入职日期）
-- 交互式功能展示
-- 实时选择状态显示
-- 数据统计面板
+<DemoContainer title="虚拟滚动">
+  <ReactDemo name="DataTable" variant="virtual" />
+</DemoContainer>
 
-## 🚀 快速开始
+## 代码示例
 
 ### 基础用法
 
@@ -85,17 +81,7 @@ const users: User[] = [
     status: 'active',
     joinDate: '2023-01-15',
   },
-  {
-    id: 2,
-    name: '李四',
-    email: 'lisi@example.com',
-    age: 30,
-    department: '产品部',
-    salary: 18000,
-    status: 'active',
-    joinDate: '2022-08-20',
-  },
-  // 更多数据...
+  // ...更多数据
 ];
 
 const columns: Column<User>[] = [
@@ -118,39 +104,28 @@ const columns: Column<User>[] = [
     width: 200,
     filterable: true,
   },
-  {
-    key: 'age',
-    title: '年龄',
-    width: 80,
-    sortable: true,
-  },
-  {
-    key: 'department',
-    title: '部门',
-    width: 100,
-    sortable: true,
-    filterable: true,
-  },
-  {
-    key: 'salary',
-    title: '薪资',
-    width: 100,
-    sortable: true,
-    render: (value: unknown) => `¥${Number(value).toLocaleString()}`,
-  },
-  {
-    key: 'status',
-    title: '状态',
-    width: 80,
-    render: (value: unknown) => (
-      <span className={`status-${value}`}>
-        {value === 'active' ? '在职' : '离职'}
-      </span>
-    ),
-  },
+  // ...更多列
 ];
 
 function App() {
+  return (
+    <DataTable
+      data={users}
+      columns={columns}
+      rowKey="id"
+      pagination={{
+        pageSize: 10,
+        showSizeChanger: true,
+      }}
+    />
+  );
+}
+```
+
+### 行选择
+
+```tsx
+function SelectableTable() {
   const handleRowSelect = (selectedRows: User[]) => {
     console.log('选中的行:', selectedRows);
   };
@@ -162,120 +137,46 @@ function App() {
       rowKey="id"
       selectable
       onRowSelect={handleRowSelect}
-      pagination={{
-        pageSize: 10,
-        showSizeChanger: true,
-      }}
     />
   );
 }
 ```
 
-<DemoContainer title="基础用法（实时演示）">
-  <ReactDemo name="DataTable" />
-</DemoContainer>
+### 虚拟滚动（大数据量）
 
-## 分页功能
+对于超过 100 条的数据，建议启用虚拟滚动以获得更好的性能：
 
 ```tsx
 <DataTable
-  data={data}
-  columns={columns}
-  rowKey="id"
-  pagination={{
-    pageSize: 10,
-    showSizeChanger: true,
-  }}
-/>
-```
-
-## 行选择
-
-```tsx
-function SelectableTable() {
-  const handleRowSelect = (selectedRows: User[]) => {
-    console.log('选中的行:', selectedRows);
-  };
-
-  return (
-    <DataTable
-      data={data}
-      columns={columns}
-      rowKey="id"
-      selectable
-      onRowSelect={handleRowSelect}
-    />
-  );
-}
-```
-
-## 虚拟滚动
-
-```tsx
-// 适用于大量数据的场景
-<DataTable
-  data={largeDataSet} // 10000+ 条数据
+  data={largeDataSet}
   columns={columns}
   rowKey="id"
   virtualScroll
   pagination={{
-    pageSize: 100,
+    pageSize: 100, // 增大页面大小以充分利用虚拟滚动
   }}
 />
 ```
 
-## 加载状态
+### 自定义列渲染
 
 ```tsx
-function LoadingTable() {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    fetchData().then(result => {
-      setData(result);
-      setLoading(false);
-    });
-  }, []);
-
-  return (
-    <DataTable data={data} columns={columns} rowKey="id" loading={loading} />
-  );
-}
-```
-
-## 自定义渲染
-
-```tsx
-const columns: Column<User>[] = [
+const columnsWithRender = [
   {
-    key: 'avatar',
-    title: '头像',
+    key: 'status',
+    title: '状态',
     render: (value, record) => (
-      <img
-        src={record.avatar}
-        alt={record.name}
-        className="w-8 h-8 rounded-full"
-      />
-    ),
-  },
-  {
-    key: 'name',
-    title: '用户信息',
-    render: (value, record) => (
-      <div>
-        <div className="font-medium">{record.name}</div>
-        <div className="text-sm text-gray-500">{record.email}</div>
-      </div>
+      <span className={`status-${record.status}`}>
+        {record.status === 'active' ? '活跃' : '非活跃'}
+      </span>
     ),
   },
   {
     key: 'actions',
     title: '操作',
     render: (_, record) => (
-      <div className="space-x-2">
-        <button onClick={() => editUser(record.id)}>编辑</button>
-        <button onClick={() => deleteUser(record.id)}>删除</button>
+      <div className="action-buttons">
+        <button onClick={() => handleEdit(record.id)}>编辑</button>
       </div>
     ),
   },
@@ -308,186 +209,6 @@ const columns: Column<User>[] = [
 | filterable | `boolean`                                                       | `false` | 是否可筛选     |
 | render     | `(value: unknown, record: T, index: number) => React.ReactNode` | -       | 自定义渲染函数 |
 
-## 高级用法
-
-### 自定义列渲染
-
-```tsx
-const columnsWithRender = [
-  // 其他列...
-  {
-    key: 'status' as keyof UserWithStatus,
-    title: '状态',
-    width: 100,
-    render: (value: unknown, record: UserWithStatus) => (
-      <span className={`status-${record.status}`}>
-        {record.status === 'active' ? '活跃' : '非活跃'}
-      </span>
-    ),
-  },
-  {
-    key: 'actions' as keyof UserWithStatus,
-    title: '操作',
-    width: 150,
-    render: (_, record: UserWithStatus) => (
-      <div className="action-buttons">
-        <button onClick={() => handleEdit(record.id)}>编辑</button>
-        <button onClick={() => handleDelete(record.id)}>删除</button>
-      </div>
-    ),
-  },
-];
-```
-
-### 虚拟滚动（大数据量）
-
-```tsx
-// 生成大量数据
-const largeDataSet = Array.from({ length: 10000 }, (_, i) => ({
-  id: i + 1,
-  name: `用户 ${i + 1}`,
-  email: `user${i + 1}@example.com`,
-  age: 20 + Math.floor(Math.random() * 50),
-}));
-
-<DataTable
-  data={largeDataSet}
-  columns={columns}
-  rowKey="id"
-  virtualScroll={true}
-/>;
-```
-
-### 加载状态
-
-```tsx
-function LoadingTable() {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<User[]>([]);
-
-  useEffect(() => {
-    fetchData().then(result => {
-      setData(result);
-      setLoading(false);
-    });
-  }, []);
-
-  return (
-    <DataTable data={data} columns={columns} rowKey="id" loading={loading} />
-  );
-}
-```
-
-## 性能优化
-
-### 虚拟滚动
-
-对于大量数据（10,000+ 条记录），建议启用虚拟滚动：
-
-```tsx
-<DataTable
-  data={largeDataSet}
-  columns={columns}
-  rowKey="id"
-  virtualScroll
-  pagination={{
-    pageSize: 100, // 增大页面大小以充分利用虚拟滚动
-  }}
-/>
-```
-
-### 内存管理
-
-- 组件内部使用 `useMemo` 和 `useCallback` 优化性能
-- 虚拟滚动只渲染可视区域的行
-- 智能的状态管理避免不必要的重新渲染
-
-## 注意事项
-
-1. **rowKey 必须唯一**: 确保 `rowKey` 指定的字段在数据中是唯一的
-2. **虚拟滚动限制**: 启用虚拟滚动时，某些 CSS 样式可能受限
-3. **性能考虑**: 对于大量数据，建议使用服务端分页而非客户端分页
-4. **类型安全**: 使用 TypeScript 泛型确保类型安全
-   columns={columns.map(col => ({ ...col, sortable: true }))}
-   rowKey="id"
-   />
-
-````
-
-### 响应式列
-
-```tsx
-const responsiveColumns: Column<User>[] = [
-  {
-    key: 'name',
-    title: '姓名',
-    width: window.innerWidth > 768 ? 200 : 150,
-  },
-  {
-    key: 'email',
-    title: '邮箱',
-    render: value => (
-      <div className="truncate max-w-xs" title={value as string}>
-        {value as string}
-      </div>
-    ),
-  },
-];
-````
-
-## 性能优化
-
-### 虚拟滚动最佳实践
-
-```tsx
-// 当数据量超过 100 条时建议启用虚拟滚动
-const shouldUseVirtualScroll = data.length > 100
-
-<DataTable
-  data={data}
-  columns={columns}
-  rowKey="id"
-  virtualScroll={shouldUseVirtualScroll}
-  pagination={{
-    pageSize: shouldUseVirtualScroll ? 50 : 10
-  }}
-/>
-```
-
-### 大数据处理
-
-```tsx
-// 对于超大数据集，建议结合服务端分页
-function BigDataTable() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [pagination, setPagination] = useState({ current: 1, pageSize: 20 });
-
-  const fetchData = async (page: number, size: number) => {
-    setLoading(true);
-    try {
-      const result = await api.getData({ page, size });
-      setData(result.data);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <DataTable
-      data={data}
-      columns={columns}
-      rowKey="id"
-      loading={loading}
-      virtualScroll
-      pagination={{
-        pageSize: pagination.pageSize,
-      }}
-    />
-  );
-}
-```
-
 ## 样式定制
 
 组件使用 CSS 类名进行样式控制，主要类名包括：
@@ -505,16 +226,9 @@ function BigDataTable() {
 2. **虚拟滚动限制**: 启用虚拟滚动时，行高应该相对固定
 3. **性能考虑**: 大量数据时建议启用虚拟滚动和分页
 4. **自定义渲染**: `render` 函数应该是纯函数，避免副作用
-5. **筛选功能**: 目前支持简单的文本筛选，复杂筛选需要自定义实现
 
 ## 兼容性
 
-- React 16.8+
+- React 18+
 - TypeScript 4.0+
-- 现代浏览器 (IE11+)
-
-## 相关组件
-
-- [VirtualList](./VirtualList.md) - 虚拟滚动列表
-- [Pagination](./Pagination.md) - 分页器
-- [Button](./Button.md) - 按钮组件
+- 现代浏览器

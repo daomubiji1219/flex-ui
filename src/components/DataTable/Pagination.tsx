@@ -14,11 +14,12 @@ interface PaginationProps {
   onChange: (page: number) => void;
 }
 
+// 分页组件，上一页/下一页/页码跳转按钮实现  显示当前激活页码/‘起始-终止’列表项/总项数
 export const Pagination: React.FC<PaginationProps> = ({
   current,
   total,
   pageSize,
-  onChange,
+  onChange, // 分页变化回调
 }) => {
   const totalPages = Math.ceil(total / pageSize);
   const startItem = (current - 1) * pageSize + 1;

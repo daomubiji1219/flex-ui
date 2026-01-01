@@ -71,6 +71,106 @@ const Label = styled.label`
   `}
 `;
 
+// className 测试样式
+const TestClassNameStyles = styled.div`
+  .virtual-list-test-class {
+    border: 5px solid #ff4444 !important;
+    border-radius: 20px !important;
+    box-shadow: 0 0 30px rgba(255, 68, 68, 0.8) !important;
+    background: rgba(255, 68, 68, 0.1) !important;
+    transform: scale(1.05) !important;
+    margin: 20px !important;
+    position: relative !important;
+
+    &::before {
+      content: '🎯 VirtualList className 生效！';
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      background: #ff4444;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 15px;
+      font-size: 14px;
+      font-weight: bold;
+      z-index: 1000;
+      animation: pulse 2s infinite;
+    }
+
+    &::after {
+      content: '✨ 测试样式 ✨';
+      position: absolute;
+      bottom: -15px;
+      right: 20px;
+      background: #ff6666;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 15px;
+      font-size: 12px;
+      z-index: 1000;
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+  }
+`;
+
+// 创建带测试样式的 VirtualList 容器
+const TestVirtualListContainer = styled.div`
+  border: 5px solid #ff4444 !important;
+  border-radius: 20px !important;
+  box-shadow: 0 0 30px rgba(255, 68, 68, 0.8) !important;
+  background: rgba(255, 68, 68, 0.1) !important;
+  transform: scale(1.05) !important;
+  margin: 20px !important;
+  position: relative !important;
+
+  &::before {
+    content: '🎯 VirtualList className 生效！';
+    position: absolute;
+    top: -15px;
+    left: 20px;
+    background: #ff4444;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 1000;
+    animation: pulse 2s infinite;
+  }
+
+  &::after {
+    content: '✨ 测试样式 ✨';
+    position: absolute;
+    bottom: -15px;
+    right: 20px;
+    background: #ff6666;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-size: 12px;
+    z-index: 1000;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+`;
+
 const VirtualListExample: React.FC = () => {
   const { theme } = useTheme();
   const [itemCount, setItemCount] = useState(1000);
@@ -160,6 +260,7 @@ const VirtualListExample: React.FC = () => {
 
   return (
     <ExampleContainer>
+      <TestClassNameStyles />
       <h2
         style={{
           marginBottom: theme.tokens.spacing[5] + 'px',
@@ -309,16 +410,19 @@ const VirtualListExample: React.FC = () => {
           boxShadow: theme.isDark
             ? '0 2px 8px rgba(0,0,0,0.3)'
             : '0 2px 8px rgba(0,0,0,0.1)',
+          position: 'relative',
         }}
       >
-        <VirtualList
-          data={data}
-          containerHeight={containerHeight}
-          itemHeight={itemHeight}
-          overscan={5}
-          getKey={item => item.id}
-          renderItem={renderItem}
-        />
+        <TestVirtualListContainer>
+          <VirtualList
+            data={data}
+            containerHeight={containerHeight}
+            itemHeight={itemHeight}
+            overscan={5}
+            getKey={item => item.id}
+            renderItem={renderItem}
+          />
+        </TestVirtualListContainer>
       </div>
 
       {/* 性能说明 */}

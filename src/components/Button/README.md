@@ -67,6 +67,7 @@ function App() {
 | fullWidth | `boolean`                                          | `false`     | 是否全宽度显示       |
 | disabled  | `boolean`                                          | `false`     | 是否禁用             |
 | children  | `React.ReactNode`                                  | -           | 按钮内容             |
+| className | `string`                                           | -           | 自定义 CSS 类名      |
 | onClick   | `(event: MouseEvent<HTMLButtonElement>) => void`   | -           | 点击事件处理函数     |
 | ...rest   | `ButtonHTMLAttributes<HTMLButtonElement>`          | -           | 其他原生 button 属性 |
 
@@ -156,6 +157,50 @@ import { PlusIcon } from '@heroicons/react/24/outline';
 
 ```tsx
 <Button fullWidth>全宽度按钮</Button>
+```
+
+## 自定义样式
+
+### 使用 className
+
+你可以通过 `className` 属性为按钮添加自定义样式：
+
+```tsx
+// 基础用法
+<Button className="my-custom-button">自定义按钮</Button>
+
+// 结合 CSS 模块
+<Button className={styles.specialButton}>特殊样式按钮</Button>
+
+// 结合 styled-components 或其他 CSS-in-JS 库
+const CustomStyledButton = styled.div`
+  .custom-button {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+  }
+`;
+
+function MyComponent() {
+  return (
+    <CustomStyledButton>
+      <Button className="custom-button" variant="primary">
+        悬浮效果按钮
+      </Button>
+    </CustomStyledButton>
+  );
+}
+```
+
+### 响应式样式
+
+```tsx
+<Button className="w-full md:w-auto lg:w-48">响应式宽度按钮</Button>
 ```
 
 ## 高级用法

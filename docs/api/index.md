@@ -1,17 +1,8 @@
 # API 参考
 
-欢迎来到 Flexi-UI 的 API 参考文档。这里提供了组件库的完整 API 说明，包括组件、Hooks、工具函数和类型定义。
+欢迎来到 Flexi-UI 的 API 参考文档。这里提供了组件库的完整 API 说明，包括 Hooks、工具函数和类型定义。
 
 ## 📚 文档导航
-
-### [组件 API](./components)
-
-详细的组件属性、方法和事件说明，包括：
-
-- Button 按钮组件
-- DataTable 数据表格组件
-- VirtualList 虚拟列表组件
-- FileUploader 文件上传组件
 
 ### [Hooks API](./hooks)
 
@@ -26,8 +17,6 @@
 实用工具函数的详细说明，包括：
 
 - 节流函数
-- 防抖函数
-- 类型检查工具
 
 ### [类型定义](./types)
 

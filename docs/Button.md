@@ -77,18 +77,32 @@ function App() {
 
 ## 带图标
 
+<DemoContainer title="带图标">
+  <ReactDemo name="Button" variant="icon" />
+  <ReactDemo name="Button" variant="icon" :props="{ variant: 'outline', children: '添加项目' }" />
+  <ReactDemo name="Button" variant="icon-only" />
+  <ReactDemo name="Button" variant="icon-only" :props="{ variant: 'secondary' }" />
+</DemoContainer>
+
 ```tsx
 import { Button } from '@flexi-ui/components';
-import { PlusIcon, DownloadIcon } from '@heroicons/react/24/outline';
+import { PlusIcon } from '@heroicons/react/24/outline';
 
 <div>
   <Button icon={<PlusIcon />}>添加</Button>
-  <Button icon={<DownloadIcon />} variant="outline">
-    下载
+  <Button icon={<PlusIcon />} variant="outline">
+    添加项目
   </Button>
   <Button icon={<PlusIcon />} /> {/* 仅图标 */}
 </div>;
 ```
+
+## 全宽度
+
+<DemoContainer title="全宽度">
+  <ReactDemo name="Button" variant="full" />
+  <ReactDemo name="Button" variant="full" :props="{ variant: 'outline', children: '全宽边框按钮', style: { marginTop: 8 } }" />
+</DemoContainer>
 
 ## 禁用状态
 

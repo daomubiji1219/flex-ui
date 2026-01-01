@@ -36,8 +36,14 @@ pnpm add flexi-ui
 
 ### 基础用法
 
-<DemoContainer title="基础用法（实时演示）">
+<DemoContainer title="基础用法（固定高度）">
   <ReactDemo name="VirtualList" />
+</DemoContainer>
+
+### 动态高度
+
+<DemoContainer title="动态高度（不同行高）">
+  <ReactDemo name="VirtualList" variant="variable" />
 </DemoContainer>
 
 ```tsx
@@ -135,16 +141,15 @@ function DynamicHeightExample() {
 
 ### VirtualListProps`<T>`
 
-| 属性              | 类型                                           | 默认值                | 必填 | 说明                               |
-| ----------------- | ---------------------------------------------- | --------------------- | ---- | ---------------------------------- |
-| `data`            | `T[]`                                          | -                     | ✅   | 要渲染的数据数组                   |
-| `renderItem`      | `(item: T, index: number) => ReactNode`        | -                     | ✅   | 渲染每个列表项的函数               |
-| `containerHeight` | `number`                                       | -                     | ✅   | 容器的固定高度（像素）             |
-| `itemHeight`      | `number \| ((index: number) => number)`        | -                     | ✅   | 每项的高度，可以是固定值或计算函数 |
-| `overscan`        | `number`                                       | `5`                   | ❌   | 可视区域外额外渲染的项目数量       |
-| `getKey`          | `(item: T, index: number) => string \| number` | `(_, index) => index` | ❌   | 获取每项唯一标识的函数             |
-| `className`       | `string`                                       | -                     | ❌   | 容器的 CSS 类名                    |
-| `style`           | `CSSProperties`                                | -                     | ❌   | 容器的内联样式                     |
+| 属性              | 类型                                    | 默认值                | 必填 | 说明                         |
+| ----------------- | --------------------------------------- | --------------------- | ---- | ---------------------------- |
+| `data`            | `T[]`                                   | -                     | ✅   | 要渲染的数据数组             |
+| `renderItem`      | `(item: T, index: number) => ReactNode` | -                     | ✅   | 渲染每个列表项的函数         |
+| `containerHeight` | `number`                                | `1000`                | ❌   | 容器的固定高度（像素）       |
+| `itemHeight`      | `number`                                | `50`                  | ❌   | 每项的固定高度               |
+| `overscan`        | `number`                                | `3`                   | ❌   | 可视区域外额外渲染的项目数量 |
+| `getKey`          | `(item: T) => string \| number`         | `(_, index) => index` | ❌   | 获取每项唯一标识的函数       |
+| `className`       | `string`                                | -                     | ❌   | 容器的 CSS 类名              |
 
 ### 核心属性详解
 
@@ -1326,5 +1331,3 @@ function ChunkedVirtualList() {
 ## 相关组件
 
 - [DataTable](./DataTable.md) - 数据表格组件
-- [List](./List.md) - 普通列表组件
-- [ScrollArea](./ScrollArea.md) - 滚动区域组件

@@ -1,11 +1,11 @@
 // 导入 Emotion 核心样式工具：styled 用于创建带样式的组件，css 用于编写嵌套/条件样式
-import styled from '@emotion/styled';
-import { css } from '@emotion/react';
+import styled from '@emotion/styled'; //负责 “创建带样式的 React 组件”
+import { css } from '@emotion/react'; //负责 “创建可复用的样式片段”
 import type { Theme } from '../../theme/tokens';
 
 // 主容器组件：包裹整个文件上传区域，控制全局宽度和字体
 // 接收完整的Theme对象，支持ThemeProvider主题系统
-export const Container = styled.div<{ theme?: Theme }>`
+export const Container = styled.div<{ theme?: Theme; className?: string }>`
   // 使用 css 函数接收组件 props（此处解构出 theme），编写条件样式
   ${({ theme }) => css`
     width: 100%; // 占满父容器宽度

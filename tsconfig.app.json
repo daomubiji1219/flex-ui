@@ -19,6 +19,7 @@
     "paths": {
       "@/*": ["src/*"]
     },
+    "types": ["node"],
 
     /* 打包工具模式配置（适用于webpack、vite等打包工具） */
     // 模块解析策略（使用打包工具的解析逻辑）
@@ -48,6 +49,11 @@
     // 检查有副作用的导入语句，防止意外引入未使用但有副作用的模块
     "noUncheckedSideEffectImports": true
   },
+  "typeAcquisition": {
+    "enable": false,
+    "exclude": ["dotenv"]
+  },
   // 指定需要TypeScript编译的文件目录（包含src目录下的所有文件，包括测试文件）
-  "include": ["src/**/*", "src/**/*.test.tsx", "src/**/*.test.ts"]
+  "include": ["src/**/*", "src/**/*.test.tsx", "src/**/*.test.ts"],
+  "exclude": ["node_modules/**/*"] // 根级别 exclude
 }

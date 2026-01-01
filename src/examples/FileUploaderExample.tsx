@@ -138,6 +138,160 @@ const InfoBox = styled.div`
   `}
 `;
 
+// 自定义 FileUploader 样式类
+const CustomFileUploaderStyles = styled.div`
+  /* 基础上传器样式 - 蓝色主题 */
+  &.basic-uploader {
+    border: 3px solid #3b82f6;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+    transform: scale(1.02);
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 12px 35px rgba(59, 130, 246, 0.25);
+      transform: scale(1.03);
+    }
+  }
+
+  /* 单文件上传器样式 - 绿色主题 */
+  &.single-uploader {
+    border: 3px solid #10b981;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(16, 185, 129, 0.1),
+        transparent
+      );
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+      }
+      100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+      }
+    }
+  }
+
+  /* 大文件上传器样式 - 紫色主题 */
+  &.large-uploader {
+    border: 4px dashed #8b5cf6;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+    box-shadow:
+      0 0 0 4px rgba(139, 92, 246, 0.1),
+      0 8px 25px rgba(139, 92, 246, 0.15);
+    position: relative;
+
+    &::after {
+      content: '🚀 大文件专用';
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: linear-gradient(135deg, #8b5cf6, #a855f7);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+    }
+  }
+
+  /* 暗色模式适配 */
+  [data-theme='dark'] &.basic-uploader {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
+    border-color: #60a5fa;
+  }
+
+  [data-theme='dark'] &.single-uploader {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+    border-color: #34d399;
+  }
+
+  [data-theme='dark'] &.large-uploader {
+    background: linear-gradient(135deg, #581c87 0%, #6b21a8 100%);
+    border-color: #a78bfa;
+  }
+
+  // className 测试样式
+  &.file-uploader-test-class {
+    border: 5px solid #0066ff !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 30px rgba(0, 102, 255, 0.5) !important;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 102, 255, 0.2),
+      rgba(0, 102, 255, 0.1)
+    ) !important;
+    position: relative !important;
+    transform: scale(1.03) !important;
+    margin: 20px !important;
+
+    &::before {
+      content: '🎯 FileUploader className 生效！';
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #0066ff, #0044cc);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: bold;
+      z-index: 1000;
+      white-space: nowrap;
+      box-shadow: 0 4px 15px rgba(0, 102, 255, 0.4);
+      animation: shake 2s infinite;
+    }
+
+    &::after {
+      content: '✨ 上传测试 ✨';
+      position: absolute;
+      bottom: -35px;
+      right: 20px;
+      background: #4488ff;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: bold;
+      z-index: 1000;
+    }
+  }
+
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(-50%) rotate(0deg);
+    }
+    25% {
+      transform: translateX(-50%) rotate(-2deg);
+    }
+    75% {
+      transform: translateX(-50%) rotate(2deg);
+    }
+  }
+`;
+
 const FileUploaderExample: React.FC = () => {
   const { mode, toggleMode } = useTheme();
 
@@ -208,78 +362,89 @@ const FileUploaderExample: React.FC = () => {
         </Header>
 
         <ExampleSection>
-          <SectionTitle>基础文件上传</SectionTitle>
+          <SectionTitle>基础文件上传 🎨</SectionTitle>
           <SectionDescription>
-            支持拖拽上传、分片上传、断点续传
+            支持拖拽上传、分片上传、断点续传 - 蓝色主题样式
           </SectionDescription>
-          <FileUploader
-            action="http://localhost:3000/upload"
-            urls={{
-              check: 'http://localhost:3000/upload/check',
-              chunk: 'http://localhost:3000/upload/chunk',
-              merge: 'http://localhost:3000/upload/merge',
-            }}
-            multiple={true}
-            chunkSize={2 * 1024 * 1024} // 2MB分片
-            maxConcurrent={3} // 最大并发3个分片
-            accept=".ts,.tsx,.js,.jsx,.html,.css"
-            maxSize={100 * 1024 * 1024} // 100MB
-            onProgress={handleProgress}
-            onSuccess={handleSuccess}
-            onError={handleError}
-            beforeUpload={beforeUpload}
-          />
+          <CustomFileUploaderStyles className="file-uploader-test-class">
+            <FileUploader
+              className="file-uploader-test-class"
+              action="http://localhost:3000/upload"
+              urls={{
+                check: 'http://localhost:3000/upload/check',
+                chunk: 'http://localhost:3000/upload/chunk',
+                merge: 'http://localhost:3000/upload/merge',
+              }}
+              multiple={true}
+              chunkSize={2 * 1024 * 1024} // 2MB分片
+              maxConcurrent={3} // 最大并发3个分片
+              accept=".ts,.tsx,.js,.jsx,.html,.css"
+              maxSize={100 * 1024 * 1024} // 100MB
+              onProgress={handleProgress}
+              onSuccess={handleSuccess}
+              onError={handleError}
+              beforeUpload={beforeUpload}
+            />
+          </CustomFileUploaderStyles>
         </ExampleSection>
 
         <ExampleSection>
-          <SectionTitle>单文件上传</SectionTitle>
-          <SectionDescription>只允许上传单个文件</SectionDescription>
-          <FileUploader
-            action="http://localhost:3001/upload"
-            urls={{
-              check: 'http://localhost:3001/upload/check',
-              chunk: 'http://localhost:3001/upload/chunk',
-              merge: 'http://localhost:3001/upload/merge',
-            }}
-            multiple={false}
-            chunkSize={1 * 1024 * 1024} // 1MB分片
-            maxConcurrent={2}
-            accept="image/*"
-            maxSize={50 * 1024 * 1024} // 50MB
-            onProgress={handleProgress}
-            onSuccess={handleSuccess}
-            onError={handleError}
-          />
+          <SectionTitle>单文件上传 ✨</SectionTitle>
+          <SectionDescription>
+            只允许上传单个文件 - 绿色主题样式带动画效果
+          </SectionDescription>
+          <CustomFileUploaderStyles className="single-uploader">
+            <FileUploader
+              className="single-uploader"
+              action="http://localhost:3001/upload"
+              urls={{
+                check: 'http://localhost:3001/upload/check',
+                chunk: 'http://localhost:3001/upload/chunk',
+                merge: 'http://localhost:3001/upload/merge',
+              }}
+              multiple={false}
+              chunkSize={1 * 1024 * 1024} // 1MB分片
+              maxConcurrent={2}
+              accept="image/*"
+              maxSize={50 * 1024 * 1024} // 50MB
+              onProgress={handleProgress}
+              onSuccess={handleSuccess}
+              onError={handleError}
+            />
+          </CustomFileUploaderStyles>
         </ExampleSection>
 
         <ExampleSection>
-          <SectionTitle>大文件上传</SectionTitle>
+          <SectionTitle>大文件上传 🚀</SectionTitle>
           <SectionDescription>
-            专门用于大文件上传，使用更大的分片
+            专门用于大文件上传，使用更大的分片 - 紫色主题样式带标签
           </SectionDescription>
-          <FileUploader
-            action="http://localhost:3001/upload"
-            urls={{
-              check: 'http://localhost:3001/upload/check',
-              chunk: 'http://localhost:3001/upload/chunk',
-              merge: 'http://localhost:3001/upload/merge',
-            }}
-            multiple={true}
-            chunkSize={10 * 1024 * 1024} // 10MB分片
-            maxConcurrent={5}
-            accept="video/*,.zip,.rar,.7z"
-            maxSize={1024 * 1024 * 1024} // 1GB
-            onProgress={handleProgress}
-            onSuccess={handleSuccess}
-            onError={handleError}
-            beforeUpload={file => {
-              if (file.size < 100 * 1024 * 1024) {
-                alert('此上传器专用于大文件（>100MB），请使用基础上传器');
-                return false;
-              }
-              return true;
-            }}
-          />
+          <CustomFileUploaderStyles className="large-uploader">
+            <FileUploader
+              className="large-uploader"
+              action="http://localhost:3001/upload"
+              urls={{
+                check: 'http://localhost:3001/upload/check',
+                chunk: 'http://localhost:3001/upload/chunk',
+                merge: 'http://localhost:3001/upload/merge',
+              }}
+              multiple={true}
+              chunkSize={10 * 1024 * 1024} // 10MB分片
+              maxConcurrent={5}
+              accept="video/*,.zip,.rar,.7z"
+              maxSize={1024 * 1024 * 1024} // 1GB
+              onProgress={handleProgress}
+              onSuccess={handleSuccess}
+              onError={handleError}
+              beforeUpload={file => {
+                if (file.size < 100 * 1024 * 1024) {
+                  alert('此上传器专用于大文件（>100MB），请使用基础上传器');
+                  return false;
+                }
+                return true;
+              }}
+            />
+          </CustomFileUploaderStyles>
         </ExampleSection>
 
         <ExampleSection>

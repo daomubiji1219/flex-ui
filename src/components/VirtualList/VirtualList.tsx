@@ -1,6 +1,8 @@
 import { useState, useRef, useMemo, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import { throttle } from '../../utils/throttle';
+import { useErrorBoundaryEnhanced } from '../../hooks/useErrorBoundaryEnhanced';
+import { DefaultErrorFallback } from '../../hooks/useErrorBoundary';
 import {
   VirtualListContainer,
   VirtualListContent,
@@ -17,6 +19,7 @@ interface VirtualListProps<T> {
   overscan?: number;
   getKey?: (item: T) => number | string;
   renderItem: (item: T, index?: number) => ReactNode; //列表引索得节点
+  className?: string;
 }
 
 //jsx场景下防止误认<T>为标签
@@ -27,7 +30,16 @@ export const VirtualList = <T,>({
   overscan = 3,
   getKey,
   renderItem,
+  className,
 }: VirtualListProps<T>) => {
+  // ==================== 错误边界 ====================
+  const { ErrorBoundary } = useErrorBoundaryEnhanced(DefaultErrorFallback, {
+    maxRetries: 3,
+    onError: (error, errorInfo) => {
+      console.error('VirtualList 组件发生错误:', { error, errorInfo });
+    },
+  });
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollTop, setScrollTop] = useState<number>(0);
   const [itemHeights, setItemHeights] = useState<Record<number, number>>({});
@@ -91,37 +103,40 @@ export const VirtualList = <T,>({
   }, 50);
 
   return (
-    <VirtualListContainer
-      ref={containerRef}
-      containerHeight={containerHeight}
-      onScroll={handleScroll}
-      data-testid="virtual-list"
-    >
-      <VirtualListContent totalHeight={totalHeight}>
-        <VisibleArea offsetTop={offsetTop}>
-          {data && Array.isArray(data)
-            ? data.slice(startIndex, endIndex).map((item, i) => {
-                const index = startIndex + i;
-                return (
-                  <VirtualListItem
-                    key={getKey?.(item) ?? index}
-                    ref={ref => {
-                      if (ref) {
-                        const h = ref.offsetHeight;
-                        if (h && itemHeights[index] !== h) {
-                          updateHeight(index, h);
+    <ErrorBoundary>
+      <VirtualListContainer
+        ref={containerRef}
+        containerHeight={containerHeight}
+        onScroll={handleScroll}
+        className={className}
+        data-testid="virtual-list"
+      >
+        <VirtualListContent totalHeight={totalHeight}>
+          <VisibleArea offsetTop={offsetTop}>
+            {data && Array.isArray(data)
+              ? data.slice(startIndex, endIndex).map((item, i) => {
+                  const index = startIndex + i;
+                  return (
+                    <VirtualListItem
+                      key={getKey?.(item) ?? index}
+                      ref={ref => {
+                        if (ref) {
+                          const h = ref.offsetHeight;
+                          if (h && itemHeights[index] !== h) {
+                            updateHeight(index, h);
+                          }
                         }
-                      }
-                    }}
-                  >
-                    {renderItem(item, index)}
-                  </VirtualListItem>
-                );
-              })
-            : null}
-        </VisibleArea>
-      </VirtualListContent>
-    </VirtualListContainer>
+                      }}
+                    >
+                      {renderItem(item, index)}
+                    </VirtualListItem>
+                  );
+                })
+              : null}
+          </VisibleArea>
+        </VirtualListContent>
+      </VirtualListContainer>
+    </ErrorBoundary>
   );
 };
 

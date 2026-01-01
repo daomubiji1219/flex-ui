@@ -35,7 +35,8 @@
     // 禁止switch语句中出现贯穿（fallthrough）情况（case后未加break）
     "noFallthroughCasesInSwitch": true,
     // 检查有副作用的导入语句，防止意外引入未使用但有副作用的模块
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "types": ["node"]
   },
   // 指定需要TypeScript编译的文件（这里包含vite和vitest的配置文件，因该配置专为Node端工具脚本设计）
   "include": ["vite.config.ts", "vitest.config.ts"]

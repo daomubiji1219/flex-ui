@@ -13,6 +13,8 @@ interface TableHeaderProps<T> {
   onFilter: (key: keyof T, value: unknown) => void;
 }
 
+// 表格头组件，渲染表头标题，包含排序按钮/筛选输入框
+
 export const TableHeader = <T extends Record<string, unknown>>({
   columns,
   onSort,

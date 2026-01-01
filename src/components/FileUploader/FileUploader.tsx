@@ -3,6 +3,8 @@
 import React, { useState, useRef } from 'react';
 // import crypto from 'crypto-js';
 import { useTheme } from '../../hooks/useTheme';
+import { useErrorBoundaryEnhanced } from '../../hooks/useErrorBoundaryEnhanced';
+import { DefaultErrorFallback } from '../../hooks/useErrorBoundary';
 import {
   Container,
   DropZone,
@@ -70,6 +72,14 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
   beforeUpload,
   className = '',
 }) => {
+  // ==================== 错误边界 ====================
+  const { ErrorBoundary } = useErrorBoundaryEnhanced(DefaultErrorFallback, {
+    maxRetries: 3,
+    onError: (error, errorInfo) => {
+      console.error('FileUploader 组件发生错误:', { error, errorInfo });
+    },
+  });
+
   const [files, setFiles] = useState<UploadFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null); //非受控组件
@@ -510,100 +520,110 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
   };
 
   return (
-    <Container theme={theme} className={className} data-testid="file-uploader">
-      {/* 拖拽区域 */}
-      <DropZone
+    <ErrorBoundary>
+      <Container
         theme={theme}
-        isDragging={isDragging}
-        darkMode={darkMode}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        onClick={() => fileInputRef.current?.click()}
-        data-testid="drop-zone"
+        className={className}
+        data-testid="file-uploader"
       >
-        {isDragging && <DropZoneOverlay />}
-        <DropZoneText theme={theme} isDragging={isDragging} darkMode={darkMode}>
-          点击或拖拽文件到此处上传
-        </DropZoneText>
-        <HiddenInput
-          ref={fileInputRef}
-          type="file"
-          multiple={multiple}
-          accept={accept}
-          data-testid="file-input"
-          onChange={e => {
-            if (e.target.files) {
-              addFiles(e.target.files);
-            }
-          }}
-        />
-      </DropZone>
+        {/* 拖拽区域 */}
+        <DropZone
+          theme={theme}
+          isDragging={isDragging}
+          darkMode={darkMode}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          onClick={() => fileInputRef.current?.click()}
+          data-testid="drop-zone"
+        >
+          {isDragging && <DropZoneOverlay />}
+          <DropZoneText
+            theme={theme}
+            isDragging={isDragging}
+            darkMode={darkMode}
+          >
+            点击或拖拽文件到此处上传
+          </DropZoneText>
+          <HiddenInput
+            ref={fileInputRef}
+            type="file"
+            multiple={multiple}
+            accept={accept}
+            data-testid="file-input"
+            onChange={e => {
+              if (e.target.files) {
+                addFiles(e.target.files);
+              }
+            }}
+          />
+        </DropZone>
 
-      {/* 文件列表 */}
-      <FileList>
-        {files.map(file => (
-          <FileItem key={file.uid} theme={theme} darkMode={darkMode}>
-            <FileHeader>
-              <FileName theme={theme} darkMode={darkMode}>
-                {file.name}
-              </FileName>
-              <FileSize theme={theme} darkMode={darkMode}>
-                {(file.size / 1024 / 1024).toFixed(2)} MB
-              </FileSize>
-              <StatusBadge
-                theme={theme}
-                status={file.status}
-                darkMode={darkMode}
-              >
-                {file.status}
-              </StatusBadge>
-            </FileHeader>
-
-            <ProgressBar theme={theme} darkMode={darkMode}>
-              <ProgressFill
-                theme={theme}
-                status={file.status}
-                progress={file.progress}
-              />
-              {file.status === 'uploading' && <ProgressShimmer />}
-            </ProgressBar>
-
-            <ButtonGroup>
-              {file.status === 'uploading' && (
-                <ActionButton
+        {/* 文件列表 */}
+        <FileList>
+          {files.map(file => (
+            <FileItem key={file.uid} theme={theme} darkMode={darkMode}>
+              <FileHeader>
+                <FileName theme={theme} darkMode={darkMode}>
+                  {file.name}
+                </FileName>
+                <FileSize theme={theme} darkMode={darkMode}>
+                  {(file.size / 1024 / 1024).toFixed(2)} MB
+                </FileSize>
+                <StatusBadge
                   theme={theme}
-                  variant="pause"
-                  onClick={() => {
-                    const controller = uploadQueueRef.current.get(file.uid);
-                    controller?.abort();
-                    uploadQueueRef.current.delete(file.uid);
-                    setFiles(prev =>
-                      prev.map(f =>
-                        f.uid === file.uid
-                          ? { ...f, status: 'paused' as const }
-                          : f
-                      )
-                    );
-                  }}
+                  status={file.status}
+                  darkMode={darkMode}
                 >
-                  暂停
-                </ActionButton>
-              )}
-              {file.status === 'paused' && (
-                <ActionButton
+                  {file.status}
+                </StatusBadge>
+              </FileHeader>
+
+              <ProgressBar theme={theme} darkMode={darkMode}>
+                <ProgressFill
                   theme={theme}
-                  variant="resume"
-                  onClick={() => uploadFile(file)}
-                >
-                  继续
-                </ActionButton>
-              )}
-            </ButtonGroup>
-          </FileItem>
-        ))}
-      </FileList>
-    </Container>
+                  status={file.status}
+                  progress={file.progress}
+                />
+                {file.status === 'uploading' && <ProgressShimmer />}
+              </ProgressBar>
+
+              <ButtonGroup>
+                {file.status === 'uploading' && (
+                  <ActionButton
+                    theme={theme}
+                    variant="pause"
+                    onClick={() => {
+                      const controller = uploadQueueRef.current.get(file.uid);
+                      controller?.abort();
+                      uploadQueueRef.current.delete(file.uid);
+                      setFiles(prev =>
+                        prev.map(f =>
+                          f.uid === file.uid
+                            ? { ...f, status: 'paused' as const }
+                            : f
+                        )
+                      );
+                    }}
+                  >
+                    暂停
+                  </ActionButton>
+                )}
+                {file.status === 'paused' && (
+                  <ActionButton
+                    theme={theme}
+                    variant="resume"
+                    onClick={() => uploadFile(file)}
+                  >
+                    继续
+                  </ActionButton>
+                )}
+              </ButtonGroup>
+            </FileItem>
+          ))}
+        </FileList>
+      </Container>
+    </ErrorBoundary>
   );
 };
 

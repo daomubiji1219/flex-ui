@@ -4,52 +4,39 @@
 
 ## 基础类型
 
-### Size 尺寸类型
+### ThemeMode 主题模式
 
-定义组件的尺寸规格。
-
-```typescript
-type Size = 'small' | 'medium' | 'large';
-```
-
-**使用场景**: Button、Input、Select 等组件的 `size` 属性。
-
----
-
-### Variant 变体类型
-
-定义组件的样式变体。
+定义应用的主题模式。
 
 ```typescript
-type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+type ThemeMode = 'light' | 'dark';
 ```
 
-**使用场景**: Button、Badge、Alert 等组件的 `variant` 属性。
+**使用场景**: `ThemeProvider`, `useTheme`.
 
----
+### Theme 主题对象
 
-### Theme 主题类型
-
-定义应用主题。
+定义完整的主题对象结构。
 
 ```typescript
-type Theme = 'light' | 'dark' | 'system';
-type ResolvedTheme = 'light' | 'dark';
+interface Theme {
+  tokens: typeof designTokens;
+  mode: ThemeMode;
+  isDark: boolean;
+  colors: typeof designTokens.colors & {
+    background: string;
+    surface: string;
+    text: {
+      primary: string;
+      secondary: string;
+      disabled: string;
+    };
+    border: string;
+  };
+}
 ```
 
-**使用场景**: ThemeProvider、useTheme Hook。
-
----
-
-### Status 状态类型
-
-定义组件或操作的状态。
-
-```typescript
-type Status = 'idle' | 'loading' | 'success' | 'error';
-```
-
-**使用场景**: 异步操作、表单验证、文件上传等。
+**使用场景**: `useTheme` Hook 返回的 `theme` 对象。
 
 ---
 
@@ -59,13 +46,12 @@ type Status = 'idle' | 'loading' | 'success' | 'error';
 
 ```typescript
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: Variant;
-  size?: Size;
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
-  disabled?: boolean;
-  children: React.ReactNode;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
+  icon?: ReactNode;
+  fullWidth?: boolean;
+  children?: ReactNode;
 }
 ```
 
@@ -76,21 +62,19 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 ### DataTableProps 数据表格属性
 
 ```typescript
-interface DataTableProps<T = any> {
+interface DataTableProps<T> {
   data: T[];
   columns: Column<T>[];
+  rowKey: keyof T;
+  pagination?: {
+    pageSize: number;
+    showSizeChanger?: boolean;
+  };
   loading?: boolean;
-  pagination?: PaginationConfig;
-  sortable?: boolean;
+  onRowSelect?: (selectedRows: T[]) => void;
+  virtualScroll?: boolean;
   selectable?: boolean;
-  rowKey?: keyof T | ((record: T) => string | number);
-  onRowClick?: (record: T, index: number) => void;
-  onSelectionChange?: (
-    selectedRows: T[],
-    selectedRowKeys: (string | number)[]
-  ) => void;
   className?: string;
-  style?: React.CSSProperties;
 }
 ```
 
@@ -101,16 +85,14 @@ interface DataTableProps<T = any> {
 ### VirtualListProps 虚拟列表属性
 
 ```typescript
-interface VirtualListProps<T = any> {
+interface VirtualListProps<T> {
   data: T[];
-  itemHeight?: number | ((index: number) => number);
+  itemHeight?: number;
   containerHeight?: number;
   overscan?: number;
-  renderItem: (item: T, index: number) => React.ReactNode;
-  getKey?: (item: T, index: number) => string | number;
-  onScroll?: (scrollTop: number, scrollLeft: number) => void;
+  getKey?: (item: T) => number | string;
+  renderItem: (item: T, index?: number) => ReactNode;
   className?: string;
-  style?: React.CSSProperties;
 }
 ```
 
@@ -122,19 +104,22 @@ interface VirtualListProps<T = any> {
 
 ```typescript
 interface FileUploaderProps {
-  accept?: string;
+  action: string;
+  urls?: {
+    check: string; // 检查已上传分片的接口URL
+    chunk: string; // 上传分片的接口URL
+    merge: string; // 合并分片的接口URL
+  };
   multiple?: boolean;
+  chunkSize?: number;
+  maxConcurrent?: number;
+  accept?: string;
   maxSize?: number;
-  maxFiles?: number;
-  disabled?: boolean;
-  directory?: boolean;
-  onFileSelect?: (files: File[]) => void;
-  onUpload?: (files: File[]) => Promise<UploadResponse[]>;
-  onProgress?: (progress: UploadProgress) => void;
-  onError?: (error: UploadError) => void;
-  children?: React.ReactNode;
+  onProgress?: (file: UploadFile, progress: number) => void;
+  onSuccess?: (file: UploadFile, response: unknown) => void;
+  onError?: (file: UploadFile, error: Error) => void;
+  beforeUpload?: (file: File) => boolean | Promise<boolean>;
   className?: string;
-  style?: React.CSSProperties;
 }
 ```
 
@@ -145,57 +130,19 @@ interface FileUploaderProps {
 ### Column 表格列配置
 
 ```typescript
-interface Column<T = any> {
+interface Column<T> {
   key: keyof T;
-  title: React.ReactNode;
-  dataIndex?: keyof T;
-  width?: number | string;
-  minWidth?: number;
-  maxWidth?: number;
-  align?: 'left' | 'center' | 'right';
+  title: string;
+  width?: number;
   sortable?: boolean;
   filterable?: boolean;
-  fixed?: 'left' | 'right';
-  render?: (value: any, record: T, index: number) => React.ReactNode;
-  sorter?: (a: T, b: T) => number;
-  filters?: FilterOption[];
-  onFilter?: (value: any, record: T) => boolean;
-  ellipsis?: boolean;
-  className?: string;
+  sortDirection?: 'asc' | 'desc';
+  filterValue?: unknown;
+  render?: (value: unknown, record: T, index: number) => React.ReactNode;
 }
 ```
 
 **泛型**: `T` 表示数据行的类型。
-
----
-
-### PaginationConfig 分页配置
-
-```typescript
-interface PaginationConfig {
-  current: number;
-  pageSize: number;
-  total: number;
-  showSizeChanger?: boolean;
-  showQuickJumper?: boolean;
-  showTotal?: (total: number, range: [number, number]) => React.ReactNode;
-  pageSizeOptions?: string[];
-  onChange?: (page: number, pageSize: number) => void;
-  onShowSizeChange?: (current: number, size: number) => void;
-}
-```
-
----
-
-### FilterOption 筛选选项
-
-```typescript
-interface FilterOption {
-  text: React.ReactNode;
-  value: any;
-  children?: FilterOption[];
-}
-```
 
 ---
 
@@ -207,53 +154,12 @@ interface UploadFile {
   name: string;
   size: number;
   type: string;
-  status: UploadStatus;
-  progress?: number;
-  response?: any;
-  error?: UploadError;
-  url?: string;
-  thumbUrl?: string;
-  originFileObj?: File;
-}
-
-type UploadStatus = 'pending' | 'uploading' | 'success' | 'error' | 'removed';
-```
-
----
-
-### UploadResponse 上传响应
-
-```typescript
-interface UploadResponse {
-  success: boolean;
-  data?: any;
-  message?: string;
-  url?: string;
-}
-```
-
----
-
-### UploadProgress 上传进度
-
-```typescript
-interface UploadProgress {
-  file: UploadFile;
-  percent: number;
-  loaded: number;
-  total: number;
-}
-```
-
----
-
-### UploadError 上传错误
-
-```typescript
-interface UploadError {
-  file: UploadFile;
-  error: Error;
-  message: string;
+  status: 'ready' | 'uploading' | 'success' | 'error' | 'paused';
+  progress: number;
+  file: File;
+  chunks?: Blob[];
+  uploadedChunks?: boolean[];
+  hash?: string;
 }
 ```
 
@@ -261,122 +167,83 @@ interface UploadError {
 
 ## 表单类型
 
-### FormValues 表单值
+### FormState 表单状态
 
 ```typescript
-type FormValues = Record<string, any>;
+interface FormState<T = Record<string, unknown>> {
+  values: T;
+  errors: Partial<Record<keyof T, string>>;
+  touched: Partial<Record<keyof T, boolean>>;
+  isSubmitting: boolean;
+  isDirty: boolean;
+}
 ```
 
 ---
 
-### FormErrors 表单错误
+### FormConfig 表单配置
 
 ```typescript
-type FormErrors<T = FormValues> = Partial<Record<keyof T, string>>;
+interface FormConfig<T = Record<string, unknown>> {
+  initialValues: T;
+  validationSchema?: Record<keyof T, IValidator>;
+  debounceMs?: number;
+  validateOnChange?: boolean;
+  validateOnBlur?: boolean;
+}
 ```
 
 ---
 
-### FormTouched 表单触摸状态
+### IFormContext 表单上下文
 
 ```typescript
-type FormTouched<T = FormValues> = Partial<Record<keyof T, boolean>>;
+interface IFormContext<T = Record<string, unknown>> {
+  state: FormState<T>;
+  setFieldValue: (name: keyof T, value: unknown) => Promise<void>;
+  setFieldError: (name: keyof T, error: string) => void;
+  clearFieldError: (name: keyof T) => void;
+  validateField: (name: keyof T) => Promise<ValidationResult>;
+  validateForm: () => Promise<Record<keyof T, ValidationResult>>;
+  resetForm: () => void;
+  subscribe: (observer: IFormObserver) => () => void;
+  undo: () => Promise<void>;
+  redo: () => Promise<void>;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
+}
 ```
 
 ---
 
-### ValidationRule 验证规则
+### ValidationResult 验证结果
 
 ```typescript
-interface ValidationRule<T = any> {
-  required?: boolean;
+interface ValidationResult {
+  isValid: boolean;
   message?: string;
-  validator?: (value: T, values: FormValues) => string | undefined;
-  pattern?: RegExp;
-  min?: number;
-  max?: number;
-  minLength?: number;
-  maxLength?: number;
 }
 ```
 
 ---
 
-### FieldConfig 字段配置
+### IValidator 验证器接口
 
 ```typescript
-interface FieldConfig<T = any> {
-  name: string;
-  label?: React.ReactNode;
-  initialValue?: T;
-  rules?: ValidationRule<T>[];
-  dependencies?: string[];
-  normalize?: (value: T, prevValue: T, values: FormValues) => T;
-  getValueFromEvent?: (...args: any[]) => T;
+interface IValidator {
+  validate(value: unknown): Promise<ValidationResult> | ValidationResult;
 }
 ```
 
 ---
 
-## 事件类型
-
-### MouseEventHandler 鼠标事件处理器
+### IFormObserver 表单观察者
 
 ```typescript
-type MouseEventHandler<T = Element> = (event: React.MouseEvent<T>) => void;
-```
-
----
-
-### KeyboardEventHandler 键盘事件处理器
-
-```typescript
-type KeyboardEventHandler<T = Element> = (
-  event: React.KeyboardEvent<T>
-) => void;
-```
-
----
-
-### ChangeEventHandler 变化事件处理器
-
-```typescript
-type ChangeEventHandler<T = Element> = (event: React.ChangeEvent<T>) => void;
-```
-
----
-
-### FocusEventHandler 焦点事件处理器
-
-```typescript
-type FocusEventHandler<T = Element> = (event: React.FocusEvent<T>) => void;
-```
-
----
-
-## 样式类型
-
-### CSSProperties CSS 属性
-
-```typescript
-type CSSProperties = React.CSSProperties;
-```
-
----
-
-### ClassName 类名
-
-```typescript
-type ClassName = string | string[] | Record<string, boolean> | undefined;
-```
-
----
-
-### StyleObject 样式对象
-
-```typescript
-interface StyleObject {
-  [key: string]: string | number | StyleObject;
+interface IFormObserver {
+  onFieldChange(fieldName: string, value: unknown): void;
+  onFieldError(fieldName: string, error: string): void;
+  onFormSubmit(values: Record<string, unknown>): void;
 }
 ```
 
@@ -384,240 +251,16 @@ interface StyleObject {
 
 ## 工具类型
 
-### Serializer 序列化器
+### ThrottledFunction 节流函数
 
 ```typescript
-interface Serializer<T> {
-  parse: (value: string) => T;
-  stringify: (value: T) => string;
-}
-```
-
-**使用场景**: useLocalStorage Hook。
-
----
-
-### Debounced 防抖函数
-
-```typescript
-interface Debounced<T extends (...args: any[]) => any> {
-  (...args: Parameters<T>): void;
+type ThrottledFunction<TArgs extends unknown[]> = ((...args: TArgs) => void) & {
   cancel: () => void;
   flush: () => void;
-}
-```
-
----
-
-### Throttled 节流函数
-
-```typescript
-interface Throttled<T extends (...args: any[]) => any> {
-  (...args: Parameters<T>): void;
-  cancel: () => void;
-  flush: () => void;
-}
-```
-
----
-
-### DeepPartial 深度可选
-
-```typescript
-type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
 };
 ```
 
-**使用场景**: 配置对象的部分更新。
-
----
-
-### DeepRequired 深度必需
-
-```typescript
-type DeepRequired<T> = {
-  [P in keyof T]-?: T[P] extends object ? DeepRequired<T[P]> : T[P];
-};
-```
-
----
-
-### Omit 排除属性
-
-```typescript
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-```
-
-**使用场景**: 从现有类型中排除某些属性。
-
----
-
-### Override 覆盖属性
-
-```typescript
-type Override<T, U> = Omit<T, keyof U> & U;
-```
-
-**使用场景**: 覆盖现有类型的某些属性。
-
----
-
-## 泛型约束
-
-### ComponentProps 组件属性约束
-
-```typescript
-type ComponentProps<
-  T extends keyof JSX.IntrinsicElements | React.JSXElementConstructor<any>,
-> =
-  T extends React.JSXElementConstructor<infer P>
-    ? P
-    : T extends keyof JSX.IntrinsicElements
-      ? JSX.IntrinsicElements[T]
-      : never;
-```
-
-**使用场景**: 获取组件的属性类型。
-
----
-
-### ElementRef 元素引用约束
-
-```typescript
-type ElementRef<
-  T extends keyof JSX.IntrinsicElements | React.JSXElementConstructor<any>,
-> = T extends keyof JSX.IntrinsicElements
-  ? JSX.IntrinsicElements[T] extends React.DetailedHTMLProps<any, infer E>
-    ? E
-    : never
-  : T extends React.JSXElementConstructor<any>
-    ? React.ComponentRef<T>
-    : never;
-```
-
-**使用场景**: 获取组件的引用类型。
-
----
-
-## 条件类型
-
-### IsFunction 函数类型检查
-
-```typescript
-type IsFunction<T> = T extends (...args: any[]) => any ? true : false;
-```
-
----
-
-### IsArray 数组类型检查
-
-```typescript
-type IsArray<T> = T extends readonly any[] ? true : false;
-```
-
----
-
-### IsObject 对象类型检查
-
-```typescript
-type IsObject<T> = T extends object
-  ? T extends any[]
-    ? false
-    : T extends Function
-      ? false
-      : true
-  : false;
-```
-
----
-
-## 使用示例
-
-### 组件开发
-
-```typescript
-import type { ButtonProps, Size, Variant } from '@daomu/flexi-ui';
-
-// 扩展按钮组件
-interface CustomButtonProps extends Omit<ButtonProps, 'variant'> {
-  variant?: Variant | 'custom';
-  customColor?: string;
-}
-
-const CustomButton: React.FC<CustomButtonProps> = props => {
-  // 组件实现
-};
-```
-
-### 表格数据类型
-
-```typescript
-import type { DataTableProps, Column } from '@daomu/flexi-ui';
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: 'admin' | 'user';
-  createdAt: Date;
-}
-
-const columns: Column<User>[] = [
-  {
-    key: 'name',
-    title: '姓名',
-    sortable: true,
-  },
-  {
-    key: 'email',
-    title: '邮箱',
-  },
-  {
-    key: 'role',
-    title: '角色',
-    render: (role: User['role']) => (
-      <Badge variant={role === 'admin' ? 'primary' : 'secondary'}>
-        {role}
-      </Badge>
-    ),
-  },
-];
-
-const UserTable: React.FC<{ users: User[] }> = ({ users }) => {
-  return (
-    <DataTable<User>
-      data={users}
-      columns={columns}
-      rowKey="id"
-    />
-  );
-};
-```
-
-### 表单类型安全
-
-```typescript
-import type { FormValues, ValidationRule } from '@daomu/flexi-ui';
-
-interface LoginForm {
-  username: string;
-  password: string;
-  remember: boolean;
-}
-
-const validationRules: Record<keyof LoginForm, ValidationRule[]> = {
-  username: [
-    { required: true, message: '请输入用户名' },
-    { minLength: 3, message: '用户名至少3个字符' },
-  ],
-  password: [
-    { required: true, message: '请输入密码' },
-    { minLength: 6, message: '密码至少6个字符' },
-  ],
-  remember: [],
-};
-```
+**使用场景**: `throttle` 工具函数。
 
 ---
 
@@ -631,18 +274,6 @@ import type { ButtonProps, DataTableProps } from '@daomu/flexi-ui';
 
 // 导入所有类型
 import type * as FlexiTypes from '@daomu/flexi-ui';
-```
-
-### 重新导出
-
-```typescript
-// 在你的项目中重新导出类型
-export type {
-  ButtonProps,
-  DataTableProps,
-  VirtualListProps,
-  FileUploaderProps,
-} from '@daomu/flexi-ui';
 ```
 
 ---

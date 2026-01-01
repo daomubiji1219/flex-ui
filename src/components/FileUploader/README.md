@@ -56,6 +56,7 @@ function App() {
 | maxConcurrent | `number`                                        | `3`               | 最大并发上传数            |
 | accept        | `string`                                        | -                 | 接受的文件类型            |
 | maxSize       | `number`                                        | -                 | 最大文件大小（字节）      |
+| className     | `string`                                        | -                 | 自定义 CSS 类名           |
 | onProgress    | `(file: UploadFile, progress: number) => void`  | -                 | 上传进度回调              |
 | onSuccess     | `(file: UploadFile, response: unknown) => void` | -                 | 上传成功回调              |
 | onError       | `(file: UploadFile, error: Error) => void`      | -                 | 上传失败回调              |
@@ -296,6 +297,127 @@ function ImageUploader() {
       </div>
     </div>
   );
+}
+```
+
+## 自定义样式
+
+### 使用 className
+
+你可以通过 `className` 属性为文件上传组件添加自定义样式：
+
+```tsx
+// 基础用法
+<FileUploader
+  action="/api/upload"
+  className="my-custom-uploader"
+/>
+
+// 结合 CSS 模块
+<FileUploader
+  action="/api/upload"
+  className={styles.specialUploader}
+/>
+
+// 结合 styled-components 或其他 CSS-in-JS 库
+const CustomStyledUploader = styled.div`
+  .custom-file-uploader {
+    border: 2px dashed #4f46e5;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: #3730a3;
+      background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(79, 70, 229, 0.15);
+    }
+
+    .upload-area {
+      padding: 2rem;
+      text-align: center;
+
+      .upload-icon {
+        font-size: 3rem;
+        color: #4f46e5;
+        margin-bottom: 1rem;
+      }
+
+      .upload-text {
+        font-size: 1.1rem;
+        color: #475569;
+        font-weight: 500;
+      }
+    }
+
+    .file-list {
+      margin-top: 1rem;
+
+      .file-item {
+        background: white;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        &.uploading {
+          border-left: 4px solid #3b82f6;
+        }
+
+        &.success {
+          border-left: 4px solid #10b981;
+        }
+
+        &.error {
+          border-left: 4px solid #ef4444;
+        }
+      }
+    }
+  }
+`;
+
+function MyComponent() {
+  return (
+    <CustomStyledUploader>
+      <FileUploader
+        action="/api/upload"
+        className="custom-file-uploader"
+        multiple
+      />
+    </CustomStyledUploader>
+  );
+}
+```
+
+### 响应式上传区域
+
+```tsx
+<FileUploader
+  action="/api/upload"
+  className="w-full max-w-md mx-auto lg:max-w-lg"
+/>
+```
+
+### 主题化样式
+
+```tsx
+// 深色主题
+<FileUploader
+  action="/api/upload"
+  className="dark-theme-uploader"
+/>
+
+// 对应的 CSS
+.dark-theme-uploader {
+  background-color: #1f2937;
+  border-color: #374151;
+  color: #f9fafb;
+}
+
+.dark-theme-uploader:hover {
+  border-color: #6b7280;
+  background-color: #111827;
 }
 ```
 

@@ -40,6 +40,24 @@ pnpm dev
   <ReactDemo name="FileUploader" />
 </DemoContainer>
 
+### 多文件上传
+
+<DemoContainer title="多文件上传">
+  <ReactDemo name="FileUploader" variant="multiple" />
+</DemoContainer>
+
+### 限制文件类型（仅图片）
+
+<DemoContainer title="限制文件类型">
+  <ReactDemo name="FileUploader" variant="accept" />
+</DemoContainer>
+
+### 限制文件大小（最大 1MB）
+
+<DemoContainer title="限制文件大小">
+  <ReactDemo name="FileUploader" variant="limit" />
+</DemoContainer>
+
 ```tsx
 import { FileUploader } from 'flexi-ui';
 

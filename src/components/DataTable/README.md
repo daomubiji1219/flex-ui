@@ -194,6 +194,8 @@ function App() {
 | loading       | `boolean`                                         | `false` | 是否显示加载状态 |
 | onRowSelect   | `(selectedRows: T[]) => void`                     | -       | 行选择回调函数   |
 | virtualScroll | `boolean`                                         | `false` | 是否启用虚拟滚动 |
+| selectable    | `boolean`                                         | `false` | 是否启用行选择   |
+| className     | `string`                                          | -       | 自定义 CSS 类名  |
 
 ### Column<T>
 
@@ -304,6 +306,78 @@ function LoadingTable() {
     <DataTable data={data} columns={columns} rowKey="id" loading={loading} />
   );
 }
+```
+
+### 自定义样式
+
+#### 使用 className
+
+你可以通过 `className` 属性为表格添加自定义样式：
+
+```tsx
+// 基础用法
+<DataTable
+  data={users}
+  columns={columns}
+  rowKey="id"
+  className="my-custom-table"
+/>
+
+// 结合 CSS 模块
+<DataTable
+  data={users}
+  columns={columns}
+  rowKey="id"
+  className={styles.specialTable}
+/>
+
+// 结合 styled-components 或其他 CSS-in-JS 库
+const CustomStyledTable = styled.div`
+  .custom-data-table {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    .table-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .table-row:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    .table-row:hover {
+      background-color: #e3f2fd;
+      transform: translateY(-1px);
+      transition: all 0.2s ease;
+    }
+  }
+`;
+
+function MyComponent() {
+  return (
+    <CustomStyledTable>
+      <DataTable
+        data={users}
+        columns={columns}
+        rowKey="id"
+        className="custom-data-table"
+      />
+    </CustomStyledTable>
+  );
+}
+```
+
+#### 响应式表格
+
+```tsx
+<DataTable
+  data={users}
+  columns={columns}
+  rowKey="id"
+  className="responsive-table w-full overflow-x-auto"
+/>
 ```
 
 ### 动态列配置

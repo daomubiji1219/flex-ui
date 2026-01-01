@@ -164,6 +164,106 @@ const InfoContainer = styled.div`
   `}
 `;
 
+// 创建带测试样式的 DataTable 容器
+const TestDataTableContainer = styled.div`
+  border: 5px solid #22c55e !important;
+  border-radius: 20px !important;
+  box-shadow: 0 0 30px rgba(34, 197, 94, 0.8) !important;
+  background: rgba(34, 197, 94, 0.1) !important;
+  transform: scale(1.02) !important;
+  margin: 20px !important;
+  position: relative !important;
+
+  &::before {
+    content: '🎯 DataTable className 生效！';
+    position: absolute;
+    top: -15px;
+    left: 20px;
+    background: #22c55e;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 1000;
+    animation: bounce 2s infinite;
+  }
+
+  &::after {
+    content: '✨ 表格测试 ✨';
+    position: absolute;
+    bottom: -15px;
+    right: 20px;
+    background: #16a34a;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-size: 12px;
+    z-index: 1000;
+  }
+
+  @keyframes bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+`;
+
+// className 测试样式
+const TestClassNameStyles = styled.div`
+  .data-table-test-class {
+    border: 5px solid #22c55e !important;
+    border-radius: 20px !important;
+    box-shadow: 0 0 30px rgba(34, 197, 94, 0.8) !important;
+    background: rgba(34, 197, 94, 0.1) !important;
+    transform: scale(1.02) !important;
+    margin: 20px !important;
+    position: relative !important;
+
+    &::before {
+      content: '🎯 DataTable className 生效！';
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      background: #22c55e;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 15px;
+      font-size: 14px;
+      font-weight: bold;
+      z-index: 1000;
+      animation: bounce 2s infinite;
+    }
+
+    &::after {
+      content: '✨ 表格测试 ✨';
+      position: absolute;
+      bottom: -15px;
+      right: 20px;
+      background: #16a34a;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 15px;
+      font-size: 12px;
+      z-index: 1000;
+    }
+
+    @keyframes bounce {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+  }
+`;
+
 // 生成示例数据
 const generateSampleData = (count: number): User[] => {
   const departments = [
@@ -323,6 +423,7 @@ const DataTableExample: React.FC = () => {
 
   return (
     <ExampleContainer>
+      <TestClassNameStyles />
       <h2
         style={{
           marginBottom: theme.tokens.spacing[6] + 'px',
@@ -465,18 +566,23 @@ const DataTableExample: React.FC = () => {
           backgroundColor: theme.colors.surface,
           borderRadius: theme.tokens.radii.lg + 'px',
           border: `1px solid ${theme.colors.border}`,
+          position: 'relative',
         }}
       >
-        <DataTable<User>
-          data={sortedData}
-          columns={columns}
-          rowKey="id"
-          pagination={{
-            pageSize,
-          }}
-          loading={false}
-          onRowSelect={handleRowSelect}
-        />
+        <TestDataTableContainer>
+          {/* <ErrorBoundary> */}
+          <DataTable<User>
+            data={sortedData}
+            columns={columns}
+            rowKey="id"
+            pagination={{
+              pageSize,
+            }}
+            loading={false}
+            onRowSelect={handleRowSelect}
+          />
+          {/* </ErrorBoundary> */}
+        </TestDataTableContainer>
       </div>
 
       {/* 数据统计 */}

@@ -182,7 +182,7 @@ export class ValidationObserver implements IFormObserver {
     this.debounceMs = debounceMs;
   }
 
-  private debounceTimers = new Map<string, NodeJS.Timeout>();
+  private debounceTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
   onFieldChange(fieldName: string, value: unknown): void {
     // 清除之前的定时器

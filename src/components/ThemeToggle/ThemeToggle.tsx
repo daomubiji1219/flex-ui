@@ -4,6 +4,9 @@ import React from 'react';
 import type { ReactNode } from 'react';
 // 导入自定义的useTheme钩子，用于获取和切换主题模式
 import { useTheme } from '../../hooks/useTheme';
+// 导入ErrorBoundary相关hooks
+import { useErrorBoundaryEnhanced } from '../../hooks/useErrorBoundaryEnhanced';
+import { DefaultErrorFallback } from '../../hooks/useErrorBoundary';
 // 导入Button组件，作为主题切换按钮的基础容器
 import { Button } from '../Button/Button';
 
@@ -18,6 +21,14 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   children,
   className,
 }) => {
+  // ==================== 错误边界 ====================
+  const { ErrorBoundary } = useErrorBoundaryEnhanced(DefaultErrorFallback, {
+    maxRetries: 3,
+    onError: (error, errorInfo) => {
+      console.error('ThemeToggle 组件发生错误:', { error, errorInfo });
+    },
+  });
+
   // 从useTheme钩子中获取当前主题模式(mode)和切换主题的方法(toggleMode)
   const { mode, toggleMode } = useTheme();
 
@@ -48,16 +59,18 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
 
   // 组件返回一个按钮元素，用于切换主题
   return (
-    <Button
-      variant="outline" // 按钮样式为轮廓型
-      size="md" // 按钮尺寸为中等
-      onClick={toggleMode} // 点击时调用切换主题的方法
-      icon={getIcon()} // 按钮图标为getIcon函数返回的SVG
-      className={className} // 应用传入的自定义类名
-    >
-      {/* 按钮文本：优先使用传入的children，否则显示默认切换提示 */}
-      {children || `切换到${mode === 'light' ? '暗色' : '亮色'}模式`}
-    </Button>
+    <ErrorBoundary>
+      <Button
+        variant="outline" // 按钮样式为轮廓型
+        size="md" // 按钮尺寸为中等
+        onClick={toggleMode} // 点击时调用切换主题的方法
+        icon={getIcon()} // 按钮图标为getIcon函数返回的SVG
+        className={className} // 应用传入的自定义类名
+      >
+        {/* 按钮文本：优先使用传入的children，否则显示默认切换提示 */}
+        {children || `切换到${mode === 'light' ? '暗色' : '亮色'}模式`}
+      </Button>
+    </ErrorBoundary>
   );
 };
 

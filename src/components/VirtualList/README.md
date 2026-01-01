@@ -144,6 +144,7 @@ function DynamicHeightExample() {
 | itemHeight      | `number`                                 | `50`   | ❌   | 项目预估高度（px），用于初始计算和性能优化      |
 | overscan        | `number`                                 | `3`    | ❌   | 缓冲区项目数量，增加可提升滚动流畅度            |
 | getKey          | `(item: T) => number \| string`          | -      | ❌   | 获取项目唯一标识的函数，优化渲染性能            |
+| className       | `string`                                 | -      | ❌   | 自定义 CSS 类名，用于样式定制                   |
 
 ### 属性详解
 
@@ -285,6 +286,99 @@ function ComplexVirtualList() {
 ```
 
 ## ⚡ 性能优化
+
+### 自定义样式
+
+#### 使用 className
+
+```tsx
+import { VirtualList } from 'flexi-ui';
+
+// 基础用法
+<VirtualList data={data} renderItem={renderItem} className="my-virtual-list" />;
+
+// 结合 CSS Modules
+import styles from './VirtualList.module.css';
+
+<VirtualList
+  data={data}
+  renderItem={renderItem}
+  className={styles.customList}
+/>;
+
+// 结合 styled-components
+import styled from 'styled-components';
+
+const StyledVirtualList = styled(VirtualList)`
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  /* 自定义滚动条 */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+`;
+
+<StyledVirtualList data={data} renderItem={renderItem} />;
+```
+
+#### 响应式虚拟列表
+
+```tsx
+import { useState, useEffect } from 'react';
+import { VirtualList } from 'flexi-ui';
+
+function ResponsiveVirtualList() {
+  const [containerHeight, setContainerHeight] = useState(400);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      const height = window.innerHeight * 0.6; // 60% 视口高度
+      setContainerHeight(height);
+    };
+
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
+
+  return (
+    <VirtualList
+      data={data}
+      renderItem={renderItem}
+      containerHeight={containerHeight}
+      className="responsive-virtual-list"
+    />
+  );
+}
+
+/* CSS 样式 */
+.responsive-virtual-list {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    margin: 0 16px;
+  }
+}
+```
 
 ### 最佳实践
 

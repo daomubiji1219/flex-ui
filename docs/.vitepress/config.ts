@@ -75,6 +75,8 @@ export default defineConfig({
             { text: 'DataTable 数据表格', link: '/DataTable' },
             { text: 'VirtualList 虚拟列表', link: '/VirtualList' },
             { text: 'FileUploader 文件上传', link: '/FileUploader' },
+            { text: 'ThemeToggle 主题切换', link: '/ThemeToggle' },
+            { text: 'ErrorBoundary 错误边界', link: '/ErrorBoundary' },
           ],
         },
       ],
@@ -82,7 +84,6 @@ export default defineConfig({
         {
           text: 'API 参考',
           items: [
-            { text: '组件 API', link: '/api/components' },
             { text: 'Hooks API', link: '/api/hooks' },
             { text: '工具函数', link: '/api/utils' },
             { text: '类型定义', link: '/api/types' },
