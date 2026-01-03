@@ -7,6 +7,5 @@
   "installCommand": "node -v && npx pnpm@8.15.0 -v && npx pnpm@8.15.0 install --registry=https://registry.npmmirror.com/",
   "buildCommand": "npx pnpm@8.15.0 run docs:build",
   "outputDirectory": "docs/.vitepress/dist",
-  "framework": "vitepress",
-  "nodeVersion": "18.x"
+  "framework": "vitepress"
 }
